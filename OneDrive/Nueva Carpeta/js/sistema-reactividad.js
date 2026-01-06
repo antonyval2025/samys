@@ -20,9 +20,9 @@ const SistemaReactividad = (function() {
      * Registra una función que se ejecutará cuando ocurra un evento
      */
     function on(tipoEvento, callback) {
+        // Crear el observable si no existe (permite eventos dinámicos)
         if (!observadores[tipoEvento]) {
-            console.warn(`[SistemaReactividad] Evento desconocido: ${tipoEvento}`);
-            return false;
+            observadores[tipoEvento] = [];
         }
         observadores[tipoEvento].push(callback);
         console.log(`[SistemaReactividad] ✅ Observador registrado para: ${tipoEvento}`);
