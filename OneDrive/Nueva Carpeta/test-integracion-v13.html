@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test de Integración - v13 Modular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .test-section h2 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+        }
+        .test-item {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 4px;
+            align-items: center;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .badge.ok { background: #10b981; color: white; }
+        .badge.error { background: #ef4444; color: white; }
+        .badge.warning { background: #f59e0b; color: white; }
+        .code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Integración v13 - Sistema Modular</h1>
+    <p>Verificación de componentes, referencias y funcionalidad</p>
+
+    <div class="test-section">
+        <h2>📦 Scripts Cargados</h2>
+        <div id="scriptTests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📍 LocalidadesManager Tests</h2>
+        <div id="localidadesTests"></div>
+        <button onclick="testLocalidades()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h2>⏰ TurnosTypesManager Tests</h2>
+        <div id="turnosTests"></div>
+        <button onclick="testTurnos()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 ConsolidadoTurnos Tests</h2>
+        <div id="consolidadoTurnosTests"></div>
+        <button onclick="testConsolidadoTurnos()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 ConsolidadoLocalidades Tests</h2>
+        <div id="consolidadoLocalidadesTests"></div>
+        <button onclick="testConsolidadoLocalidades()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h2>💾 localStorage Tests</h2>
+        <div id="storageTests"></div>
+        <button onclick="testStorage()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 SistemaReactividad Tests</h2>
+        <div id="reactividadTests"></div>
+        <button onclick="testReactividad()">▶️ Ejecutar Tests</button>
+    </div>
+
+    <div id="summary"></div>
+
+    <script>
+        const results = {
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        function test(name, condition, container) {
+            const div = document.createElement('div');
+            div.className = 'test-item';
+            
+            let badge, status;
+            if (condition === true) {
+                badge = '✅';
+                results.passed++;
+                status = 'ok';
+            } else if (condition === false) {
+                badge = '❌';
+                results.failed++;
+                status = 'error';
+            } else {
+                badge = '⚠️';
+                results.warnings++;
+                status = 'warning';
+            }
+            
+            div.innerHTML = `
+                <span class="badge ${status}">${badge}</span>
+                <span>${name}</span>
+            `;
+            document.getElementById(container).appendChild(div);
+        }
+
+        function testScripts() {
+            const scripts = [
+                { name: 'LocalidadesManager', obj: window.LocalidadesManager },
+                { name: 'ConsolidadoLocalidades', obj: window.ConsolidadoLocalidades },
+                { name: 'TurnosTypesManager', obj: window.TurnosTypesManager },
+                { name: 'ConsolidadoTurnos', obj: window.ConsolidadoTurnos },
+                { name: 'SistemaReactividad', obj: window.SistemaReactividad },
+                // Deprecated - should NOT exist
+                { name: 'LocationManager (deprecated)', obj: window.LocationManager, shouldNotExist: true },
+                { name: 'TurnoTypeManager (deprecated)', obj: window.TurnoTypeManager, shouldNotExist: true }
+            ];
+            
+            scripts.forEach(s => {
+                const exists = typeof s.obj !== 'undefined';
+                const condition = s.shouldNotExist ? !exists : exists;
+                test(
+                    s.name + (s.shouldNotExist ? ' (debe estar removido)' : ' (debe existir)'),
+                    condition,
+                    'scriptTests'
+                );
+            });
+        }
+
+        function testLocalidades() {
+            const container = 'localidadesTests';
+            document.getElementById(container).innerHTML = '';
+            
+            test('LocalidadesManager.inicializar existe', typeof LocalidadesManager?.inicializar === 'function', container);
+            test('LocalidadesManager.obtenerLocalidades existe', typeof LocalidadesManager?.obtenerLocalidades === 'function', container);
+            test('LocalidadesManager.crearLocalidad existe', typeof LocalidadesManager?.crearLocalidad === 'function', container);
+            test('LocalidadesManager.actualizarLocalidad existe', typeof LocalidadesManager?.actualizarLocalidad === 'function', container);
+            
+            const locs = LocalidadesManager?.obtenerLocalidades?.();
+            test('Localidades cargadas del storage', Array.isArray(locs) || typeof locs === 'object', container);
+        }
+
+        function testTurnos() {
+            const container = 'turnosTests';
+            document.getElementById(container).innerHTML = '';
+            
+            test('TurnosTypesManager.inicializar existe', typeof TurnosTypesManager?.inicializar === 'function', container);
+            test('TurnosTypesManager.obtenerTurnos existe', typeof TurnosTypesManager?.obtenerTurnos === 'function', container);
+            test('TurnosTypesManager.crearTurno existe', typeof TurnosTypesManager?.crearTurno === 'function', container);
+            test('TurnosTypesManager.actualizarTurno existe', typeof TurnosTypesManager?.actualizarTurno === 'function', container);
+            
+            const turnos = TurnosTypesManager?.obtenerTurnos?.();
+            test('Turnos cargados del storage', Array.isArray(turnos) || typeof turnos === 'object', container);
+        }
+
+        function testConsolidadoTurnos() {
+            const container = 'consolidadoTurnosTests';
+            document.getElementById(container).innerHTML = '';
+            
+            test('ConsolidadoTurnos.abrirModal existe', typeof ConsolidadoTurnos?.abrirModal === 'function', container);
+            test('ConsolidadoTurnos.cerrarModal existe', typeof ConsolidadoTurnos?.cerrarModal === 'function', container);
+            test('ConsolidadoTurnos.guardarTurno existe', typeof ConsolidadoTurnos?.guardarTurno === 'function', container);
+            test('ConsolidadoTurnos.eliminarTurno existe', typeof ConsolidadoTurnos?.eliminarTurno === 'function', container);
+            test('ConsolidadoTurnos.cargarListaTurnos existe', typeof ConsolidadoTurnos?.cargarListaTurnos === 'function', container);
+        }
+
+        function testConsolidadoLocalidades() {
+            const container = 'consolidadoLocalidadesTests';
+            document.getElementById(container).innerHTML = '';
+            
+            test('ConsolidadoLocalidades.abrirModal existe', typeof ConsolidadoLocalidades?.abrirModal === 'function', container);
+            test('ConsolidadoLocalidades.cerrarModal existe', typeof ConsolidadoLocalidades?.cerrarModal === 'function', container);
+            test('ConsolidadoLocalidades.guardarLocalidad existe', typeof ConsolidadoLocalidades?.guardarLocalidad === 'function', container);
+            test('ConsolidadoLocalidades.eliminarLocalidad existe', typeof ConsolidadoLocalidades?.eliminarLocalidad === 'function', container);
+            test('ConsolidadoLocalidades.cargarListaLocalidades existe', typeof ConsolidadoLocalidades?.cargarListaLocalidades === 'function', container);
+        }
+
+        function testStorage() {
+            const container = 'storageTests';
+            document.getElementById(container).innerHTML = '';
+            
+            const localidadesData = localStorage.getItem('localidadesData');
+            const turnosData = localStorage.getItem('tiposTurnoData');
+            
+            test('localStorage.localidadesData existe', localidadesData !== null, container);
+            test('localStorage.tiposTurnoData existe', turnosData !== null, container);
+            
+            if (localidadesData) {
+                try {
+                    const parsed = JSON.parse(localidadesData);
+                    test('localidadesData es JSON válido', true, container);
+                    test(`localidadesData contiene ${parsed.length || 0} items`, true, container);
+                } catch (e) {
+                    test('localidadesData JSON corrupto', false, container);
+                }
+            }
+            
+            if (turnosData) {
+                try {
+                    const parsed = JSON.parse(turnosData);
+                    test('tiposTurnoData es JSON válido', true, container);
+                    test(`tiposTurnoData contiene ${Object.keys(parsed).length || 0} turnos`, true, container);
+                } catch (e) {
+                    test('tiposTurnoData JSON corrupto', false, container);
+                }
+            }
+        }
+
+        function testReactividad() {
+            const container = 'reactividadTests';
+            document.getElementById(container).innerHTML = '';
+            
+            test('SistemaReactividad.emit existe', typeof SistemaReactividad?.emit === 'function', container);
+            test('SistemaReactividad.on existe', typeof SistemaReactividad?.on === 'function', container);
+            
+            let eventFired = false;
+            const unsubscribe = SistemaReactividad?.on('test-event', () => {
+                eventFired = true;
+            });
+            
+            SistemaReactividad?.emit('test-event', { test: true });
+            test('Events se emiten y reciben correctamente', eventFired, container);
+            
+            if (unsubscribe) unsubscribe();
+        }
+
+        function showSummary() {
+            const total = results.passed + results.failed + results.warnings;
+            const percentage = Math.round((results.passed / total) * 100);
+            
+            let color = percentage === 100 ? '#10b981' : percentage >= 80 ? '#f59e0b' : '#ef4444';
+            
+            document.getElementById('summary').innerHTML = `
+                <div class="summary">
+                    <h2>📊 Resumen de Tests</h2>
+                    <p>✅ Pasados: ${results.passed}</p>
+                    <p>❌ Fallidos: ${results.failed}</p>
+                    <p>⚠️ Advertencias: ${results.warnings}</p>
+                    <p style="font-size: 1.5rem; margin-top: 10px;">Éxito: <span style="color: ${color}">${percentage}%</span></p>
+                </div>
+            `;
+        }
+
+        // Ejecutar tests automáticos al cargar
+        window.addEventListener('load', () => {
+            testScripts();
+            showSummary();
+        });
+    </script>
+</body>
+</html>
