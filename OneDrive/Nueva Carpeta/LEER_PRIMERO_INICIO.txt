@@ -1,0 +1,202 @@
+════════════════════════════════════════════════════════════════════════════════
+                                                                                  
+  ✅ HERRAMIENTAS DE INICIO LISTAS - Gestor de Turnos v9.4                      
+                                                                                  
+════════════════════════════════════════════════════════════════════════════════
+
+Se han creado MÚLTIPLES opciones optimizadas para iniciar tu aplicación.
+Elige la que prefieras:
+
+─────────────────────────────────────────────────────────────────────────────────
+
+⭐ OPCIÓN 1: START.bat  (MÁS SIMPLE - RECOMENDADO)
+
+   Acción:   Doble-clic
+   Qué hace: Inicia servidor Flask directamente
+   Terminal: SÍ (ves todo lo que pasa)
+   Control:  CTRL+C para detener
+   
+   Código:
+   @echo off
+   cd /d "%~dp0"
+   python servidor_turnos.py
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🔍 OPCIÓN 2: diagnostico.bat  (VERIFICACIÓN RECOMENDADA)
+
+   Acción:   Doble-clic
+   Qué hace: Revisa sistema ANTES de iniciar
+   Verifica:
+   ✓ Python instalado
+   ✓ Flask disponible
+   ✓ Archivos necesarios
+   ✓ Puerto 5001 libre
+   
+   RECOMENDACIÓN: Ejecuta esto PRIMERO
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🛡️ OPCIÓN 3: iniciar_seguro.bat  (CON VALIDACIONES)
+
+   Acción:   Doble-clic
+   Qué hace: Valida todo y luego inicia
+   Características:
+   ✓ Mensajes claros de diagnóstico
+   ✓ Manejo de puertos
+   ✓ Detección de conflictos
+   ✓ Instrucciones si falla
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🌐 OPCIÓN 4: iniciar_con_navegador.bat
+
+   Acción:   Doble-clic
+   Qué hace: Abre servidor + navegador automáticamente
+   Ventaja:  Servidor en background (no bloquea terminal)
+   
+   Flujo:
+   1. Inicia servidor en ventana separada
+   2. Espera 3 segundos
+   3. Abre navegador automáticamente
+   4. Tú sigues usando terminal
+
+─────────────────────────────────────────────────────────────────────────────────
+
+💻 OPCIÓN 5: iniciar_servidor.ps1  (POWERSHELL)
+
+   Acción:   Clic derecho → "Ejecutar con PowerShell"
+   Qué hace: Versión moderna con colores y mejor interfaz
+   
+   Si da error de permisos:
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   .\iniciar_servidor.ps1
+
+─────────────────────────────────────────────────────────────────────────────────
+
+📖 DOCUMENTACIÓN
+
+   README_INICIAR.md ............. Guía completa (Markdown)
+   INICIO_RAPIDO.txt ............. Guía visual (ASCII art)
+   config.json ................... Configuración (JSON)
+   NUEVAS_HERRAMIENTAS.txt ....... Resumen de cambios
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🚀 QUICK START EN 60 SEGUNDOS
+
+1. ✓ ¿Python instalado?
+   → Abre terminal: python --version
+
+2. ✓ ¿Flask instalado?
+   → Si no: pip install flask
+
+3. ✓ Doble-clic en: START.bat
+
+4. ✓ Abre en navegador: http://localhost:5001
+
+5. ✓ ¡A trabajar!
+
+─────────────────────────────────────────────────────────────────────────────────
+
+✅ ARQUITECTURA DEL SISTEMA
+
+Backend:
+┌─────────────────────────────────────┐
+│ servidor_turnos.py (Flask)          │
+│ Puerto: 5001                        │
+│ Base datos: turnos_database.db      │
+└─────────────────────────────────────┘
+           ▲
+           │ (HTTP API)
+           ▼
+Frontend:
+┌─────────────────────────────────────┐
+│ nuevo_cuadrante_mejorado.html       │
+│ JavaScript vanilla                  │
+│ Sin dependencias externas           │
+└─────────────────────────────────────┘
+
+Acceso:
+http://localhost:5001
+
+Datos:
+turnos_database.db (SQLite)
+
+─────────────────────────────────────────────────────────────────────────────────
+
+📊 VERIFICACIÓN PREVIA
+
+Antes de iniciar, abre terminal y ejecuta:
+
+python --version          ← Verifica Python 3.9+
+pip list | findstr flask  ← Verifica Flask
+netstat -ano | find ":5001" ← Verifica puerto (si devuelve algo, está en uso)
+
+Si todo OK → Doble-clic START.bat
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🆘 PROBLEMAS COMUNES
+
+PROBLEMA: "Python no encontrado"
+SOLUCIÓN: 
+1. Instala de: https://www.python.org
+2. Marca "Add Python to PATH"
+3. Reinicia tu PC
+4. Verifica: python --version
+
+PROBLEMA: "Flask no instalado"
+SOLUCIÓN:
+pip install flask
+
+PROBLEMA: "Puerto 5001 en uso"
+SOLUCIÓN:
+netstat -ano | find ":5001"          ← Ve qué proceso lo usa
+taskkill /PID <numero> /F            ← Termina ese proceso
+
+PROBLEMA: "Navegador no abre"
+SOLUCIÓN:
+Abre manualmente: http://localhost:5001
+
+─────────────────────────────────────────────────────────────────────────────────
+
+💡 TIPS Y TRUCOS
+
+• Los datos se guardan automáticamente en turnos_database.db
+• Para resetear datos: elimina turnos_database.db y reinicia
+• Puedes abrir múltiples ventanas del navegador
+• CTRL+C en terminal detiene el servidor
+• El servidor recarga automáticamente cambios en el código
+• Usa F12 en navegador para ver consola (debug)
+
+─────────────────────────────────────────────────────────────────────────────────
+
+📋 CHECKLIST FINAL
+
+[ ] Python instalado (python --version)
+[ ] Flask instalado (pip list | findstr flask)
+[ ] Este archivo en la carpeta correcta
+[ ] servidor_turnos.py presente
+[ ] nuevo_cuadrante_mejorado.html presente
+[ ] START.bat presente
+
+¿Todos marcados? → ¡Estás listo!
+
+─────────────────────────────────────────────────────────────────────────────────
+
+🎯 PRÓXIMOS PASOS
+
+1. Lee este archivo hasta el final
+2. Ejecuta: diagnostico.bat (toma 10 segundos)
+3. Doble-clic en: START.bat
+4. Navega a: http://localhost:5001
+5. ¡Disfruta! 🎉
+
+─────────────────────────────────────────────────────────────────────────────────
+
+VERSION: 1.0
+ACTUALIZADO: 2024
+ESTADO: ✅ LISTO PARA USAR
+
+════════════════════════════════════════════════════════════════════════════════

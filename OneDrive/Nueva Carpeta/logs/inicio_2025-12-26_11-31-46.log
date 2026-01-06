@@ -1,0 +1,42 @@
+ 
+============================================================================ 
+GESTOR DE TURNOS - INICIALIZACION 
+Timestamp: 2025-12-26_11-31-46 
+============================================================================ 
+[PASO 1/5] Detectando procesos anteriores... 
+    [] Se detecto proceso Python activo 
+    [*] Deteniendo PID: 10444 
+    [+] Procesos detenidos 
+[PASO 2/5] Limpiando puertos en uso... 
+    [+] Puertos limpiados 
+[PASO 3/5] Verificando archivos necesarios... 
+    [+] servidor_turnos.py OK 
+    [+] nuevo_cuadrante_mejorado.html OK 
+    [+] launcher_simple.py OK 
+    [+] Todos los archivos verificados correctamente 
+[PASO 4/6] Detectando puerto disponible... 
+    [+] Puerto 5001 disponible 
+    [*] Usando puerto: 5001 
+[PASO 5/6] Iniciando servidor en puerto 5001... 
+
+============================================================
+                GESTOR DE TURNOS - INICIANDO                
+============================================================
+
+Traceback (most recent call last):
+  File "C:\Users\samys\OneDrive\Nueva Carpeta\launcher_simple.py", line 95, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\samys\OneDrive\Nueva Carpeta\launcher_simple.py", line 41, in main
+    print("[+] Archivos verificados \u2713")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\samys\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 25: character maps to <undefined>
+    [+] Servidor iniciado correctamente 
+[PASO 6/6] Preparando para abrir navegador... 
+[*] Abriendo navegador en puerto 5001... 
+[+] Navegador abierto 
+Cierre: 26/12/2025 11:32:05,26 
+============================================================================ 

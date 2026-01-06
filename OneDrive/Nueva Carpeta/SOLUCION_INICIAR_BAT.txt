@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                     ✅ SOLUCIÓN PARA INICIAR.BAT                            ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+## ❌ PROBLEMA DETECTADO
+
+iniciar.bat tenía problemas con:
+  • Dependencia de `curl` (no siempre disponible)
+  • Script demasiado complejo
+  • Problemas con redirecciones
+
+## ✅ SOLUCIONES
+
+### OPCIÓN 1: Iniciar SIMPLE (Recomendado - 100% funciona)
+
+Creé un nuevo archivo: **iniciar_simple.bat**
+
+```
+Doble clic en: iniciar_simple.bat
+↓
+Se inicia servidor automáticamente
+↓
+Navegador abre en http://localhost:5001
+↓
+¡LISTO!
+```
+
+Este es el más confiable. Úsalo si iniciar.bat falla.
+
+### OPCIÓN 2: Iniciar MEJORADO
+
+He actualizado el archivo original **iniciar.bat** con:
+  ✓ Mejor detección de puerto
+  ✓ Sin dependencia de curl
+  ✓ Verificación más simple
+  ✓ Mensajes claros
+
+Prueba: Doble clic en iniciar.bat
+
+### OPCIÓN 3: Inicio MANUAL (Si todo falla)
+
+```
+1. Abre PowerShell o Cmd
+2. Ve a la carpeta del proyecto
+3. Ejecuta: servidor_turnos.exe
+4. Abre navegador: http://localhost:5001
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 📋 QUÉ HACER AHORA
+
+### Paso 1: Intenta iniciar_simple.bat
+```
+Doble clic en: iniciar_simple.bat
+Espera 3 segundos
+¿Se abre navegador? → ¡FUNCIONA! ✓
+```
+
+### Paso 2: Si eso no funciona, prueba iniciar.bat
+```
+Doble clic en: iniciar.bat
+Espera 5 segundos
+¿Se abre navegador? → ¡FUNCIONA! ✓
+```
+
+### Paso 3: Si aún no funciona
+```
+1. Abre PowerShell
+2. Navega a la carpeta
+3. Ejecuta: .\servidor_turnos.exe
+4. Abre manualmente: http://localhost:5001
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🔍 DIAGNÓSTICO
+
+¿Qué está pasando?
+
+SITUACIÓN A: Aparece ventana negra pero navegador no abre
+```
+Solución:
+  1. Abre manualmente: http://localhost:5001 en tu navegador
+  2. Si la app aparece → ¡Funciona!
+  3. Si no → Ve a Situación B
+```
+
+SITUACIÓN B: Ventana negra desaparece rápidamente
+```
+Significa: Servidor tiene error al iniciar
+Solución:
+  1. Abre PowerShell
+  2. Ejecuta: .\servidor_turnos.exe
+  3. Verás el mensaje de error
+  4. Reporta el error
+```
+
+SITUACIÓN C: Antivirus bloquea servidor_turnos.exe
+```
+Solución:
+  1. Abre tu antivirus
+  2. Agrega excepción para servidor_turnos.exe
+  3. O confía en el archivo
+```
+
+SITUACIÓN D: Puerto 5001 está en uso
+```
+Solución:
+  1. Edita iniciar.bat
+  2. Cambia "5001" por "5002"
+  3. Guarda y ejecuta
+  4. Abre: http://localhost:5002
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 📝 RESUMEN
+
+Tu aplicación está lista. Solo necesitas:
+
+✅ Doble clic en **iniciar_simple.bat** → app funciona
+✅ Si eso falla → doble clic en **iniciar.bat** 
+✅ Si aún falla → abre PowerShell y corre servidor_turnos.exe
+
+El resto funciona perfectamente, solo el launcher tenía pequeños problemas.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🎯 ACCIÓN INMEDIATA
+
+```
+1. Abre carpeta: c:\Users\samys\OneDrive\Nueva Carpeta
+2. Doble clic en: iniciar_simple.bat
+3. Espera 3 segundos
+4. ¡Tu app funciona!
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Versión: 10.0 PORTABLE
+Status: ✅ LISTO
+Fecha: 26 de diciembre de 2025
+
+¡La app está completamente funcional! Solo era el launcher. 🎉

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Datos - Sistema de Turnos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        button.success { background: #28a745; }
+        button.success:hover { background: #218838; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .data-section { margin: 20px 0; padding: 15px; border: 1px solid #dee2e6; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico de Datos - Sistema de Turnos</h1>
+
+        <div id="status" class="status info">
+            <strong>Estado:</strong> Analizando datos del sistema...
+        </div>
+
+        <button onclick="analizarDatos()">🔍 Analizar Datos Actuales</button>
+        <button onclick="verificarLocalStorage()">💾 Verificar LocalStorage</button>
+        <button onclick="verificarEmpleados()">👥 Verificar Empleados</button>
+        <button onclick="verificarTurnos()">📅 Verificar Turnos</button>
+        <button onclick="limpiarLocalStorage()" class="danger">🗑️ Limpiar LocalStorage (CUIDADO)</button>
+        <button onclick="regenerarDatos()" class="success">🔄 Regenerar Datos</button>
+        <button onclick="exportarDatos()">📤 Exportar Datos</button>
+        <button onclick="importarDatos()">📥 Importar Datos</button>
+
+        <div class="data-section">
+            <h2>📊 Resultados del Análisis</h2>
+            <div id="resultados"></div>
+        </div>
+
+        <div class="data-section">
+            <h2>💾 LocalStorage</h2>
+            <div id="localStorageInfo"></div>
+        </div>
+
+        <div class="data-section">
+            <h2>👥 Empleados</h2>
+            <div id="empleadosInfo"></div>
+        </div>
+
+        <div class="data-section">
+            <h2>📅 Turnos</h2>
+            <div id="turnosInfo"></div>
+        </div>
+
+        <div class="data-section">
+            <h2>📤 Exportar/Importar Datos</h2>
+            <textarea id="datosJson" placeholder="Pega aquí los datos JSON para importar..." rows="10" style="width: 100%;"></textarea>
+        </div>
+    </div>
+
+    <script src="js/modules.js"></script>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<strong>Estado:</strong> ${message}`;
+        }
+
+        function analizarDatos() {
+            updateStatus('Analizando datos del sistema...', 'info');
+
+            const resultados = document.getElementById('resultados');
+            resultados.innerHTML = '';
+
+            // Verificar localStorage
+            const turnosAppState = localStorage.getItem('turnosAppState');
+            const empleadosData = localStorage.getItem('empleadosData');
+            const tiposTurnoData = localStorage.getItem('tiposTurnoData');
+
+            resultados.innerHTML += `<p><strong>LocalStorage:</strong></p>`;
+            resultados.innerHTML += `<p>• turnosAppState: ${turnosAppState ? '✅ Presente' : '❌ Ausente'}</p>`;
+            resultados.innerHTML += `<p>• empleadosData: ${empleadosData ? '✅ Presente' : '❌ Ausente'}</p>`;
+            resultados.innerHTML += `<p>• tiposTurnoData: ${tiposTurnoData ? '✅ Presente' : '❌ Ausente'}</p>`;
+
+            // Verificar arrays globales
+            resultados.innerHTML += `<p><strong>Arrays globales:</strong></p>`;
+            resultados.innerHTML += `<p>• empleados: ${window.empleados ? window.empleados.length + ' empleados' : '❌ No definido'}</p>`;
+            resultados.innerHTML += `<p>• tiposTurno: ${window.tiposTurno ? Object.keys(window.tiposTurno).length + ' tipos' : '❌ No definido'}</p>`;
+
+            // Verificar AppState
+            resultados.innerHTML += `<p><strong>AppState:</strong></p>`;
+            resultados.innerHTML += `<p>• AppState: ${window.AppState ? '✅ Definido' : '❌ No definido'}</p>`;
+            if (window.AppState) {
+                resultados.innerHTML += `<p>• scheduleData: ${AppState.scheduleData ? AppState.scheduleData.size + ' empleados con turnos' : '❌ No definido'}</p>`;
+                resultados.innerHTML += `<p>• Mes actual: ${AppState.currentMonth}/${AppState.currentYear}</p>`;
+            }
+
+            updateStatus('Análisis completado', 'success');
+        }
+
+        function verificarLocalStorage() {
+            const info = document.getElementById('localStorageInfo');
+            info.innerHTML = '<h3>Contenido del LocalStorage:</h3>';
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                let size = 'Desconocido';
+                try {
+                    size = new Blob([value]).size + ' bytes';
+                } catch(e) {}
+
+                info.innerHTML += `<p><strong>${key}:</strong> ${size}</p>`;
+                if (value.length < 500) {
+                    info.innerHTML += `<pre>${value}</pre>`;
+                } else {
+                    info.innerHTML += `<p>Contenido muy largo (${value.length} caracteres)</p>`;
+                }
+            }
+
+            if (localStorage.length === 0) {
+                info.innerHTML += '<p>LocalStorage está vacío</p>';
+            }
+        }
+
+        function verificarEmpleados() {
+            const info = document.getElementById('empleadosInfo');
+            info.innerHTML = '<h3>Empleados cargados:</h3>';
+
+            if (!window.empleados) {
+                info.innerHTML += '<p class="error">❌ Array de empleados no definido</p>';
+                return;
+            }
+
+            info.innerHTML += `<p><strong>Total de empleados:</strong> ${empleados.length}</p>`;
+
+            if (empleados.length > 0) {
+                empleados.forEach((emp, index) => {
+                    info.innerHTML += `<p><strong>${index + 1}. ${emp.nombre}</strong></p>`;
+                    info.innerHTML += `<p>  • ID: ${emp.id}</p>`;
+                    info.innerHTML += `<p>  • Departamento: ${emp.departamento}</p>`;
+                    info.innerHTML += `<p>  • Estado: ${emp.estado}</p>`;
+                    info.innerHTML += `<p>  • Horas contrato: ${emp.horasContrato}</p>`;
+                });
+            } else {
+                info.innerHTML += '<p class="warning">⚠️ No hay empleados cargados</p>';
+            }
+        }
+
+        function verificarTurnos() {
+            const info = document.getElementById('turnosInfo');
+            info.innerHTML = '<h3>Turnos cargados:</h3>';
+
+            if (!window.AppState || !AppState.scheduleData) {
+                info.innerHTML += '<p class="error">❌ AppState o scheduleData no definido</p>';
+                return;
+            }
+
+            info.innerHTML += `<p><strong>Empleados con turnos:</strong> ${AppState.scheduleData.size}</p>`;
+
+            AppState.scheduleData.forEach((turnos, empleadoId) => {
+                const empleado = empleados.find(e => e.id == empleadoId);
+                const nombre = empleado ? empleado.nombre : `ID: ${empleadoId}`;
+
+                info.innerHTML += `<p><strong>${nombre}:</strong> ${turnos.length} turnos</p>`;
+
+                // Mostrar algunos turnos de ejemplo
+                if (turnos.length > 0) {
+                    const primerosTurnos = turnos.slice(0, 5);
+                    primerosTurnos.forEach(turno => {
+                        const fecha = turno.fecha ? new Date(turno.fecha).toLocaleDateString('es-ES') : 'Sin fecha';
+                        info.innerHTML += `<p>  • Día ${turno.dia} (${fecha}): ${turno.turno} - ${turno.horas}h</p>`;
+                    });
+
+                    if (turnos.length > 5) {
+                        info.innerHTML += `<p>  ... y ${turnos.length - 5} turnos más</p>`;
+                    }
+                }
+            });
+        }
+
+        function limpiarLocalStorage() {
+            if (confirm('¿Estás seguro de que quieres limpiar todo el LocalStorage? Esta acción no se puede deshacer.')) {
+                localStorage.clear();
+                updateStatus('LocalStorage limpiado', 'warning');
+                analizarDatos();
+            }
+        }
+
+        function regenerarDatos() {
+            updateStatus('Regenerando datos...', 'info');
+
+            try {
+                // Cargar datos del storage
+                AppState.loadFromStorage();
+                EmployeeManager.cargarDelStorage();
+                TurnoTypeManager.cargarDelStorage();
+
+                // Inicializar turnos si es necesario
+                TurnoManager.inicializarDatos();
+
+                // Guardar
+                AppState.saveToStorage();
+                EmployeeManager.guardarEnStorage();
+
+                updateStatus('Datos regenerados correctamente', 'success');
+                analizarDatos();
+            } catch (error) {
+                updateStatus(`Error regenerando datos: ${error.message}`, 'error');
+            }
+        }
+
+        function exportarDatos() {
+            const datos = {
+                empleados: empleados,
+                turnosAppState: localStorage.getItem('turnosAppState'),
+                empleadosData: localStorage.getItem('empleadosData'),
+                tiposTurnoData: localStorage.getItem('tiposTurnoData'),
+                fechaExportacion: new Date().toISOString()
+            };
+
+            const jsonString = JSON.stringify(datos, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_turnos_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            updateStatus('Datos exportados correctamente', 'success');
+        }
+
+        function importarDatos() {
+            const jsonText = document.getElementById('datosJson').value.trim();
+            if (!jsonText) {
+                alert('Por favor, pega los datos JSON en el campo de texto');
+                return;
+            }
+
+            try {
+                const datos = JSON.parse(jsonText);
+
+                if (datos.empleadosData) {
+                    localStorage.setItem('empleadosData', datos.empleadosData);
+                }
+                if (datos.turnosAppState) {
+                    localStorage.setItem('turnosAppState', datos.turnosAppState);
+                }
+                if (datos.tiposTurnoData) {
+                    localStorage.setItem('tiposTurnoData', datos.tiposTurnoData);
+                }
+
+                // Recargar datos
+                location.reload();
+
+            } catch (error) {
+                updateStatus(`Error importando datos: ${error.message}`, 'error');
+            }
+        }
+
+        // Análisis inicial
+        setTimeout(() => {
+            analizarDatos();
+        }, 1000);
+    </script>
+</body>
+</html>

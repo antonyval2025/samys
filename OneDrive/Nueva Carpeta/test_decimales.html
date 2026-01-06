@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Decimales Horas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .output { background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; }
+        button { padding: 12px 24px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px; }
+        button:hover { background: linear-gradient(135deg, #0056b3 0%, #004085 100%); }
+        .section { margin: 20px 0; padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Decimales en Horas</h1>
+        <p>Este test verifica si los inputs mantienen correctamente los decimales.</p>
+
+        <div class="section">
+            <h3>Test Input Number con Decimales</h3>
+            <input type="number" id="testInput" value="6.5" step="0.25" min="0" max="24">
+            <button onclick="testDecimales()">Probar Decimales</button>
+            <button onclick="cambiarValor()">Cambiar a 6.75</button>
+        </div>
+
+        <div class="section">
+            <button onclick="testTiposTurno()">Verificar Tipos de Turno</button>
+            <button onclick="abrirAplicacion()">📱 Abrir Aplicación</button>
+        </div>
+
+        <h2>Resultado del Test:</h2>
+        <div class="output" id="output">Haz clic en "Probar Decimales" para comenzar...</div>
+    </div>
+
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+
+        function testDecimales() {
+            document.getElementById('output').textContent = '';
+            log('🧪 === TEST DECIMALES ===');
+
+            const input = document.getElementById('testInput');
+            const valorActual = input.value;
+            const valorParseado = parseFloat(valorActual);
+
+            log(`Valor actual del input: "${valorActual}"`);
+            log(`Tipo: ${typeof valorActual}`);
+            log(`Parseado con parseFloat: ${valorParseado}`);
+            log(`Tipo después de parseFloat: ${typeof valorParseado}`);
+
+            // Test asignación
+            log('\n🔄 Asignando 6.5...');
+            input.value = 6.5;
+            log(`Después de asignar 6.5: "${input.value}"`);
+
+            log('\n🔄 Asignando 6.5.toString()...');
+            input.value = 6.5.toString();
+            log(`Después de asignar 6.5.toString(): "${input.value}"`);
+
+            log('\n🔄 Asignando "6.75"...');
+            input.value = "6.75";
+            log(`Después de asignar "6.75": "${input.value}"`);
+        }
+
+        function cambiarValor() {
+            const input = document.getElementById('testInput');
+            input.value = "6.75";
+            log(`✅ Valor cambiado a: "${input.value}"`);
+        }
+
+        function testTiposTurno() {
+            document.getElementById('output').textContent = '';
+            log('📋 === TIPOS DE TURNO ===');
+
+            // Simular tiposTurno
+            const tiposTurno = {
+                mañana: { id: 1, nombre: "Mañana", inicial: "M", horario: "08:00-16:00", color: "#d4edda", horas: 8 },
+                tarde: { id: 2, nombre: "Tarde", inicial: "T", horario: "14:30-21:00", color: "#fff3cd", horas: 6.5 },
+                noche: { id: 3, nombre: "Noche", inicial: "N", horario: "00:00-08:00", color: "#f8d7da", horas: 8 },
+                guardia: { id: 4, nombre: "Guardia", inicial: "GD", horario: "12:00-08:00", color: "#d8b4fe", horas: 20 },
+                mixto: { id: 5, nombre: "Mixto", inicial: "X", horario: "Variable", color: "#cce5ff", horas: 6 },
+                asuntospropios: { id: 6, nombre: "Asuntos propios", inicial: "AP", horario: "Variable", color: "#e0e7ff", horas: 8 },
+                descanso: { id: 7, nombre: "Descanso", inicial: "D", horario: "-", color: "#e2e3e5", horas: 0 },
+                vacaciones: { id: 8, nombre: "Vacaciones", inicial: "V", horario: "-", color: "#d0ebff", horas: 0 },
+                baja: { id: 9, nombre: "Baja médica", inicial: "B", horario: "-", color: "#ffe3e3", horas: 0 },
+                festivo: { id: 10, nombre: "Festivo", inicial: "F", horario: "-", color: "#f8d7da", horas: 0 },
+                libre: { id: 11, nombre: "Libre", inicial: "L", horario: "-", color: "#e2e3e5", horas: 0 }
+            };
+
+            Object.entries(tiposTurno).forEach(([key, value]) => {
+                log(`${key}: ${value.horas} horas (${typeof value.horas})`);
+            });
+
+            log('\n🎯 Verificando "tarde":');
+            const tarde = tiposTurno.tarde;
+            log(`tarde.horas: ${tarde.horas} (${typeof tarde.horas})`);
+            log(`tarde.horas.toString(): "${tarde.horas.toString()}"`);
+        }
+
+        function abrirAplicacion() {
+            window.open('nuevo_cuadrante_mejorado.html', '_blank');
+        }
+
+        // Auto-ejecutar test básico al cargar
+        setTimeout(() => {
+            if (document.getElementById('output').textContent.includes('Haz clic')) {
+                testDecimales();
+            }
+        }, 500);
+    </script>
+</body>
+</html>

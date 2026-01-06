@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Chat - Sistema de Turnos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chat-messages { border: 1px solid #ccc; height: 300px; overflow-y: auto; padding: 10px; margin-bottom: 10px; }
+        #chat-input { width: 300px; padding: 5px; }
+        button { padding: 5px 10px; margin-left: 5px; }
+        .message { margin-bottom: 10px; }
+        .user { color: blue; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Prueba del Chat Inteligente</h1>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Escribe tu pregunta...">
+    <button onclick="enviarMensaje()">Enviar</button>
+    <button onclick="testPreguntas()">Probar Preguntas</button>
+
+    <script>
+        // Variables globales simuladas
+        window.empleados = [
+            { id: 1, nombre: 'María Rodríguez', departamento: 'Enfermería', localidad: 'Madrid', horasContrato: 160, turnoPrincipal: 'mañana', estado: 'activo', email: 'maria@email.com', telefono: '600123456' },
+            { id: 2, nombre: 'Carlos López', departamento: 'Administración', localidad: 'Barcelona', horasContrato: 140, turnoPrincipal: 'tarde', estado: 'activo', email: 'carlos@email.com', telefono: '600234567' },
+            { id: 3, nombre: 'Ana García', departamento: 'Enfermería', localidad: 'Madrid', horasContrato: 160, turnoPrincipal: 'noche', estado: 'vacaciones', email: 'ana@email.com', telefono: '600345678' }
+        ];
+
+        window.AppState = {
+            currentYear: 2024,
+            currentMonth: 11, // Diciembre
+            scheduleData: new Map([
+                [1, [
+                    { dia: 1, turno: 'mañana', horas: 8, fecha: new Date(2024, 11, 1), esFinSemana: false },
+                    { dia: 2, turno: 'tarde', horas: 8, fecha: new Date(2024, 11, 2), esFinSemana: false },
+                    { dia: 3, turno: 'noche', horas: 8, fecha: new Date(2024, 11, 3), esFinSemana: false }
+                ]],
+                [2, [
+                    { dia: 1, turno: 'tarde', horas: 8, fecha: new Date(2024, 11, 1), esFinSemana: false },
+                    { dia: 2, turno: 'noche', horas: 8, fecha: new Date(2024, 11, 2), esFinSemana: false },
+                    { dia: 3, turno: 'mañana', horas: 8, fecha: new Date(2024, 11, 3), esFinSemana: false }
+                ]],
+                [3, [
+                    { dia: 1, turno: 'descanso', horas: 0, fecha: new Date(2024, 11, 1), esFinSemana: false },
+                    { dia: 2, turno: 'descanso', horas: 0, fecha: new Date(2024, 11, 2), esFinSemana: false },
+                    { dia: 3, turno: 'descanso', horas: 0, fecha: new Date(2024, 11, 3), esFinSemana: false }
+                ]]
+            ]),
+            cambiosPendientes: []
+        };
+
+        window.tiposTurno = {
+            mañana: { horario: "08:00-16:00", color: "#d4edda", horas: 8 },
+            tarde: { horario: "16:00-00:00", color: "#fff3cd", horas: 8 },
+            noche: { horario: "00:00-08:00", color: "#f8d7da", horas: 8 },
+            descanso: { horario: "Libre", color: "#e2e3e5", horas: 0 },
+            mixto: { horario: "08:00-20:00", color: "#cce5ff", horas: 12 }
+        };
+    </script>
+
+    <script src="js/modules.js"></script>
+
+    <script>
+        function agregarMensajeUsuario(texto) {
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML += `<div class="message user"><strong>Tú:</strong> ${texto}</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function agregarMensajeBot(texto) {
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML += `<div class="message bot"><strong>Bot:</strong> ${texto.replace(/\n/g, '<br>')}</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function enviarMensaje() {
+            const input = document.getElementById('chat-input');
+            const pregunta = input.value.trim();
+            if (!pregunta) return;
+
+            agregarMensajeUsuario(pregunta);
+            const respuesta = ChatBot.procesarPregunta(pregunta);
+            agregarMensajeBot(respuesta);
+
+            input.value = '';
+        }
+
+        function testPreguntas() {
+            const preguntas = [
+                '¿Cuántos empleados hay?',
+                '¿Empleados por departamento?',
+                '¿Información de María Rodríguez?',
+                '¿Turnos de Carlos López?',
+                '¿Horas trabajadas de María Rodríguez?',
+                '¿Estadísticas del mes?',
+                '¿Empleados de vacaciones?',
+                'ayuda'
+            ];
+
+            preguntas.forEach((pregunta, index) => {
+                setTimeout(() => {
+                    agregarMensajeUsuario(pregunta);
+                    const respuesta = ChatBot.procesarPregunta(pregunta);
+                    agregarMensajeBot(respuesta);
+                }, index * 500);
+            });
+        }
+
+        // Permitir envío con Enter
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                enviarMensaje();
+            }
+        });
+
+        // Mensaje inicial
+        setTimeout(() => {
+            agregarMensajeBot('¡Hola! Soy el asistente del sistema de turnos. ¿En qué puedo ayudarte? Escribe "ayuda" para ver las preguntas que puedo responder.');
+        }, 500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+/* ============================================
+   SIDEBAR PARA CONTROLES SEMANA 1-2-3
+   ============================================ */
+
+.sidebar-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80px;
+    height: 100vh;
+    background: linear-gradient(180deg, #0f172a 0%, #1a1f35 100%);
+    border-right: 2px solid rgba(14, 165, 233, 0.2);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-container:hover {
+    width: 280px;
+}
+
+.sidebar-container.collapsed {
+    width: 0;
+    border-right: none;
+    overflow: hidden;
+}
+
+.sidebar-container.collapsed:hover {
+    width: 280px;
+}
+
+/* Scroll personalizado */
+.sidebar-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb {
+    background: rgba(14, 165, 233, 0.4);
+    border-radius: 3px;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 165, 233, 0.6);
+}
+
+/* Header del sidebar */
+.sidebar-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #0f172a 0%, #1a2847 100%);
+    border-bottom: 2px solid rgba(14, 165, 233, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    white-space: nowrap;
+}
+
+.sidebar-title {
+    color: #0ea5e9;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.sidebar-container:hover .sidebar-title {
+    opacity: 1;
+}
+
+/* Icono que siempre es visible */
+.sidebar-title::before {
+    content: '🎛️';
+    font-size: 20px;
+    opacity: 1;
+}
+
+.sidebar-toggle {
+    position: fixed;
+    left: 90px;
+    top: 10px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-container.collapsed ~ .main-content .sidebar-toggle {
+    left: 10px;
+}
+
+.sidebar-toggle:hover {
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Secciones dentro del sidebar */
+.sidebar-section {
+    padding: 20px;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+}
+
+.sidebar-section-title {
+    color: #0ea5e9;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+    opacity: 0;
+}
+
+.sidebar-container:hover .sidebar-section-title {
+    opacity: 1;
+}
+
+.sidebar-section-title::before {
+    content: '';
+    width: 3px;
+    height: 12px;
+    background: currentColor;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Botones del sidebar */
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: rgba(14, 165, 233, 0.1);
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.sidebar-btn:hover {
+    background: rgba(14, 165, 233, 0.25);
+    border-color: rgba(14, 165, 233, 0.4);
+    transform: translateX(4px);
+}
+
+.sidebar-btn:active {
+    transform: translateX(2px);
+}
+
+.sidebar-btn.semana1 { border-left: 3px solid #06b6d4; }
+.sidebar-btn.semana1:hover { background: rgba(6, 182, 212, 0.15); }
+
+.sidebar-btn.semana2 { border-left: 3px solid #f97316; }
+.sidebar-btn.semana2:hover { background: rgba(249, 115, 22, 0.15); }
+
+.sidebar-btn.semana3 { border-left: 3px solid #dc2626; }
+.sidebar-btn.semana3:hover { background: rgba(220, 38, 38, 0.15); }
+
+.sidebar-btn-icon {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-btn-text {
+    flex: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+    margin-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-container:hover .sidebar-btn-text {
+    opacity: 1;
+}
+
+/* Ajustar contenido principal cuando sidebar está abierto */
+.main-content {
+    margin-left: 80px;
+    transition: margin-left 0.2s ease;
+}
+
+.sidebar-container:hover ~ .main-content {
+    margin-left: 280px;
+}
+
+.sidebar-container.collapsed ~ .main-content {
+    margin-left: 0;
+}
+
+.sidebar-container.collapsed:hover ~ .main-content {
+    margin-left: 280px;
+}
+
+/* Responsive para móvil */
+@media (max-width: 1024px) {
+    .sidebar-container {
+        width: 70px;
+    }
+
+    .sidebar-container:hover {
+        width: 250px;
+    }
+
+    .main-content {
+        margin-left: 70px;
+    }
+
+    .sidebar-container:hover ~ .main-content {
+        margin-left: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar-container {
+        width: 0;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .sidebar-container:hover {
+        width: 100%;
+    }
+
+    .sidebar-toggle {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+        z-index: 1002;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar-container:hover ~ .main-content {
+        margin-left: 0;
+        pointer-events: none;
+    }
+
+    .sidebar-btn-text {
+        opacity: 1;
+    }
+}
+
+/* Efecto de transición suave */
+body {
+    --sidebar-width: 80px;
+}
+
+body.sidebar-open {
+    --sidebar-width: 280px;
+}
+
+body.sidebar-closed {
+    --sidebar-width: 0;
+}
+

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Específico de Horas - v9.2</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #0f172a;
+            color: #f1f5f9;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 { color: #a78bfa; border-bottom: 3px solid #a78bfa; padding-bottom: 10px; }
+        h2 { color: #f8fafc; margin-top: 30px; }
+        .section {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #8b5cf6;
+        }
+        .error { color: #ff6b6b; font-weight: bold; }
+        .ok { color: #51cf66; font-weight: bold; }
+        .warning { color: #fbbf24; font-weight: bold; }
+        .data-box {
+            background: #0f172a;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #475569;
+            font-size: 13px;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            font-weight: bold;
+        }
+        button:hover { background: #a78bfa; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #0f172a;
+        }
+        th, td {
+            border: 1px solid #475569;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #334155;
+            font-weight: bold;
+        }
+        tr:hover { background: #1e293b; }
+        .highlight { background: #8b5cf6; color: white; padding: 2px 4px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<h1>🔍 Diagnóstico de Cálculo de Horas v9.2</h1>
+
+<div class="section">
+    <h2>Paso 1: Verificar Tipos de Turno Guardados</h2>
+    <button onclick="verificarTiposTurno()">Inspeccionar tiposTurnoData</button>
+    <div id="tiposTurnoOutput"></div>
+</div>
+
+<div class="section">
+    <h2>Paso 2: Inspeccionar Datos de Empleado (Antony)</h2>
+    <button onclick="verificarEmpleados()">Cargar Empleados</button>
+    <div id="empleadosOutput"></div>
+</div>
+
+<div class="section">
+    <h2>Paso 3: Análisis de Turnos - Mes Actual</h2>
+    <button onclick="analizarTurnosCompleto()">Analizar Turnos Completo</button>
+    <div id="turnosOutput"></div>
+</div>
+
+<div class="section">
+    <h2>Paso 4: Simulación del Filtro de WhatsApp</h2>
+    <button onclick="simularFiltroWhatsApp()">Simular Filtro WhatsApp</button>
+    <div id="filtroOutput"></div>
+</div>
+
+<script>
+function verificarTiposTurno() {
+    const output = document.getElementById('tiposTurnoOutput');
+    output.innerHTML = '';
+    
+    try {
+        const tiposTurnoData = JSON.parse(localStorage.getItem('tiposTurnoData') || '{}');
+        
+        if (Object.keys(tiposTurnoData).length === 0) {
+            output.innerHTML = `<div class="section error">⚠️ No hay tiposTurnoData en localStorage</div>`;
+            return;
+        }
+        
+        let html = `<table>
+                        <tr>
+                            <th>Tipo de Turno</th>
+                            <th>Horas</th>
+                            <th>Horario</th>
+                            <th>Color</th>
+                        </tr>`;
+        
+        Object.entries(tiposTurnoData).forEach(([key, value]) => {
+            html += `<tr>
+                        <td>${value.nombre || key}</td>
+                        <td><span class="highlight">${value.horas || 0}</span></td>
+                        <td>${value.horario || 'N/A'}</td>
+                        <td style="background: ${value.color || '#ccc'}; width: 50px;"></td>
+                    </tr>`;
+        });
+        html += `</table>`;
+        
+        output.innerHTML += html;
+        output.innerHTML += `<div class="section ok">✅ Datos cargados correctamente</div>`;
+        
+    } catch (e) {
+        output.innerHTML = `<div class="section error">❌ Error: ${e.message}</div>`;
+    }
+}
+
+function verificarEmpleados() {
+    const output = document.getElementById('empleadosOutput');
+    output.innerHTML = '';
+    
+    try {
+        const empleadosData = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+        
+        if (empleadosData.length === 0) {
+            output.innerHTML = `<div class="section error">⚠️ No hay empleados en localStorage</div>`;
+            return;
+        }
+        
+        const antony = empleadosData.find(e => e.nombre.toLowerCase().includes('antony'));
+        
+        if (!antony) {
+            output.innerHTML = `<div class="section warning">⚠️ No encontrado empleado 'Antony'. Empleados disponibles:</div>`;
+            empleadosData.forEach(e => {
+                output.innerHTML += `<div class="data-box">ID: ${e.id}\nNombre: ${e.nombre}\nHoras Contrato: ${e.horasContrato}h</div>`;
+            });
+            return;
+        }
+        
+        output.innerHTML = `<div class="section ok">✅ Empleado encontrado: Antony</div>`;
+        output.innerHTML += `<div class="data-box">
+${JSON.stringify(antony, null, 2)}
+        </div>`;
+        
+    } catch (e) {
+        output.innerHTML = `<div class="section error">❌ Error: ${e.message}</div>`;
+    }
+}
+
+function analizarTurnosCompleto() {
+    const output = document.getElementById('turnosOutput');
+    output.innerHTML = '';
+    
+    try {
+        const appStateData = localStorage.getItem('turnosAppState');
+        if (!appStateData) {
+            output.innerHTML = `<div class="section error">❌ No hay turnosAppState en localStorage</div>`;
+            return;
+        }
+        
+        const appState = JSON.parse(appStateData);
+        const scheduleData = appState.scheduleData ? new Map(appState.scheduleData) : new Map();
+        
+        output.innerHTML += `<div class="data-box">Mes Actual: ${appState.currentMonth} (0=Enero...11=Diciembre)
+Año Actual: ${appState.currentYear}</div>`;
+        
+        const empleadosData = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+        const antony = empleadosData.find(e => e.nombre.toLowerCase().includes('antony'));
+        
+        if (!antony) {
+            output.innerHTML += `<div class="section error">❌ Antony no encontrado</div>`;
+            return;
+        }
+        
+        const turnos = scheduleData.get(antony.id) || [];
+        const mes = appState.currentMonth;
+        const anio = appState.currentYear;
+        
+        output.innerHTML += `<div class="data-box"><span class="highlight">Datos de ${antony.nombre}</span>
+Total turnos en AppState: ${turnos.length}
+Mes: ${mes} (0=Enero, 11=Diciembre)
+Año: ${anio}
+Horas Contrato: ${antony.horasContrato}h</div>`;
+        
+        // Filtrar turnos del mes
+        const turnosDelMes = turnos.filter(t => {
+            if (!t?.fecha) return false;
+            const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
+            return fecha.getMonth() === mes && fecha.getFullYear() === anio;
+        });
+        
+        output.innerHTML += `<div class="data-box"><span class="warning">Turnos del mes ${mes + 1}/${anio}: ${turnosDelMes.length}</span></div>`;
+        
+        // Calcular total
+        const totalHoras = turnosDelMes.reduce((sum, t) => sum + (t.horas || 0), 0);
+        const totalRedondeado = Math.round(totalHoras * 100) / 100;
+        
+        output.innerHTML += `<div class="data-box"><span class="ok">Total de Horas del Mes: ${totalRedondeado}h</span></div>`;
+        
+        // Tabla detallada
+        let html = `<table>
+                        <tr>
+                            <th>Día</th>
+                            <th>Turno</th>
+                            <th>Horas</th>
+                            <th>Horario</th>
+                            <th>Fecha</th>
+                        </tr>`;
+        
+        turnosDelMes.forEach((t, i) => {
+            const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
+            html += `<tr>
+                        <td>${t.dia || fecha.getDate()}</td>
+                        <td>${t.turno || 'N/A'}</td>
+                        <td>${t.horas || 0}h</td>
+                        <td>${t.horario || 'N/A'}</td>
+                        <td>${fecha.toLocaleDateString('es-ES')}</td>
+                    </tr>`;
+        });
+        html += `</table>`;
+        
+        output.innerHTML += html;
+        
+        // Agrupar por tipo de turno
+        const resumen = {};
+        turnosDelMes.forEach(t => {
+            const tipo = t.turno || 'sin-tipo';
+            if (!resumen[tipo]) resumen[tipo] = { count: 0, totalHoras: 0 };
+            resumen[tipo].count++;
+            resumen[tipo].totalHoras += (t.horas || 0);
+        });
+        
+        output.innerHTML += `<h3>Resumen por Tipo de Turno</h3>`;
+        output.innerHTML += `<table>
+                                <tr>
+                                    <th>Tipo de Turno</th>
+                                    <th>Cantidad</th>
+                                    <th>Total Horas</th>
+                                </tr>`;
+        
+        Object.entries(resumen).forEach(([tipo, datos]) => {
+            output.innerHTML += `<tr>
+                                    <td>${tipo}</td>
+                                    <td>${datos.count}</td>
+                                    <td><span class="highlight">${datos.totalHoras}h</span></td>
+                                </tr>`;
+        });
+        output.innerHTML += `</table>`;
+        
+    } catch (e) {
+        output.innerHTML = `<div class="section error">❌ Error: ${e.message}\nStack: ${e.stack}</div>`;
+    }
+}
+
+function simularFiltroWhatsApp() {
+    const output = document.getElementById('filtroOutput');
+    output.innerHTML = '';
+    
+    try {
+        const appStateData = localStorage.getItem('turnosAppState');
+        if (!appStateData) {
+            output.innerHTML = `<div class="section error">❌ No hay turnosAppState</div>`;
+            return;
+        }
+        
+        const appState = JSON.parse(appStateData);
+        const scheduleData = appState.scheduleData ? new Map(appState.scheduleData) : new Map();
+        const empleadosData = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+        
+        const antony = empleadosData.find(e => e.nombre.toLowerCase().includes('antony'));
+        if (!antony) {
+            output.innerHTML = `<div class="section error">❌ Antony no encontrado</div>`;
+            return;
+        }
+        
+        const turnos = scheduleData.get(antony.id) || [];
+        const mes = appState.currentMonth;
+        const anio = appState.currentYear;
+        
+        // Simular lo que hace enviarWhatsAppIndividual()
+        let turnosDelMes = turnos.filter(t => {
+            if (!t?.fecha) return false;
+            const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
+            return fecha.getMonth() === mes && fecha.getFullYear() === anio;
+        });
+        
+        const totalHorasCalculado = Math.round((turnosDelMes || []).reduce((sum, t) => sum + (t?.horas || 0), 0) * 100) / 100;
+        
+        output.innerHTML += `<div class="data-box"><span class="ok">Simulación del filtro de WhatsApp:</span>
+Turnos filtrados: ${turnosDelMes.length}
+Total de Horas: ${totalHorasCalculado}h</div>`;
+        
+        // Mostrar si el problema es los 184 horas
+        if (totalHorasCalculado > 160) {
+            output.innerHTML += `<div class="section error">⚠️ PROBLEMA DETECTADO: Total > 160h
+Posible causa: Hay turnos de meses previos siendo sumados
+O hay un error en cómo se define el campo 'horas' en los turnos</div>`;
+        } else if (totalHorasCalculado < 100) {
+            output.innerHTML += `<div class="section warning">⚠️ Total bajo: ${totalHorasCalculado}h
+Verificar si hay turnos con horas = 0</div>`;
+        } else {
+            output.innerHTML += `<div class="section ok">✅ Total parece correcto: ${totalHorasCalculado}h</div>`;
+        }
+        
+    } catch (e) {
+        output.innerHTML = `<div class="section error">❌ Error: ${e.message}</div>`;
+    }
+}
+
+// Auto-ejecutar al cargar
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        verificarTiposTurno();
+        verificarEmpleados();
+    }, 500);
+});
+</script>
+
+</body>
+</html>

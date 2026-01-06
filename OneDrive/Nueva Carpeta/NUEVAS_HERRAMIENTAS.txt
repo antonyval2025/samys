@@ -1,0 +1,105 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   ✅ HERRAMIENTAS DE INICIO CREADAS - Gestor de Turnos      ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Se han creado MÚLTIPLES opciones para iniciar tu aplicación:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📂 NUEVOS ARCHIVOS CREADOS:
+
+1. ⭐ START.bat
+   └─ Lo MÁS simple posible
+   └─ Solo 2 líneas
+   └─ Doble-clic y listo
+   └─ Puerto: 5001
+
+2. 🛡️ iniciar_seguro.bat
+   └─ Con verificaciones previas
+   └─ Revisa Python, Flask, archivos, puerto
+   └─ Mensaje de diagnóstico antes de iniciar
+   └─ Puerto: 5001
+
+3. 🌐 iniciar_con_navegador.bat
+   └─ Lanza servidor en background
+   └─ Abre navegador automáticamente
+   └─ Puerto: 5001
+
+4. 💻 iniciar_servidor.ps1
+   └─ Versión PowerShell (moderna)
+   └─ Colores y formatos mejorados
+   └─ Mejor manejo de errores
+   └─ Puerto: 5001
+
+5. 🔍 diagnostico.bat
+   └─ Verifica estado del sistema
+   └─ Detecta problemas antes de iniciar
+   └─ Muy útil para troubleshooting
+
+6. 📖 README_INICIAR.md
+   └─ Documentación completa
+   └─ Guía detallada de cada opción
+   └─ Solución de problemas
+
+7. 🚀 INICIO_RAPIDO.txt
+   └─ Guía visual (este archivo)
+   └─ Resumen en ASCII art
+   └─ Fácil de leer
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ RECOMENDACIÓN:
+
+  ¿Primera vez?
+  → Abre: diagnostico.bat
+  → Verifica que todo esté bien
+  → Luego: START.bat
+
+  ¿Ya verificaste?
+  → Directamente: START.bat
+
+  ¿Prefieres PowerShell?
+  → iniciar_servidor.ps1
+
+  ¿Quieres que se abra el navegador automático?
+  → iniciar_con_navegador.bat
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 QUICK START EN 3 PASOS:
+
+1. pip install flask          ← Solo si NO lo has hecho
+2. Doble-clic: START.bat      ← Inicia el servidor
+3. Navega a: http://localhost:5001
+
+¡Listo! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 CARACTERÍSTICAS:
+
+✓ Múltiples opciones de inicio
+✓ Verificaciones automáticas de:
+  - Python disponible
+  - Flask instalado
+  - Puerto 5001 libre
+  - Archivos necesarios presentes
+✓ Mensajes claros de error
+✓ Soporte para PowerShell y CMD
+✓ Documentación completa
+✓ Diagnóstico del sistema
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔥 PRUÉBALO AHORA:
+
+Abre el Explorador de archivos, navega a esta carpeta,
+y haz doble-clic en:
+
+                    START.bat
+
+¡Verás el servidor iniciar!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

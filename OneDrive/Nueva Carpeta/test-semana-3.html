@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests Semana 3 - Sistema de Turnos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .test-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .pass {
+            background: #d4edda;
+            color: #155724;
+            border-left: 3px solid #28a745;
+        }
+        .fail {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 3px solid #dc3545;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .summary h2 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .stat {
+            display: inline-block;
+            margin-right: 30px;
+            font-weight: bold;
+        }
+        .stat.passed { color: #28a745; }
+        .stat.failed { color: #dc3545; }
+        .stat.total { color: #667eea; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Tests de Verificación - Semana 3</h1>
+        <p style="color: #666;">Ejecución automática de 6 tests de analítica y optimización</p>
+        
+        <div id="results"></div>
+        
+        <div class="summary">
+            <h2>📊 Resumen de Resultados</h2>
+            <div class="stat total">Total: <span id="total">0</span></div>
+            <div class="stat passed">Pasados: <span id="passed">0</span></div>
+            <div class="stat failed">Fallidos: <span id="failed">0</span></div>
+        </div>
+    </div>
+
+    <script src="js/analizador-conflictos.js"></script>
+    <script src="js/dashboard-analytica.js"></script>
+    <script src="js/optimizador-turnos.js"></script>
+
+    <script>
+        // ✅ CREAR VARIABLE GLOBAL empleados PARA TESTS
+        if (typeof empleados === 'undefined') {
+            window.empleados = [
+                { 
+                    id: 1, 
+                    nombre: 'Juan García', 
+                    email: 'juan@test.com', 
+                    telefono: '645123456', 
+                    horasContrato: 160,
+                    departamento: 'Operaciones',
+                    estado: 'activo'
+                },
+                { 
+                    id: 2, 
+                    nombre: 'María López', 
+                    email: 'maria@test.com', 
+                    telefono: '612345678', 
+                    horasContrato: 160,
+                    departamento: 'Ventas',
+                    estado: 'activo'
+                },
+                { 
+                    id: 3, 
+                    nombre: 'Pedro Martínez', 
+                    email: 'pedro@test.com', 
+                    telefono: '698765432', 
+                    horasContrato: 160,
+                    departamento: 'Operaciones',
+                    estado: 'vacaciones'
+                }
+            ];
+        }
+
+        // ✅ CREAR APPSTATE GLOBAL
+        if (typeof AppState === 'undefined') {
+            window.AppState = {
+                currentMonth: 0,
+                currentYear: 2026,
+                scheduleData: new Map([
+                    [1, [
+                        { dia: 1, turno: 'mañana', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 2, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 3, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 4, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 5, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 6, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 7, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 8, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 9, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 10, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 11, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 12, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 13, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 14, turno: 'noche', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 15, turno: 'descanso', mes: 0, anio: 2026, horas: 0 }
+                    ]],
+                    [2, [
+                        { dia: 1, turno: 'tarde', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 2, turno: 'mañana', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 3, turno: 'tarde', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 4, turno: 'descanso', mes: 0, anio: 2026, horas: 0 },
+                        { dia: 5, turno: 'descanso', mes: 0, anio: 2026, horas: 0 }
+                    ]],
+                    [3, [
+                        { dia: 1, turno: 'vacaciones', mes: 0, anio: 2026, horas: 0 },
+                        { dia: 2, turno: 'vacaciones', mes: 0, anio: 2026, horas: 0 },
+                        { dia: 3, turno: 'vacaciones', mes: 0, anio: 2026, horas: 0 }
+                    ]]
+                ]),
+                cambiosPendientes: []
+            };
+        }
+
+        const resultsDiv = document.getElementById('results');
+        let passedTests = 0;
+        let failedTests = 0;
+        const tests = [];
+
+        function addTest(title, result, passed) {
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test-section';
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'test-title';
+            titleDiv.textContent = title;
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            resultDiv.textContent = JSON.stringify(result, null, 2);
+            
+            testDiv.appendChild(titleDiv);
+            testDiv.appendChild(resultDiv);
+            resultsDiv.appendChild(testDiv);
+            
+            if (passed) {
+                passedTests++;
+            } else {
+                failedTests++;
+            }
+            
+            tests.push({ title, passed, result });
+        }
+
+        // Test 1: AnalizadorConflictos - Inicialización
+        try {
+            AnalizadorConflictos.init();
+            const resumen = AnalizadorConflictos.obtenerResumen();
+            const passed1 = AnalizadorConflictos.isInitialized === true && 
+                           typeof resumen.totalConflictos === 'number';
+            addTest('Test 1: AnalizadorConflictos - Inicialización', {
+                isInitialized: AnalizadorConflictos.isInitialized,
+                conflictosEncontrados: resumen.totalConflictos,
+                alertasCriticas: resumen.alertasCriticas
+            }, passed1);
+        } catch (e) {
+            addTest('Test 1: AnalizadorConflictos - Inicialización', { error: e.message }, false);
+        }
+
+        // Test 2: AnalizadorConflictos - Análisis de empleado
+        try {
+            const conflictos = AnalizadorConflictos.analizarEmpleado(1);
+            const passed2 = Array.isArray(conflictos);
+            addTest('Test 2: AnalizadorConflictos - Análisis Empleado', {
+                conflictosDetectados: conflictos.length,
+                tiposConflictos: conflictos.map(c => c.tipo),
+                primerConflicto: conflictos[0]?.tipo || 'Ninguno'
+            }, passed2);
+        } catch (e) {
+            addTest('Test 2: AnalizadorConflictos - Análisis Empleado', { error: e.message }, false);
+        }
+
+        // Test 3: DashboardAnalytica - Inicialización
+        try {
+            DashboardAnalytica.init();
+            const metricas = DashboardAnalytica.obtenerMetricas();
+            const passed3 = DashboardAnalytica.isInitialized === true && 
+                           metricas.totalEmpleados > 0 &&
+                           metricas.kpis.ocupacion > 0;
+            addTest('Test 3: DashboardAnalytica - Inicialización', {
+                isInitialized: DashboardAnalytica.isInitialized,
+                totalEmpleados: metricas.totalEmpleados,
+                ocupacion: metricas.kpis.ocupacion + '%',
+                equidad: metricas.kpis.equidadScore + '%'
+            }, passed3);
+        } catch (e) {
+            addTest('Test 3: DashboardAnalytica - Inicialización', { error: e.message }, false);
+        }
+
+        // Test 4: DashboardAnalytica - Generación de gráficos
+        try {
+            const graficoDistribucion = DashboardAnalytica.generarGraficoDistribucion();
+            const graficoTurnos = DashboardAnalytica.generarGraficoTurnos();
+            const passed4 = typeof graficoDistribucion === 'string' && 
+                           graficoDistribucion.includes('DISTRIBUCIÓN') &&
+                           typeof graficoTurnos === 'string' &&
+                           graficoTurnos.includes('TURNOS');
+            addTest('Test 4: DashboardAnalytica - Gráficos', {
+                graficoDistribucionGenerado: graficoDistribucion.length > 0,
+                graficoTurnosGenerado: graficoTurnos.length > 0,
+                contenieneTitulos: graficoDistribucion.includes('DISTRIBUCIÓN')
+            }, passed4);
+        } catch (e) {
+            addTest('Test 4: DashboardAnalytica - Gráficos', { error: e.message }, false);
+        }
+
+        // Test 5: OptimizadorTurnos - Inicialización
+        try {
+            OptimizadorTurnos.init();
+            const resumen = OptimizadorTurnos.obtenerResumen();
+            const passed5 = OptimizadorTurnos.isInitialized === true && 
+                           typeof resumen.totalSugerencias === 'number';
+            addTest('Test 5: OptimizadorTurnos - Inicialización', {
+                isInitialized: OptimizadorTurnos.isInitialized,
+                totalSugerencias: resumen.totalSugerencias,
+                balanceo: resumen.porTipo.balanceo,
+                mejora: resumen.porTipo.mejora
+            }, passed5);
+        } catch (e) {
+            addTest('Test 5: OptimizadorTurnos - Inicialización', { error: e.message }, false);
+        }
+
+        // Test 6: OptimizadorTurnos - Obtener mejor sugerencia
+        try {
+            const mejorSugerencia = OptimizadorTurnos.obtenerMejorSugerencia();
+            const passed6 = mejorSugerencia && typeof mejorSugerencia === 'object' && 
+                           (mejorSugerencia.sugerencia || mejorSugerencia.mensaje);
+            addTest('Test 6: OptimizadorTurnos - Mejor Sugerencia', {
+                existeSugerencia: mejorSugerencia ? true : false,
+                tipo: mejorSugerencia.tipo || mejorSugerencia.mensaje,
+                prioridad: mejorSugerencia.prioridad || 'N/A',
+                empleado: mejorSugerencia.empleado || 'N/A'
+            }, passed6);
+        } catch (e) {
+            addTest('Test 6: OptimizadorTurnos - Mejor Sugerencia', { error: e.message }, false);
+        }
+
+        // Actualizar resumen
+        document.getElementById('total').textContent = passedTests + failedTests;
+        document.getElementById('passed').textContent = passedTests;
+        document.getElementById('failed').textContent = failedTests;
+
+        // Log en consola
+        console.log('=== RESULTADOS DE TESTS SEMANA 3 ===');
+        console.log(`Total: ${passedTests + failedTests}`);
+        console.log(`Pasados: ${passedTests}`);
+        console.log(`Fallidos: ${failedTests}`);
+        console.table(tests);
+    </script>
+</body>
+</html>

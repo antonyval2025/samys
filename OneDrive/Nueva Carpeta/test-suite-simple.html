@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Suite Simple - Sistema de Gestión de Turnos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-item.pass { background: #d4edda; border-left-color: #28a745; color: #155724; }
+        .test-item.fail { background: #f8d7da; border-left-color: #dc3545; color: #721c24; }
+        .summary { background: #e7f3ff; padding: 15px; border-radius: 4px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background: #f0e4d9; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Suite Simple - Sistema de Gestión de Turnos</h1>
+        
+        <div class="test-section">
+            <h2>⏳ Estado</h2>
+            <div id="test-status">Ejecutando tests directamente...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Resultados</h2>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Resumen</h2>
+            <div id="test-summary"></div>
+        </div>
+    </div>
+
+    <script>
+        let totalTests = 0;
+        let passTests = 0;
+        let failTests = 0;
+
+        function addTest(name, passed, message = '') {
+            totalTests++;
+            const resultsEl = document.getElementById('test-results');
+            const div = document.createElement('div');
+            const status = passed ? 'pass' : 'fail';
+            
+            if (passed) passTests++;
+            else failTests++;
+            
+            div.className = `test-item ${status}`;
+            div.innerHTML = `<strong>${passed ? '✓' : '✗'} ${name}</strong>${message ? '<br><small>' + message + '</small>' : ''}`;
+            resultsEl.appendChild(div);
+        }
+
+        // Ejecutar tests directamente
+        console.log('🔄 Iniciando tests...');
+
+        try {
+            // 1. HTML Structure
+            const header = document.querySelector('header');
+            addTest('Header existe', !!header);
+
+            const topControls = document.querySelector('.top-controls');
+            addTest('Top controls existe', !!topControls);
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            addTest('Tabs existen', tabs.length >= 2, `${tabs.length} tabs encontradas`);
+
+            const tabGeneral = document.getElementById('tab-general');
+            addTest('Tab Cuadrante General existe', !!tabGeneral);
+
+            const tabIndividual = document.getElementById('tab-individual');
+            addTest('Tab Informe Individual existe', !!tabIndividual);
+
+            const modalEmpleados = document.getElementById('modalGestionEmpleados');
+            addTest('Modal Gestión Empleados existe', !!modalEmpleados);
+
+            const cuadranteDiv = document.getElementById('cuadranteGeneral');
+            addTest('Div cuadranteGeneral existe', !!cuadranteDiv);
+
+            // 2. Data
+            const empleados = window.empleados;
+            addTest('Variable "empleados" existe', typeof empleados !== 'undefined');
+
+            if (Array.isArray(empleados)) {
+                addTest('Empleados es array', true, `${empleados.length} empleados`);
+                if (empleados.length > 0) {
+                    const emp = empleados[0];
+                    const hasFields = emp.id && emp.nombre && emp.departamento;
+                    addTest('Empleados tienen campos requeridos', hasFields, `ID: ${emp.id}, Nombre: "${emp.nombre}"`);
+                }
+            }
+
+            const appState = window.AppState;
+            addTest('AppState existe', appState !== null && appState !== undefined);
+            
+            if (appState) {
+                addTest('AppState.currentYear definido', appState.currentYear > 2000, `Año: ${appState.currentYear}`);
+                addTest('AppState.currentMonth definido', appState.currentMonth >= 0 && appState.currentMonth <= 11, `Mes: ${appState.currentMonth}`);
+                addTest('AppState.scheduleData es Map', appState.scheduleData instanceof Map);
+            }
+
+            // 3. Functions
+            const functions = [
+                { name: 'EmployeeManager', method: 'abrirModal' },
+                { name: 'TurnoManager', method: 'reiniciarDatos' },
+                { name: 'TurnoEditor', method: 'mostrarModalEdicionMasiva' },
+                { name: 'ExportManager', method: 'exportarCuadranteGeneral' },
+                { name: 'DateUtils', method: 'cambiarMes' }
+            ];
+
+            functions.forEach(func => {
+                const manager = window[func.name];
+                const exists = manager !== null && manager !== undefined;
+                addTest(`${func.name} existe`, exists);
+                
+                if (exists) {
+                    const methodExists = typeof manager[func.method] === 'function';
+                    addTest(`  → ${func.name}.${func.method}() es función`, methodExists);
+                }
+            });
+
+            // 4. Buttons
+            const btnEmpleados = document.querySelector('button[onclick*="EmployeeManager"]');
+            addTest('👥 Botón Empleados tiene onclick', !!btnEmpleados);
+
+            const btnGenerar = document.querySelector('button[onclick*="TurnoManager"]');
+            addTest('📋 Botón Generar tiene onclick', !!btnGenerar);
+
+            const btnInforme = document.querySelector('button[onclick*="tab-individual"]');
+            addTest('📊 Botón Informe tiene onclick', !!btnInforme);
+
+            // 5. Styles
+            const bodyStyles = document.body.style.cssText;
+            const hasBackgroundInline = bodyStyles.includes('background');
+            const computedStyle = window.getComputedStyle(document.body);
+            const bgColor = computedStyle.backgroundColor;
+            
+            const isPastel = hasBackgroundInline || bgColor.includes('240') || bgColor.includes('228');
+            addTest('Body tiene background pastel', isPastel, `Inline: ${hasBackgroundInline ? 'Sí' : 'No'}`);
+
+            const buttonsPastel = document.querySelectorAll('[style*="background: #d4c5e2"]');
+            addTest('Botones con color pastel existen', buttonsPastel.length > 0, `${buttonsPastel.length} botones`);
+
+            const navBtns = document.querySelectorAll('.nav-btn');
+            addTest('Botones de navegación existen', navBtns.length > 0, `${navBtns.length} botones nav`);
+
+            const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+            addTest('CSS vinculado', cssLinks.length > 0, `${cssLinks.length} hojas de estilo`);
+
+        } catch (error) {
+            console.error('❌ ERROR:', error);
+            addTest('ERROR CRÍTICO', false, error.message);
+        }
+
+        // Summary
+        const successRate = totalTests > 0 ? ((passTests / totalTests) * 100).toFixed(1) : 0;
+        
+        const summary = document.getElementById('test-summary');
+        summary.innerHTML = `
+            <table>
+                <tr>
+                    <th>Métrica</th>
+                    <th>Cantidad</th>
+                    <th>Porcentaje</th>
+                </tr>
+                <tr style="background: #d4edda;">
+                    <td>✓ Tests Pasados</td>
+                    <td><strong>${passTests}</strong></td>
+                    <td>${((passTests / totalTests) * 100).toFixed(1)}%</td>
+                </tr>
+                <tr style="background: #f8d7da;">
+                    <td>✗ Tests Fallidos</td>
+                    <td><strong>${failTests}</strong></td>
+                    <td>${((failTests / totalTests) * 100).toFixed(1)}%</td>
+                </tr>
+                <tr style="background: #e7f3ff; font-weight: bold;">
+                    <td>Total Tests</td>
+                    <td><strong>${totalTests}</strong></td>
+                    <td>${successRate}%</td>
+                </tr>
+            </table>
+            <p style="margin-top: 15px;"><strong>Estado:</strong> 
+                ${successRate >= 80 ? '✓ APLICACIÓN FUNCIONAL' : failTests > 3 ? '✗ PROBLEMAS CRÍTICOS' : '⚠ NECESITA REVISIÓN'}
+            </p>
+        `;
+
+        document.getElementById('test-status').innerHTML = `✓ Tests completados: ${passTests}/${totalTests} pasados`;
+    </script>
+</body>
+</html>

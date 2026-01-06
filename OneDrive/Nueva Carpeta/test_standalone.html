@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Más Simple Posible</title>
+</head>
+<body>
+    <h1>Test - Solo nuestro script</h1>
+    <button onclick="test()">TEST</button>
+    <div id="result"></div>
+
+    <script src="js/controles-sidebar-semana3.js"></script>
+
+    <script>
+        function test() {
+            const result = document.getElementById('result');
+            const existe = typeof SidebarSemana3Module !== 'undefined';
+            result.textContent = 'SidebarSemana3Module existe: ' + existe;
+            console.log('Teste ejecutado');
+            console.log('typeof SidebarSemana3Module:', typeof SidebarSemana3Module);
+        }
+    </script>
+</body>
+</html>

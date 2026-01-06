@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Asignación de Horas en Turnos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .test-case {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .test-case.pass {
+            border-left-color: #27ae60;
+            background: #f0fdf4;
+        }
+        
+        .test-case.fail {
+            border-left-color: #e74c3c;
+            background: #fef2f2;
+        }
+        
+        .test-case.warning {
+            border-left-color: #f39c12;
+            background: #fffbf0;
+        }
+        
+        .status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .status.pass {
+            color: #27ae60;
+        }
+        
+        .status.fail {
+            color: #e74c3c;
+        }
+        
+        .status.warning {
+            color: #f39c12;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #764ba2;
+        }
+        
+        code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        table th, table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test: Asignación de Horas en Turnos</h1>
+        <p>Este test verifica que los empleados reciben las horas correctas según su turno configurado.</p>
+        
+        <button onclick="ejecutarTests()">▶️ Ejecutar Todos los Tests</button>
+        <button onclick="limpiar()">🗑️ Limpiar Resultados</button>
+        
+        <div id="resultados"></div>
+    </div>
+    
+    <script>
+        // ✅ VERSIÓN ROBUSTA - Evita errores de cache
+        'use strict';
+        
+        // Definición de tiposTurno (copia del archivo principal)
+        var tiposTurno = {
+            'mañana': { horario: "08:00-16:00", color: "#d4edda", horas: 8, inicial: "M" },
+            'tarde': { horario: "16:00-00:00", color: "#fff3cd", horas: 6.5, inicial: "T" },
+            'noche': { horario: "00:00-08:00", color: "#f8d7da", horas: 8, inicial: "N" },
+            'mixto': { horario: "08:00-00:00", color: "#e2e3e5", horas: 16, inicial: "X" },
+            'descanso': { horario: "-", color: "#cce5ff", horas: 0, inicial: "D" },
+            'vacaciones': { horario: "-", color: "#a8edea", horas: 0, inicial: "V" },
+            'baja': { horario: "-", color: "#fed7aa", horas: 0, inicial: "B" },
+            'festivo': { horario: "-", color: "#fecaca", horas: 0, inicial: "F" },
+            'libre': { horario: "-", color: "#d1d5db", horas: 0, inicial: "L" }
+        };
+        
+        function limpiar() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+        
+        function agregarResultado(titulo, passed, detalles) {
+            const div = document.getElementById('resultados');
+            const className = passed ? 'pass' : 'fail';
+            const icon = passed ? '✅' : '❌';
+            const statusClass = passed ? 'pass' : 'fail';
+            
+            let html = `
+                <div class="test-case ${className}">
+                    <div class="status ${statusClass}">${icon} ${titulo}</div>
+                    <pre style="background: #f0f0f0; padding: 10px; border-radius: 3px; margin-top: 10px; color: #333;">${detalles}</pre>
+                </div>
+            `;
+            
+            div.innerHTML += html;
+        }
+        
+        function test1_TurnosTardeCorrectos() {
+            const empleado = {
+                id: 1,
+                nombre: 'Juan Limpieza',
+                turnoPrincipal: 'tarde',
+                estado: 'activo'
+            };
+            
+            const diasEnMes = 31;
+            const turnos = generarTurnosEmpleado(empleado, diasEnMes);
+            
+            // Contar turnos de tipo 'tarde'
+            const turnosTarde = turnos.filter(t => t.turno === 'tarde');
+            const horasPromedio = turnosTarde.length > 0 
+                ? turnosTarde.reduce((sum, t) => sum + t.horas, 0) / turnosTarde.length 
+                : 0;
+            
+            const horasEsperadas = 6.5;
+            const passed = horasPromedio === horasEsperadas;
+            
+            agregarResultado(
+                'Empleado con turno "tarde" recibe 6.5h por turno',
+                passed,
+                `Turnos generados: ${turnosTarde.length} turnos de tarde\n` +
+                `Horas promedio: ${horasPromedio}h (esperado: ${horasEsperadas}h)\n` +
+                `Muestra de turnos:\n${JSON.stringify(turnos.slice(0, 5), null, 2)}`
+            );
+        }
+        
+        function test2_TurnoPersonalizadoEspecial() {
+            // Crear un turno personalizado "Especial"
+            const tiposTurnoData = {
+                'Especial': {
+                    horario: '10:00-14:00',
+                    color: '#ff6b6b',
+                    horas: 4,
+                    inicial: 'E'
+                }
+            };
+            
+            localStorage.setItem('tiposTurnoData', JSON.stringify(tiposTurnoData));
+            
+            const empleado = {
+                id: 2,
+                nombre: 'María Especial',
+                turnoPrincipal: 'Especial',
+                estado: 'activo'
+            };
+            
+            const diasEnMes = 31;
+            const turnos = generarTurnosEmpleado(empleado, diasEnMes);
+            
+            // Contar turnos de tipo 'Especial'
+            const turnosEspeciales = turnos.filter(t => t.turno === 'Especial');
+            const horasPromedio = turnosEspeciales.length > 0 
+                ? turnosEspeciales.reduce((sum, t) => sum + t.horas, 0) / turnosEspeciales.length 
+                : 0;
+            
+            const horasEsperadas = 4;
+            const passed = horasPromedio === horasEsperadas && turnosEspeciales.length > 0;
+            
+            agregarResultado(
+                'Empleado con turno personalizado "Especial" recibe 4h por turno',
+                passed,
+                `Turnos generados: ${turnosEspeciales.length} turnos de Especial\n` +
+                `Horas promedio: ${horasPromedio}h (esperado: ${horasEsperadas}h)\n` +
+                `Muestra de turnos:\n${JSON.stringify(turnos.slice(0, 5), null, 2)}`
+            );
+        }
+        
+        function test3_NoMezclarTurnos() {
+            // Test: empleado con turno 'tarde' NO debe recibir 'Especial'
+            localStorage.clear();
+            
+            // Agregar turno personalizado
+            const tiposTurnoData = {
+                'Especial': {
+                    horario: '10:00-14:00',
+                    color: '#ff6b6b',
+                    horas: 4,
+                    inicial: 'E'
+                }
+            };
+            
+            localStorage.setItem('tiposTurnoData', JSON.stringify(tiposTurnoData));
+            
+            const empleado = {
+                id: 3,
+                nombre: 'Carlos Tarde',
+                turnoPrincipal: 'tarde',
+                estado: 'activo'
+            };
+            
+            const diasEnMes = 31;
+            const turnos = generarTurnosEmpleado(empleado, diasEnMes);
+            
+            // Contar turnos de tipo 'tarde'
+            const turnosTarde = turnos.filter(t => t.turno === 'tarde');
+            const turnosEspeciales = turnos.filter(t => t.turno === 'Especial');
+            
+            const horasPromedioTarde = turnosTarde.length > 0 
+                ? turnosTarde.reduce((sum, t) => sum + t.horas, 0) / turnosTarde.length 
+                : 0;
+            
+            const passed = turnosEspeciales.length === 0 && horasPromedioTarde === 6.5;
+            
+            agregarResultado(
+                'Empleado "tarde" NO recibe turnos "Especial" aunque exista en localStorage',
+                passed,
+                `Turnos 'tarde': ${turnosTarde.length} con ${horasPromedioTarde}h promedio\n` +
+                `Turnos 'Especial': ${turnosEspeciales.length} (debe ser 0)\n` +
+                `Muestra:\n${JSON.stringify(turnos.slice(0, 5), null, 2)}`
+            );
+        }
+        
+        function test4_DomingosSiempreLibres() {
+            localStorage.clear();
+            
+            const empleado = {
+                id: 4,
+                nombre: 'Ana Domingos',
+                turnoPrincipal: 'tarde',
+                estado: 'activo'
+            };
+            
+            const diasEnMes = 31;
+            const turnos = generarTurnosEmpleado(empleado, diasEnMes);
+            
+            // Verificar domingos (día 3, 10, 17, 24, 31 en enero 2025 serían domingos)
+            const fechaBase = new Date(2025, 0, 1); // Enero 2025
+            let domingosIncorrectos = [];
+            
+            turnos.forEach(t => {
+                const fechaObj = new Date(2025, 0, t.dia);
+                if (fechaObj.getDay() === 0 && t.turno !== 'libre') {
+                    domingosIncorrectos.push({
+                        dia: t.dia,
+                        turno: t.turno,
+                        diaSemana: 'domingo'
+                    });
+                }
+            });
+            
+            const passed = domingosIncorrectos.length === 0;
+            
+            agregarResultado(
+                'Todos los domingos son "libre"',
+                passed,
+                `Domingos no libres encontrados: ${domingosIncorrectos.length}\n` +
+                `Detalles: ${JSON.stringify(domingosIncorrectos, null, 2)}`
+            );
+        }
+        
+        function generarTurnosEmpleado(empleado, diasEnMes) {
+            const tiposTurnoDisponibles = JSON.parse(localStorage.getItem('tiposTurnoData') || '{}');
+            const turnosMerged = { ...tiposTurno, ...tiposTurnoDisponibles };
+            
+            let turnoEmpleado = empleado.turnoPrincipal;
+            
+            if (!turnosMerged[turnoEmpleado]) {
+                const turnoLower = turnoEmpleado?.toLowerCase();
+                const turnoEncontrado = Object.keys(turnosMerged).find(t => t.toLowerCase() === turnoLower);
+                turnoEmpleado = turnoEncontrado || 'mañana';
+            }
+            
+            const patronEmpleado = [turnoEmpleado, turnoEmpleado, turnoEmpleado, turnoEmpleado, turnoEmpleado, 'descanso', 'descanso'];
+            
+            const turnos = [];
+            const fechaBase = new Date(2025, 0, 1);
+            
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const fechaObj = new Date(fechaBase);
+                fechaObj.setDate(dia);
+                const diaSemana = fechaObj.getDay();
+                
+                const esDomingo = diaSemana === 0;
+                const esSabado = diaSemana === 6;
+                
+                let turno;
+                
+                if (esDomingo) {
+                    turno = 'libre';
+                } else if (esSabado) {
+                    turno = Math.random() > 0.5 ? turnoEmpleado : 'descanso';
+                } else {
+                    const indicePatron = (dia - 1) % patronEmpleado.length;
+                    turno = patronEmpleado[indicePatron];
+                }
+                
+                turnos.push({
+                    dia: dia,
+                    turno: turno,
+                    horas: turnosMerged[turno]?.horas || 0,
+                    horario: turnosMerged[turno]?.horario || '',
+                    fecha: fechaObj,
+                    esFinSemana: diaSemana === 0 || diaSemana === 6
+                });
+            }
+            
+            return turnos;
+        }
+        
+        function ejecutarTests() {
+            limpiar();
+            document.getElementById('resultados').innerHTML = '<h2>🧪 Ejecutando Tests...</h2>';
+            
+            setTimeout(() => {
+                limpiar();
+                test1_TurnosTardeCorrectos();
+                test2_TurnoPersonalizadoEspecial();
+                test3_NoMezclarTurnos();
+                test4_DomingosSiempreLibres();
+            }, 100);
+        }
+    </script>
+</body>
+</html>

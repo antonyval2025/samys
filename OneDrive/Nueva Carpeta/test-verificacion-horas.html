@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Verificación de Cálculo de Horas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        .test-case {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .test-case h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .test-case p {
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .code {
+            background: #2c3e50;
+            color: #2ecc71;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .summary h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .summary p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Test de Cálculo de Horas</h1>
+
+        <div class="test-case">
+            <h3>Escenario 1: Contrato 154h - Trabaja 20 días</h3>
+            <p><strong>Datos:</strong></p>
+            <p>• Contrato: 154h/mes</p>
+            <p>• Promedio: 154h ÷ 20 = 7.7h/día</p>
+            <p>• Días trabajados: 20</p>
+            <div class="code">totalHoras = 20 × 7.7 = 154h</div>
+            <div class="result correct">
+                ✅ CORRECTO: 154h = 154h (Cumplimiento: 100%)
+            </div>
+        </div>
+
+        <div class="test-case">
+            <h3>Escenario 2: Error Anterior (Problema Observado)</h3>
+            <p><strong>Datos:</strong></p>
+            <p>• Contrato: 154h/mes</p>
+            <p>• Promedio: 154h ÷ 20 = 7.7h/día</p>
+            <p>• Días en mes: 31 (ó 30)</p>
+            <p><strong>Cálculo INCORRECTO anterior:</strong></p>
+            <div class="code">totalHoras = 30 × 7.7 = 231h ❌</div>
+            <div class="result incorrect">
+                ❌ INCORRECTO: 231h ≠ 154h (Cumplimiento: 150%)
+            </div>
+        </div>
+
+        <div class="test-case">
+            <h3>Escenario 3: Mes de Diciembre (31 días)</h3>
+            <p><strong>Datos:</strong></p>
+            <p>• Contrato: 154h/mes</p>
+            <p>• Diciembre tiene 31 días</p>
+            <p>• Si todos los días son trabajo: 31 × 7.7 = 238.7h ❌ (Incorrecto anterior)</p>
+            <p><strong>Solución correcta:</strong></p>
+            <p>Sumar las horas reales de cada turno almacenado</p>
+            <div class="code">totalHoras = SUM(turno.horas para cada turno) = 154h ✅</div>
+            <div class="result correct">
+                ✅ CORRECTO: Respeta el contrato del empleado
+            </div>
+        </div>
+
+        <div class="test-case">
+            <h3>Escenario 4: Verificación en Consola</h3>
+            <p>Para verificar el cálculo correcto en tu aplicación:</p>
+            <div class="code">
+const empleado = empleados[0];
+const turnos = AppState.scheduleData.get(empleado.id) || [];
+const totalHoras = turnos.reduce((sum, t) => sum + (t.horas || 0), 0);
+console.log(`Horas: ${totalHoras}h / ${empleado.horasContrato}h`);
+            </div>
+            <p style="margin-top: 12px; color: #155724;"><strong>Debería mostrar un valor cercano o igual al contrato (ej: 154h / 154h)</strong></p>
+        </div>
+
+        <div class="summary">
+            <h2>📊 Resumen de la Corrección</h2>
+            <p><strong>Antes:</strong> Cálculo errado → 1832.6h (incorrecto)</p>
+            <p><strong>Después:</strong> Suma real → ~154h (correcto)</p>
+            <p style="margin-top: 15px; font-size: 14px; opacity: 0.9;">
+                ✅ Los cambios ya se aplicaron en todos los archivos HTML<br>
+                ✅ La fórmula correcta: totalHoras = SUM(turno.horas)
+            </p>
+        </div>
+    </div>
+</body>
+</html>

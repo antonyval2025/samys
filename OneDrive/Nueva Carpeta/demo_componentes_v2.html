@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Componentes Mejorados v2.0</title>
+    <link rel="stylesheet" href="css/estilos_responsive_mejorado.css">
+    <style>
+        body {
+            padding: var(--spacing-xl);
+        }
+        .demo-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+        .demo-section h2 {
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--color-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+        .demo-grid {
+            display: grid;
+            gap: var(--spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        .demo-item {
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+        .demo-code {
+            background: var(--bg-primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+            overflow-x: auto;
+            margin-top: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Componentes UI/UX v2.0</h1>
+            <p class="subtitle">Demostración de mejoras: Responsividad, Tema Oscuro, Accesibilidad</p>
+        </header>
+
+        <!-- ============ BOTONES ============ -->
+        <div class="demo-section">
+            <h2>Botones</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <h3>Primarios</h3>
+                    <button class="btn btn-primary">Primario</button>
+                    <button class="btn btn-primary btn-sm">Pequeño</button>
+                    <button class="btn btn-primary btn-lg">Grande</button>
+                    <button class="btn btn-primary" disabled>Deshabilitado</button>
+                </div>
+                <div class="demo-item">
+                    <h3>Secundarios</h3>
+                    <button class="btn btn-secondary">Secundario</button>
+                    <button class="btn btn-success">Éxito</button>
+                    <button class="btn btn-error">Error</button>
+                    <button class="btn btn-outline">Outline</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ INPUTS ============ -->
+        <div class="demo-section">
+            <h2>Inputs y Formularios</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <label for="demo-text">Input de Texto</label>
+                    <input type="text" id="demo-text" placeholder="Escribe algo...">
+                </div>
+                <div class="demo-item">
+                    <label for="demo-select">Select</label>
+                    <select id="demo-select">
+                        <option>Opción 1</option>
+                        <option>Opción 2</option>
+                        <option>Opción 3</option>
+                    </select>
+                </div>
+                <div class="demo-item">
+                    <label for="demo-textarea">Textarea</label>
+                    <textarea id="demo-textarea" placeholder="Escribe..."></textarea>
+                </div>
+                <div class="demo-item">
+                    <label>
+                        <input type="checkbox"> Checkbox
+                    </label>
+                    <label>
+                        <input type="radio" name="demo-radio"> Radio 1
+                    </label>
+                    <label>
+                        <input type="radio" name="demo-radio"> Radio 2
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TARJETAS ============ -->
+        <div class="demo-section">
+            <h2>Tarjetas</h2>
+            <div class="demo-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tarjeta Básica</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Contenido de la tarjeta con información relevante.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary btn-sm">Acción</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📊 Estadísticas</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>30/30</strong> tests pasando</p>
+                        <p><strong>100%</strong> funcionalidad</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ ALERTAS ============ -->
+        <div class="demo-section">
+            <h2>Alertas y Notificaciones</h2>
+            <div class="alert alert-success">
+                <span>✅</span>
+                <span>Operación completada exitosamente</span>
+            </div>
+            <div class="alert alert-error">
+                <span>❌</span>
+                <span>Ha ocurrido un error durante la operación</span>
+            </div>
+            <div class="alert alert-warning">
+                <span>⚠️</span>
+                <span>Por favor, revisa este campo antes de continuar</span>
+            </div>
+            <div class="alert alert-info">
+                <span>ℹ️</span>
+                <span>Información: esto es una notificación informativa</span>
+            </div>
+        </div>
+
+        <!-- ============ BADGES ============ -->
+        <div class="demo-section">
+            <h2>Badges</h2>
+            <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap;">
+                <span class="badge">Primario</span>
+                <span class="badge badge-success">Éxito</span>
+                <span class="badge badge-error">Error</span>
+                <span class="badge badge-warning">Advertencia</span>
+                <span class="badge badge-info">Info</span>
+            </div>
+        </div>
+
+        <!-- ============ GRID ============ -->
+        <div class="demo-section">
+            <h2>Sistema de Grid Responsivo</h2>
+            <p>Redimensiona la ventana para ver cómo se adapta:</p>
+            <div class="grid grid-cols-3" style="margin-top: var(--spacing-lg);">
+                <div class="card">
+                    <h3 style="margin-top: 0;">Mobile</h3>
+                    <p>En pantallas pequeñas: 1 columna</p>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top: 0;">Tablet</h3>
+                    <p>En pantallas medianas: 2-3 columnas</p>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top: 0;">Desktop</h3>
+                    <p>En pantallas grandes: 3-4 columnas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TABLA ============ -->
+        <div class="demo-section">
+            <h2>Tabla Responsiva</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>Lunes</th>
+                            <th>Martes</th>
+                            <th>Miércoles</th>
+                            <th>Jueves</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan García</td>
+                            <td><span class="badge badge-success">Mañana</span></td>
+                            <td><span class="badge badge-info">Tarde</span></td>
+                            <td><span class="badge">Descanso</span></td>
+                            <td><span class="badge badge-error">Noche</span></td>
+                        </tr>
+                        <tr>
+                            <td>María López</td>
+                            <td><span class="badge badge-info">Tarde</span></td>
+                            <td><span class="badge badge-error">Noche</span></td>
+                            <td><span class="badge badge-success">Mañana</span></td>
+                            <td><span class="badge">Descanso</span></td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Ruiz</td>
+                            <td><span class="badge badge-error">Noche</span></td>
+                            <td><span class="badge">Descanso</span></td>
+                            <td><span class="badge badge-info">Tarde</span></td>
+                            <td><span class="badge badge-success">Mañana</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============ UTILIDADES ============ -->
+        <div class="demo-section">
+            <h2>Utilidades y Helpers</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <h3>Flexbox</h3>
+                    <div class="flex justify-between">
+                        <span>Izquierda</span>
+                        <span>Derecha</span>
+                    </div>
+                </div>
+                <div class="demo-item">
+                    <h3>Truncate</h3>
+                    <p class="truncate">Este es un texto muy largo que se truncará con ellipsis cuando sea necesario para mantener una línea única</p>
+                </div>
+                <div class="demo-item">
+                    <h3>Line Clamp</h3>
+                    <p class="line-clamp-2">Este es un texto que se limitará a dos líneas máximo y cualquier contenido adicional será truncado con ellipsis. Esto es útil para tarjetas y listados.</p>
+                </div>
+                <div class="demo-item">
+                    <h3>Spinner Loading</h3>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TIPOGRAFÍA ============ -->
+        <div class="demo-section">
+            <h2>Escala Tipográfica</h2>
+            <h1>Heading 1 - font-size-2xl</h1>
+            <h2>Heading 2 - font-size-xl</h2>
+            <h3>Heading 3 - font-size-lg</h3>
+            <h4>Heading 4 - font-size-base</h4>
+            <p>Párrafo normal con font-size-base</p>
+            <p style="font-size: var(--font-size-sm);">Párrafo pequeño con font-size-sm</p>
+            <p style="font-size: var(--font-size-xs);">Párrafo extra pequeño con font-size-xs</p>
+        </div>
+
+        <!-- ============ ESPACIADO ============ -->
+        <div class="demo-section">
+            <h2>Sistema de Espaciado</h2>
+            <div style="display: flex; gap: var(--spacing-lg); flex-wrap: wrap;">
+                <div style="width: 60px; height: 60px; background: var(--color-primary); border-radius: var(--radius-md);" title="spacing-md"></div>
+                <div style="width: 80px; height: 80px; background: var(--color-secondary); border-radius: var(--radius-md);" title="spacing-lg"></div>
+                <div style="width: 100px; height: 100px; background: var(--color-success); border-radius: var(--radius-md);" title="spacing-xl"></div>
+            </div>
+        </div>
+
+        <!-- ============ INSTRUCCIONES ============ -->
+        <div class="demo-section">
+            <h2>📋 Características Implementadas</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h3>Responsividad (Mobile-First)</h3>
+                    <ul>
+                        <li>✅ 4 breakpoints definidos</li>
+                        <li>✅ Grid y Flexbox adaptables</li>
+                        <li>✅ Scroll horizontal en tablas móviles</li>
+                        <li>✅ Padding adaptativo</li>
+                    </ul>
+
+                    <h3>Tema Oscuro/Claro</h3>
+                    <ul>
+                        <li>✅ Toggle button en header</li>
+                        <li>✅ Persistencia en localStorage</li>
+                        <li>✅ Detección automática del SO</li>
+                        <li>✅ CSS custom properties para fácil personalización</li>
+                    </ul>
+
+                    <h3>Accesibilidad (WCAG 2.1 AA)</h3>
+                    <ul>
+                        <li>✅ ARIA labels automáticos</li>
+                        <li>✅ Keyboard navigation (TAB, ESC)</li>
+                        <li>✅ Focus visible con outline 3px</li>
+                        <li>✅ Panel de accesibilidad (Ctrl/Cmd + /)</li>
+                        <li>✅ Skip links</li>
+                    </ul>
+
+                    <h3>Animaciones y Transiciones</h3>
+                    <ul>
+                        <li>✅ Transiciones suaves (150ms-500ms)</li>
+                        <li>✅ Hover effects con elevación</li>
+                        <li>✅ Animaciones CSS predefinidas</li>
+                        <li>✅ Reduce motion support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ FOOTER ============ -->
+        <div class="demo-section" style="text-align: center; margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--border-color);">
+            <p style="color: var(--text-tertiary);">Sistema de Gestión de Turnos - UI/UX v2.0</p>
+            <p style="color: var(--text-tertiary); font-size: var(--font-size-sm);">Implementado: 2 de enero de 2026</p>
+        </div>
+    </div>
+
+    <!-- Scripts de Tema y Accesibilidad -->
+    <script src="js/theme-manager.js"></script>
+    <script src="js/accessibility-manager.js"></script>
+</body>
+</html>

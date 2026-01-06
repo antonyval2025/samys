@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Persistencia</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .output { background: #f5f5f5; padding: 10px; border-radius: 5px; font-family: monospace; white-space: pre-wrap; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnóstico de Persistencia de Turnos</h1>
+    <p>Este script verifica el estado de localStorage y AppState para diagnosticar por qué se pierden los cambios al recargar.</p>
+
+    <button onclick="ejecutarDiagnostico()">Ejecutar Diagnóstico</button>
+
+    <h2>Resultado:</h2>
+    <div class="output" id="output"></div>
+
+    <script src="js/modules.js"></script>
+    <script>
+        // Inicializar datos básicos para el diagnóstico
+        window.empleados = [
+            { id: 1, nombre: "Empleado 1", localidad: "Madrid", horasContrato: 160 },
+            { id: 2, nombre: "Empleado 2", localidad: "Madrid", horasContrato: 160 },
+            { id: 3, nombre: "Empleado 3", localidad: "Madrid", horasContrato: 160 },
+            { id: 4, nombre: "Empleado 4", localidad: "Madrid", horasContrato: 160 },
+            { id: 5, nombre: "Empleado 5", localidad: "Madrid", horasContrato: 160 },
+            { id: 6, nombre: "Empleado 6", localidad: "Madrid", horasContrato: 160 },
+            { id: 7, nombre: "Empleado 7", localidad: "Madrid", horasContrato: 160 },
+            { id: 8, nombre: "antony valencia", localidad: "Madrid", horasContrato: 154 }
+        ];
+
+        // Inicializar AppState con valores actuales
+        AppState.currentYear = new Date().getFullYear();
+        AppState.currentMonth = new Date().getMonth();
+
+        function ejecutarDiagnostico() {
+            const output = document.getElementById('output');
+            let logs = [];
+
+            // Función para capturar logs
+            const originalLog = console.log;
+            const originalError = console.error;
+            const originalWarn = console.warn;
+
+            console.log = (...args) => {
+                logs.push('LOG: ' + args.join(' '));
+                originalLog(...args);
+            };
+            console.error = (...args) => {
+                logs.push('ERROR: ' + args.join(' '));
+                originalError(...args);
+            };
+            console.warn = (...args) => {
+                logs.push('WARN: ' + args.join(' '));
+                originalWarn(...args);
+            };
+
+            // Ejecutar diagnóstico
+            try {
+                diagnosticoPersistencia();
+            } catch (error) {
+                logs.push('EXCEPTION: ' + error.message);
+            }
+
+            // Restaurar console
+            console.log = originalLog;
+            console.error = originalError;
+            console.warn = originalWarn;
+
+            // Mostrar resultado
+            output.textContent = logs.join('\n');
+        }
+
+        function diagnosticoPersistencia() {
+            console.log('🧪 === DIAGNÓSTICO DE PERSISTENCIA ===');
+
+            // 1. Verificar localStorage
+            console.log('📦 LOCALSTORAGE:');
+            try {
+                const saved = localStorage.getItem('turnosAppState');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    console.log('✅ Datos encontrados en localStorage');
+                    console.log('📊 Empleados con turnos:', state.scheduleData ? state.scheduleData.length : 0);
+
+                    // Mostrar TODOS los empleados en localStorage
+                    if (state.scheduleData) {
+                        console.log('👥 LISTA DE EMPLEADOS EN LOCALSTORAGE:');
+                        state.scheduleData.forEach(([id, turnos], index) => {
+                            console.log(`  ${index + 1}. ID: ${id}, Turnos: ${turnos.length}`);
+                            // Buscar si es Antony
+                            if (turnos.length > 0 && turnos[0].dia === 30) {
+                                console.log(`     👤 Posible Antony - Día 30: ${turnos.find(t => t.dia === 30)?.turno || 'N/A'}`);
+                            }
+                        });
+                    }
+
+                    // Buscar Antony por nombre aproximado
+                    console.log('🔍 BUSCANDO ANTONY:');
+                    state.scheduleData.forEach(([id, turnos]) => {
+                        // Buscar día 30 en cada empleado
+                        const turno30 = turnos.find(t => t.dia === 30);
+                        if (turno30) {
+                            console.log(`  ID ${id} - Día 30: ${turno30.turno} (Fecha: ${turno30.fecha})`);
+                        }
+                    });
+
+                } else {
+                    console.log('❌ No hay datos en localStorage');
+                }
+            } catch (error) {
+                console.error('❌ Error leyendo localStorage:', error);
+            }
+
+            // 2. Verificar empleados disponibles
+            console.log('👥 EMPLEADOS DISPONIBLES:');
+            if (window.empleados) {
+                window.empleados.forEach(emp => {
+                    console.log(`  ID ${emp.id}: ${emp.nombre}`);
+                });
+            } else {
+                console.log('❌ No hay empleados definidos');
+            }
+
+            // 3. Verificar AppState
+            console.log('🏪 APPSTATE:');
+            console.log('📅 Mes/año actual:', AppState.currentMonth, '/', AppState.currentYear);
+            console.log('📊 Empleados en AppState:', AppState.scheduleData.size);
+
+            if (AppState.scheduleData.size > 0) {
+                console.log('👥 EMPLEADOS EN APPSTATE:');
+                AppState.scheduleData.forEach((turnos, id) => {
+                    console.log(`  ID ${id}: ${turnos.length} turnos`);
+                    const turno30 = turnos.find(t => t.dia === 30);
+                    if (turno30) {
+                        console.log(`     Día 30: ${turno30.turno}`);
+                    }
+                });
+            }
+
+            console.log('🧪 === FIN DIAGNÓSTICO ===');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Cálculo de Horas - Sistema de Turnos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        input[type="time"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="time"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .separator {
+            color: #cbd5e0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .result {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .result-label {
+            color: #718096;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .examples {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .examples h3 {
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .example-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #48bb78;
+        }
+        
+        .example-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .example-time {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .example-result {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        .warning-box {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            color: #742a2a;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .result-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏱️ Validador de Horas</h1>
+        <p class="subtitle">Calcula las horas reales trabajadas según el horario ingresado</p>
+        
+        <div class="info-box">
+            <strong>ℹ️ Instrucciones:</strong> Ingresa la hora de inicio y fin para calcular automáticamente las horas totales.
+        </div>
+        
+        <div class="form-group">
+            <label for="horaInicio">Hora de Inicio</label>
+            <div class="input-group">
+                <input type="time" id="horaInicio" placeholder="14:30">
+                <span class="separator">→</span>
+                <input type="time" id="horaFin" placeholder="21:00">
+            </div>
+        </div>
+        
+        <div class="result">
+            <h3>Resultado del Cálculo</h3>
+            <div class="result-value" id="resultado">0h</div>
+            <div class="result-label" id="etiqueta">Ingresa horarios para ver el resultado</div>
+        </div>
+        
+        <div class="warning-box" id="warning" style="display: none;">
+            <strong>⚠️ Atención:</strong> <span id="warningText"></span>
+        </div>
+        
+        <div class="examples">
+            <h3>📋 Ejemplos de Cálculo</h3>
+            <div class="example-item">
+                <span class="example-time">08:00 → 16:00</span>
+                <span class="example-result">8 horas</span>
+            </div>
+            <div class="example-item">
+                <span class="example-time">16:00 → 00:00</span>
+                <span class="example-result">8 horas</span>
+            </div>
+            <div class="example-item">
+                <span class="example-time">14:30 → 21:00</span>
+                <span class="example-result">6.5 horas</span>
+            </div>
+            <div class="example-item">
+                <span class="example-time">22:00 → 06:00</span>
+                <span class="example-result">8 horas</span>
+            </div>
+            <div class="example-item">
+                <span class="example-time">10:00 → 18:00</span>
+                <span class="example-result">8 horas</span>
+            </div>
+            <div class="example-item">
+                <span class="example-time">14:30 → 18:00</span>
+                <span class="example-result">3.5 horas</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calcularHoras() {
+            const horaInicio = document.getElementById('horaInicio').value;
+            const horaFin = document.getElementById('horaFin').value;
+            const warning = document.getElementById('warning');
+            const warningText = document.getElementById('warningText');
+            
+            warning.style.display = 'none';
+            
+            if (!horaInicio || !horaFin) {
+                document.getElementById('resultado').textContent = '0h';
+                document.getElementById('etiqueta').textContent = 'Ingresa horarios para ver el resultado';
+                return;
+            }
+            
+            const [hiInicio, minInicio] = horaInicio.split(':').map(Number);
+            const [hiFin, minFin] = horaFin.split(':').map(Number);
+            
+            let totalMinutos = (hiFin * 60 + minFin) - (hiInicio * 60 + minInicio);
+            
+            // Para turnos nocturnos que cruzan medianoche
+            if (totalMinutos < 0) {
+                totalMinutos += 24 * 60;
+            }
+            
+            const horas = totalMinutos / 60;
+            
+            // Formatear resultado
+            let resultado = '';
+            if (horas % 1 === 0) {
+                resultado = `${Math.round(horas)}h`;
+            } else {
+                resultado = `${horas.toFixed(1)}h`;
+            }
+            
+            document.getElementById('resultado').textContent = resultado;
+            document.getElementById('etiqueta').textContent = `Horario: ${horaInicio} - ${horaFin}`;
+            
+            // Advertencias
+            if (horas > 12) {
+                warning.style.display = 'block';
+                warningText.textContent = 'Este turno es más largo de lo normal (> 12 horas). Verifica que sea intencional.';
+            } else if (horas < 1) {
+                warning.style.display = 'block';
+                warningText.textContent = 'Este turno es muy corto (< 1 hora). Revisa los horarios.';
+            }
+        }
+        
+        document.getElementById('horaInicio').addEventListener('change', calcularHoras);
+        document.getElementById('horaFin').addEventListener('change', calcularHoras);
+        document.getElementById('horaInicio').addEventListener('input', calcularHoras);
+        document.getElementById('horaFin').addEventListener('input', calcularHoras);
+    </script>
+</body>
+</html>

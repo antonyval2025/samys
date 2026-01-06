@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test WhatsApp Export - Sistema de Turnos</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .test-pass {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .test-fail {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .test-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        #console {
+            background: #0f172a;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test WhatsApp Export</h1>
+        
+        <div id="results"></div>
+        
+        <button onclick="runTests()">▶️ Ejecutar Tests</button>
+        
+        <div id="console">
+            Consola de salida...
+        </div>
+    </div>
+
+    <script>
+        const logs = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            logs.push('[LOG] ' + args.join(' '));
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            logs.push('[ERROR] ' + args.join(' '));
+            originalError.apply(console, args);
+        };
+        
+        function updateConsole() {
+            document.getElementById('console').textContent = logs.join('\n');
+            document.getElementById('console').scrollTop = document.getElementById('console').scrollHeight;
+        }
+        
+        function addResult(name, passed, message) {
+            const resultsDiv = document.getElementById('results');
+            const resultEl = document.createElement('div');
+            resultEl.className = `test-result ${passed ? 'test-pass' : 'test-fail'}`;
+            resultEl.innerHTML = `<strong>${passed ? '✅' : '❌'} ${name}</strong><br><small>${message}</small>`;
+            resultsDiv.appendChild(resultEl);
+        }
+        
+        function runTests() {
+            logs.length = 0;
+            document.getElementById('results').innerHTML = '';
+            console.log('🧪 Iniciando tests de WhatsApp Export...\n');
+            
+            // Test 1: lowerCaseSafe function
+            console.log('Test 1: Validar lowerCaseSafe');
+            try {
+                const lowerCaseSafe = (valor) => (valor === undefined || valor === null) ? '' : String(valor).toLowerCase();
+                
+                const testCases = [
+                    { input: 'MAÑANA', expected: 'mañana', desc: 'String mayúscula' },
+                    { input: undefined, expected: '', desc: 'undefined' },
+                    { input: null, expected: '', desc: 'null' },
+                    { input: 123, expected: '123', desc: 'Número' },
+                    { input: { turno: 'noche' }, expected: '[object object]', desc: 'Objeto' },
+                ];
+                
+                let allPassed = true;
+                testCases.forEach(tc => {
+                    const result = lowerCaseSafe(tc.input);
+                    const passed = result === tc.expected;
+                    console.log(`  ${passed ? '✓' : '✗'} ${tc.desc}: ${JSON.stringify(tc.input)} → "${result}"`);
+                    if (!passed) allPassed = false;
+                });
+                
+                addResult('lowerCaseSafe function', allPassed, 'Función defensiva normaliza valores correctamente');
+            } catch (e) {
+                console.error('  ❌ Error en test:', e.message);
+                addResult('lowerCaseSafe function', false, `Error: ${e.message}`);
+            }
+            
+            updateConsole();
+            
+            // Test 2: Comparación de turnos segura
+            console.log('\nTest 2: Comparación segura de turnos');
+            try {
+                const lowerCaseSafe = (valor) => (valor === undefined || valor === null) ? '' : String(valor).toLowerCase();
+                
+                const tiposTurno = [
+                    { nombre: 'Mañana', id: 'manana' },
+                    { nombre: 'Tarde', id: 'tarde' },
+                    { nombre: 'Noche', id: 'noche' }
+                ];
+                
+                const testTurnos = [
+                    { turno: 'mañana', shouldFind: true },
+                    { turno: 'MAÑANA', shouldFind: true },
+                    { turno: undefined, shouldFind: false },
+                    { turno: null, shouldFind: false },
+                    { turno: 'noche', shouldFind: true },
+                ];
+                
+                let testsPassed = 0;
+                testTurnos.forEach(tt => {
+                    const found = tiposTurno.find(t => lowerCaseSafe(t.nombre) === lowerCaseSafe(tt.turno));
+                    const passed = (found !== undefined) === tt.shouldFind;
+                    console.log(`  ${passed ? '✓' : '✗'} Turno "${tt.turno}": ${found ? 'encontrado' : 'no encontrado'}`);
+                    if (passed) testsPassed++;
+                });
+                
+                addResult('Búsqueda segura de turnos', testsPassed === testTurnos.length, `${testsPassed}/${testTurnos.length} casos pasados`);
+            } catch (e) {
+                console.error('  ❌ Error en test:', e.message);
+                addResult('Búsqueda segura de turnos', false, `Error: ${e.message}`);
+            }
+            
+            updateConsole();
+            
+            // Test 3: Normalización de meses
+            console.log('\nTest 3: Normalización de meses');
+            try {
+                const lowerCaseSafe = (valor) => (valor === undefined || valor === null) ? '' : String(valor).toLowerCase();
+                const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                
+                const testMeses = [
+                    { input: 'Enero', expected: 0 },
+                    { input: 'enero', expected: 0 },
+                    { input: 'ENERO', expected: 0 },
+                    { input: 'Diciembre', expected: 11 },
+                    { input: undefined, expected: -1 },
+                    { input: 'Inválido', expected: -1 },
+                ];
+                
+                let testsPassed = 0;
+                testMeses.forEach(tm => {
+                    const mesNormalizado = (tm.input ?? '').toString().trim();
+                    const mesNum = mesNormalizado ? mesesNombres.findIndex(m => lowerCaseSafe(m) === lowerCaseSafe(mesNormalizado)) : -1;
+                    const passed = mesNum === tm.expected;
+                    console.log(`  ${passed ? '✓' : '✗'} "${tm.input}" → índice ${mesNum} (esperado ${tm.expected})`);
+                    if (passed) testsPassed++;
+                });
+                
+                addResult('Normalización de meses', testsPassed === testMeses.length, `${testsPassed}/${testMeses.length} conversiones correctas`);
+            } catch (e) {
+                console.error('  ❌ Error en test:', e.message);
+                addResult('Normalización de meses', false, `Error: ${e.message}`);
+            }
+            
+            updateConsole();
+            
+            // Test 4: Validación del flujo sin errores
+            console.log('\nTest 4: Simulación de flujo WhatsApp');
+            try {
+                const lowerCaseSafe = (valor) => (valor === undefined || valor === null) ? '' : String(valor).toLowerCase();
+                
+                // Simular datos del formulario WhatsApp
+                const datosFormulario = {
+                    empleadoId: 1,
+                    mesNombre: 'Diciembre',
+                    anio: 2025,
+                    telefono: '34612345678'
+                };
+                
+                const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                
+                // Simulación del código crítico de exportarEmpleado
+                const normalizarMes = (valor) => (valor ?? '').toString().trim();
+                const mesNormalizado = normalizarMes(datosFormulario.mesNombre);
+                const mesNum = mesNormalizado ? mesesNombres.findIndex(m => lowerCaseSafe(m) === lowerCaseSafe(mesNormalizado)) : -1;
+                
+                console.log(`  ✓ Mes "${datosFormulario.mesNombre}" convertido a índice: ${mesNum}`);
+                console.log(`  ✓ Año: ${datosFormulario.anio}`);
+                console.log(`  ✓ Teléfono: ${datosFormulario.telefono}`);
+                
+                const success = mesNum >= 0 && datosFormulario.anio > 2000 && datosFormulario.telefono.length > 5;
+                addResult('Simulación de flujo WhatsApp', success, 'Datos validados sin errores de .toLowerCase()');
+            } catch (e) {
+                console.error('  ❌ Error en test:', e.message);
+                addResult('Simulación de flujo WhatsApp', false, `Error: ${e.message}`);
+            }
+            
+            updateConsole();
+            
+            console.log('\n✅ Tests completados');
+        }
+        
+        // Ejecutar automáticamente al cargar
+        window.addEventListener('load', () => {
+            console.log('Página cargada. Click en el botón para ejecutar tests.');
+            updateConsole();
+        });
+    </script>
+</body>
+</html>

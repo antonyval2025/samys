@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        console.log('1. Script iniciando...');
+        
+        if (!window.TurnoManager) {
+            window.TurnoManager = {};
+            console.log('2. TurnoManager creado');
+        }
+        
+        window.TurnoManager.mostrarModalGeneracion = function() {
+            console.log('3. Función mostrarModalGeneracion definida');
+            alert('✅ FUNCIONANDO: TurnoManager.mostrarModalGeneracion ejecutado correctamente');
+        };
+        
+        console.log('4. Verificando disponibilidad de función...');
+        console.log('   typeof window.TurnoManager:', typeof window.TurnoManager);
+        console.log('   typeof window.TurnoManager.mostrarModalGeneracion:', typeof window.TurnoManager.mostrarModalGeneracion);
+        
+        if (typeof window.TurnoManager.mostrarModalGeneracion === 'function') {
+            console.log('✅ ÉXITO: Función está disponible y lista para usar');
+        } else {
+            console.log('❌ ERROR: Función NO está disponible');
+        }
+    </script>
+</head>
+<body>
+    <h1>Test de TurnoManager.mostrarModalGeneracion</h1>
+    <button onclick="TurnoManager.mostrarModalGeneracion()">Hacer clic para probar</button>
+    <p>Abre F12 → Console para ver los logs</p>
+</body>
+</html>

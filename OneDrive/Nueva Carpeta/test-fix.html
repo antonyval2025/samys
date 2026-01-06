@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Soporte Multi-Local</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Test - Validar Módulo soporte-multilocal.js</h1>
+    <div id="results"></div>
+
+    <!-- Cargar módulos -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/modules.js"></script>
+    <script src="js/balanceo-y-restricciones.js"></script>
+    <script src="js/reportes-y-prediccion.js"></script>
+    <script src="js/soporte-multilocal.js"></script>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+
+        function addResult(title, success, message) {
+            const div = document.createElement('div');
+            div.className = `result ${success ? 'success' : 'error'}`;
+            div.innerHTML = `<strong>${title}</strong>: ${message}`;
+            resultsDiv.appendChild(div);
+        }
+
+        // Tests
+        window.addEventListener('load', () => {
+            console.log('=== INICIANDO TESTS ===');
+
+            // Test 1: ¿Existe GestorLocales?
+            try {
+                if (typeof GestorLocales !== 'undefined') {
+                    addResult('✅ GestorLocales existe', true, 'Clase GestorLocales está definida');
+                } else {
+                    addResult('❌ GestorLocales NO existe', false, 'Clase GestorLocales no está definida');
+                }
+            } catch (e) {
+                addResult('❌ Error verificando GestorLocales', false, e.message);
+            }
+
+            // Test 2: ¿Existe GestorDepartamentos?
+            try {
+                if (typeof GestorDepartamentos !== 'undefined') {
+                    addResult('✅ GestorDepartamentos existe', true, 'Clase GestorDepartamentos está definida');
+                } else {
+                    addResult('❌ GestorDepartamentos NO existe', false, 'Clase GestorDepartamentos no está definida');
+                }
+            } catch (e) {
+                addResult('❌ Error verificando GestorDepartamentos', false, e.message);
+            }
+
+            // Test 3: ¿Existe ConsolidadorReportes?
+            try {
+                if (typeof ConsolidadorReportes !== 'undefined') {
+                    addResult('✅ ConsolidadorReportes existe', true, 'Clase ConsolidadorReportes está definida');
+                } else {
+                    addResult('❌ ConsolidadorReportes NO existe', false, 'Clase ConsolidadorReportes no está definida');
+                }
+            } catch (e) {
+                addResult('❌ Error verificando ConsolidadorReportes', false, e.message);
+            }
+
+            // Test 4: ¿Tiene GestorLocales.mostrarModalGestión()?
+            try {
+                if (typeof GestorLocales.mostrarModalGestión === 'function') {
+                    addResult('✅ mostrarModalGestión() en GestorLocales', true, 'Método existe y es una función');
+                } else {
+                    addResult('❌ mostrarModalGestión() NO es función', false, `Tipo: ${typeof GestorLocales.mostrarModalGestión}`);
+                }
+            } catch (e) {
+                addResult('❌ Error verificando mostrarModalGestión', false, e.message);
+            }
+
+            // Test 5: ¿Tiene GestorDepartamentos.mostrarModalGestión()?
+            try {
+                if (typeof GestorDepartamentos.mostrarModalGestión === 'function') {
+                    addResult('✅ mostrarModalGestión() en GestorDepartamentos', true, 'Método existe y es una función');
+                } else {
+                    addResult('❌ mostrarModalGestión() NO es función', false, `Tipo: ${typeof GestorDepartamentos.mostrarModalGestión}`);
+                }
+            } catch (e) {
+                addResult('❌ Error verificando mostrarModalGestión en GestorDepartamentos', false, e.message);
+            }
+
+            // Test 6: ¿Tiene GestorLocales.inicializarLocales()?
+            try {
+                if (typeof GestorLocales.inicializarLocales === 'function') {
+                    addResult('✅ inicializarLocales() en GestorLocales', true, 'Método existe y es una función');
+                } else {
+                    addResult('❌ inicializarLocales() NO es función', false, `Tipo: ${typeof GestorLocales.inicializarLocales}`);
+                }
+            } catch (e) {
+                addResult('❌ Error verificando inicializarLocales', false, e.message);
+            }
+
+            // Test 7: ¿Tiene GestorLocales.actualizarSelectLocal()?
+            try {
+                if (typeof GestorLocales.actualizarSelectLocal === 'function') {
+                    addResult('✅ actualizarSelectLocal() en GestorLocales', true, 'Método existe y es una función');
+                } else {
+                    addResult('❌ actualizarSelectLocal() NO es función', false, `Tipo: ${typeof GestorLocales.actualizarSelectLocal}`);
+                }
+            } catch (e) {
+                addResult('❌ Error verificando actualizarSelectLocal', false, e.message);
+            }
+
+            // Test 8: ¿Tiene GestorLocales propiedades estáticas?
+            try {
+                if (GestorLocales.locales && Array.isArray(GestorLocales.locales)) {
+                    addResult('✅ GestorLocales.locales existe', true, `Array con ${GestorLocales.locales.length} locales`);
+                } else {
+                    addResult('❌ GestorLocales.locales NO existe', false, 'Propiedad no está definida o no es un array');
+                }
+            } catch (e) {
+                addResult('❌ Error verificando locales', false, e.message);
+            }
+
+            addResult('🎉 TESTS COMPLETADOS', true, 'Revisión finalizada');
+            console.log('=== TESTS COMPLETADOS ===');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Persistencia Antony</title>
+</head>
+<body>
+    <h1>Prueba de Persistencia - Antony Día 30</h1>
+    <div id="output"></div>
+
+    <script src="js/modules.js"></script>
+    <script>
+        // Inicializar datos de prueba
+        window.empleados = [
+            { id: 1, nombre: "Antony", localidad: "Madrid", horasContrato: 160 }
+        ];
+
+        // Inicializar AppState
+        AppState.currentYear = 2025;
+        AppState.currentMonth = 11; // Diciembre (0-based)
+
+        // Simular carga desde localStorage con turno modificado
+        const mockStorage = {
+            year: 2025,
+            month: 11,
+            scheduleData: [
+                [1, [{
+                    dia: 30,
+                    turno: "asuntos propios",
+                    horas: 8,
+                    fecha: "2025-12-30T00:00:00.000Z",
+                    esFinSemana: false
+                }]]
+            ]
+        };
+        localStorage.setItem('turnosAppState', JSON.stringify(mockStorage));
+
+        // Cargar datos
+        AppState.loadFromStorage();
+
+        // Ejecutar prueba
+        const output = document.getElementById('output');
+
+        function log(message) {
+            output.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+
+        log('🧪 Probando persistencia del turno de Antony...');
+
+        // 1. Verificar empleado Antony
+        const antony = empleados.find(e => e.nombre.toLowerCase().includes('antony'));
+        if (!antony) {
+            log('❌ Empleado Antony no encontrado');
+            return;
+        }
+        log('✅ Empleado Antony encontrado: ' + JSON.stringify(antony));
+
+        // 2. Verificar turnos actuales en AppState
+        const turnosAntony = AppState.scheduleData.get(antony.id) || [];
+        log('📊 Turnos de Antony en AppState: ' + turnosAntony.length);
+
+        // 3. Buscar turno del día 30
+        const turnoDia30 = turnosAntony.find(t => t.dia === 30);
+        if (turnoDia30) {
+            log('📅 Turno día 30: ' + JSON.stringify(turnoDia30));
+        } else {
+            log('❌ No se encontró turno para día 30');
+        }
+
+        // 4. Verificar localStorage
+        try {
+            const saved = localStorage.getItem('turnosAppState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                const scheduleData = new Map(state.scheduleData);
+                const turnosAntonyStorage = scheduleData.get(antony.id) || [];
+                const turnoDia30Storage = turnosAntonyStorage.find(t => t.dia === 30);
+                log('💾 Turno día 30 en localStorage: ' + JSON.stringify(turnoDia30Storage));
+            }
+        } catch (error) {
+            log('❌ Error leyendo localStorage: ' + error);
+        }
+
+        // 5. Verificar si el turno pertenece al mes actual
+        const mesActual = AppState.currentMonth;
+        const anioActual = AppState.currentYear;
+        log('📅 Mes/año actual: ' + mesActual + '/' + anioActual);
+
+        if (turnoDia30) {
+            const fechaTurno = turnoDia30.fecha instanceof Date ? turnoDia30.fecha : new Date(turnoDia30.fecha);
+            log('📅 Fecha del turno: ' + fechaTurno);
+            log('📅 Mes del turno: ' + fechaTurno.getMonth() + ' (debería ser ' + mesActual + ')');
+            log('📅 Año del turno: ' + fechaTurno.getFullYear() + ' (debería ser ' + anioActual + ')');
+        }
+
+        // 6. Probar inicializarDatos
+        log('🔄 Ejecutando TurnoManager.inicializarDatos()...');
+        TurnoManager.inicializarDatos();
+
+        const turnosDespues = AppState.scheduleData.get(antony.id) || [];
+        const turnoDia30Despues = turnosDespues.find(t => t.dia === 30);
+        log('📅 Turno día 30 DESPUÉS de inicializarDatos: ' + JSON.stringify(turnoDia30Despues));
+    </script>
+</body>
+</html>

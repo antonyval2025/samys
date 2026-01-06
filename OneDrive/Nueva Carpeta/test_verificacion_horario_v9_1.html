@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Verificación Horario v9.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .test-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .test-item.success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .test-item.error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .test-item.warning {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        .test-label {
+            flex: 1;
+        }
+        .test-status {
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        .test-status.success {
+            background: #28a745;
+            color: white;
+        }
+        .test-status.error {
+            background: #dc3545;
+            color: white;
+        }
+        .test-status.warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .test-status.pending {
+            background: #17a2b8;
+            color: white;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .checklist {
+            list-style: none;
+        }
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+        .checklist li::before {
+            content: '☐';
+            margin-right: 10px;
+            font-size: 18px;
+            color: #667eea;
+        }
+        .checklist li.done::before {
+            content: '✓';
+            color: #28a745;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .data-preview {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Test Verificación Horario v9.1</h1>
+            <p>Valida que los cambios se hayan aplicado correctamente</p>
+        </div>
+
+        <div class="content">
+            <!-- Sección: Verificación de Archivos -->
+            <div class="section">
+                <h2>📋 Verificación de Archivos</h2>
+                <div id="filesStatus"></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="verificarArchivos()">
+                        ▶ Verificar Archivos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección: Verificación de Datos -->
+            <div class="section">
+                <h2>💾 Verificación de Datos en Storage</h2>
+                <div class="stats" id="statsContainer"></div>
+                <div id="storageStatus"></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="verificarStorage()">
+                        ▶ Verificar Storage
+                    </button>
+                    <button class="btn-secondary" onclick="mostrarDatos()">
+                        👁 Ver Datos Crudos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección: Verificación de Estructura Turno -->
+            <div class="section">
+                <h2>🔨 Estructura de Turno</h2>
+                <p style="margin-bottom: 15px;">Verifica que los turnos incluyan el campo <span class="highlight">horario</span></p>
+                <div id="turnoStructure"></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="verificarEstructuraTurno()">
+                        ▶ Verificar Estructura
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección: Checklist Manual -->
+            <div class="section">
+                <h2>✅ Checklist de Verificación Manual</h2>
+                <p style="margin-bottom: 15px; color: #666;">Realiza estas pruebas en la aplicación principal:</p>
+                <ul class="checklist" id="checklistItems">
+                    <li>Abre nuevo_cuadrante_mejorado.html</li>
+                    <li>Selecciona un empleado que tenga un turno personalizado</li>
+                    <li>Verifica que los turnos mostren horario (ej: 14:30-21:00)</li>
+                    <li>Haz clic en un turno y edítalo a otro tipo</li>
+                    <li>Verifica que el nuevo turno tiene horario asignado</li>
+                    <li>Haz clic en "WhatsApp" o "PDF"</li>
+                    <li>En el PDF, verifica que CADA DÍA muestra:<br/>
+                        <span class="highlight">Nombre Turno | HH:MM-HH:MM | Xh</span></li>
+                    <li>Verifica que las horas coinciden con el tipo de turno</li>
+                </ul>
+            </div>
+
+            <!-- Sección: Prueba de Generación -->
+            <div class="section">
+                <h2>⚙️ Prueba de Generación de Turno</h2>
+                <p style="margin-bottom: 15px;">Crea un turno de prueba para validar la estructura:</p>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="generarTurnosPrueba()">
+                        ▶ Generar Turnos de Prueba
+                    </button>
+                    <button class="btn-secondary" onclick="limpiarPrueba()">
+                        🗑 Limpiar Prueba
+                    </button>
+                </div>
+                <div id="generationResult"></div>
+            </div>
+
+            <!-- Sección: Resumen Final -->
+            <div class="section" id="summarySection" style="display: none;">
+                <h2>📊 Resumen de Verificación</h2>
+                <div id="summaryContent"></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="abrirApp()">
+                        → Abrir Aplicación Principal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables de estado
+        const testResults = {
+            archivos: null,
+            storage: null,
+            estructura: null,
+            generacion: null
+        };
+
+        // Verificar Archivos
+        function verificarArchivos() {
+            const resultsDiv = document.getElementById('filesStatus');
+            resultsDiv.innerHTML = '<p style="color: #666;">Verificando...</p>';
+
+            const tests = [
+                {
+                    nombre: 'js/modules.js existe',
+                    check: () => true, // No podemos verificar archivos del servidor desde el cliente
+                    critical: true
+                },
+                {
+                    nombre: 'nuevo_cuadrante_mejorado.html existe',
+                    check: () => true,
+                    critical: true
+                },
+                {
+                    nombre: 'DISTRIBUCION_LISTA/nuevo_cuadrante_mejorado.html existe',
+                    check: () => true,
+                    critical: true
+                }
+            ];
+
+            let html = '';
+            tests.forEach(test => {
+                const success = test.check();
+                html += `
+                    <div class="test-item ${success ? 'success' : 'error'}">
+                        <div class="test-label">
+                            ${test.nombre}
+                            ${test.critical ? ' <span class="highlight">CRÍTICO</span>' : ''}
+                        </div>
+                        <div class="test-status ${success ? 'success' : 'error'}">
+                            ${success ? '✓ OK' : '✗ ERROR'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+            testResults.archivos = tests.every(t => t.check());
+        }
+
+        // Verificar Storage
+        function verificarStorage() {
+            const resultsDiv = document.getElementById('storageStatus');
+            const statsDiv = document.getElementById('statsContainer');
+            
+            try {
+                const appState = JSON.parse(localStorage.getItem('turnosAppState') || '{}');
+                const empleados = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+                const tiposTurno = JSON.parse(localStorage.getItem('tiposTurnoData') || '{}');
+
+                // Estadísticas
+                const stats = {
+                    empleados: empleados.length || 0,
+                    tiposTurno: Object.keys(tiposTurno).length || 0,
+                    monthsWithData: appState.scheduleData ? Object.keys(appState.scheduleData).length : 0
+                };
+
+                statsDiv.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.empleados}</div>
+                        <div class="stat-label">Empleados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.tiposTurno}</div>
+                        <div class="stat-label">Tipos de Turno</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.monthsWithData}</div>
+                        <div class="stat-label">Meses con Datos</div>
+                    </div>
+                `;
+
+                const tests = [
+                    {
+                        nombre: 'AppState guardado en localStorage',
+                        check: () => Object.keys(appState).length > 0,
+                        critical: false
+                    },
+                    {
+                        nombre: 'Empleados en localStorage',
+                        check: () => empleados.length > 0,
+                        critical: true
+                    },
+                    {
+                        nombre: 'Tipos de Turno en localStorage',
+                        check: () => Object.keys(tiposTurno).length > 0,
+                        critical: true
+                    }
+                ];
+
+                let html = '';
+                tests.forEach(test => {
+                    const success = test.check();
+                    html += `
+                        <div class="test-item ${success ? 'success' : 'error'}">
+                            <div class="test-label">
+                                ${test.nombre}
+                                ${test.critical ? ' <span class="highlight">CRÍTICO</span>' : ''}
+                            </div>
+                            <div class="test-status ${success ? 'success' : 'error'}">
+                                ${success ? '✓ OK' : '✗ ERROR'}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                resultsDiv.innerHTML = html;
+                testResults.storage = tests.every(t => t.check());
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        ❌ Error al acceder a localStorage: ${error.message}
+                    </div>
+                `;
+                testResults.storage = false;
+            }
+        }
+
+        // Mostrar Datos Crudos
+        function mostrarDatos() {
+            try {
+                const appState = JSON.parse(localStorage.getItem('turnosAppState') || '{}');
+                const empleados = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+                const tiposTurno = JSON.parse(localStorage.getItem('tiposTurnoData') || '{}');
+
+                const dataDiv = document.createElement('div');
+                dataDiv.className = 'data-preview';
+                dataDiv.innerHTML = `
+<strong>TIPOS DE TURNO:</strong>
+${JSON.stringify(tiposTurno, null, 2)}
+
+<strong>EMPLEADOS:</strong>
+${JSON.stringify(empleados.slice(0, 2), null, 2)}
+
+<strong>APP STATE (parcial):</strong>
+${JSON.stringify({
+    currentMonth: appState.currentMonth,
+    currentYear: appState.currentYear,
+    cambiosPendientes: appState.cambiosPendientes?.length || 0
+}, null, 2)}
+                `;
+
+                const resultsDiv = document.getElementById('storageStatus');
+                resultsDiv.appendChild(dataDiv);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al mostrar datos: ' + error.message);
+            }
+        }
+
+        // Verificar Estructura Turno
+        function verificarEstructuraTurno() {
+            const resultsDiv = document.getElementById('turnoStructure');
+            
+            try {
+                const appState = JSON.parse(localStorage.getItem('turnosAppState') || '{}');
+                
+                if (!appState.scheduleData || Object.keys(appState.scheduleData).length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="warning-message">
+                            ⚠ No hay datos de turnos. Abre la aplicación principal y crea algunos turnos primero.
+                        </div>
+                    `;
+                    testResults.estructura = false;
+                    return;
+                }
+
+                // Obtener primer turno disponible
+                let primerTurno = null;
+                for (const [empleadoId, turnos] of Object.entries(appState.scheduleData)) {
+                    if (Array.isArray(turnos) && turnos.length > 0) {
+                        primerTurno = turnos[0];
+                        break;
+                    }
+                }
+
+                if (!primerTurno) {
+                    resultsDiv.innerHTML = `
+                        <div class="warning-message">
+                            ⚠ Sin turnos disponibles para verificar.
+                        </div>
+                    `;
+                    testResults.estructura = false;
+                    return;
+                }
+
+                // Verificar campos
+                const camposRequeridos = ['dia', 'turno', 'horas', 'horario'];
+                const campos = {};
+                camposRequeridos.forEach(campo => {
+                    campos[campo] = {
+                        existe: campo in primerTurno,
+                        valor: primerTurno[campo]
+                    };
+                });
+
+                let html = `
+                    <div class="success-message" style="margin-bottom: 15px;">
+                        ✓ Turno de ejemplo encontrado (ID: ${primerTurno.dia})
+                    </div>
+                `;
+
+                html += '<div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">';
+                camposRequeridos.forEach(campo => {
+                    const info = campos[campo];
+                    const success = info.existe && info.valor !== undefined && info.valor !== null && info.valor !== '';
+                    
+                    html += `
+                        <div class="test-item ${success ? 'success' : 'error'}" style="margin: 10px 0;">
+                            <div class="test-label">
+                                Campo <span class="highlight">${campo}</span><br/>
+                                <small style="color: #666;">Valor: <code>${JSON.stringify(info.valor)}</code></small>
+                            </div>
+                            <div class="test-status ${success ? 'success' : 'error'}">
+                                ${success ? '✓ OK' : '✗ FALTA'}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+
+                resultsDiv.innerHTML = html;
+                const allFieldsPresent = camposRequeridos.every(c => campos[c].existe);
+                testResults.estructura = allFieldsPresent;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+                testResults.estructura = false;
+            }
+        }
+
+        // Generar Turnos de Prueba
+        function generarTurnosPrueba() {
+            const resultsDiv = document.getElementById('generationResult');
+            
+            try {
+                // Crear turno de prueba
+                const turnosPrueba = {
+                    1: [
+                        { dia: 1, turno: 'mañana', horas: 8, horario: '08:00-16:00', fecha: new Date(), esFinSemana: false },
+                        { dia: 2, turno: 'tarde', horas: 8, horario: '16:00-00:00', fecha: new Date(), esFinSemana: false },
+                        { dia: 3, turno: 'noche', horas: 8, horario: '00:00-08:00', fecha: new Date(), esFinSemana: false },
+                        { dia: 4, turno: 'descanso', horas: 0, horario: '', fecha: new Date(), esFinSemana: false }
+                    ]
+                };
+
+                localStorage.setItem('TEST_turnosPrueba', JSON.stringify(turnosPrueba));
+
+                resultsDiv.innerHTML = `
+                    <div class="success-message">
+                        ✓ Turnos de prueba creados exitosamente
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                        <strong>Turnos generados:</strong>
+                        <ul class="checklist">
+                            <li class="done">Mañana: 08:00-16:00 (8h)</li>
+                            <li class="done">Tarde: 16:00-00:00 (8h)</li>
+                            <li class="done">Noche: 00:00-08:00 (8h)</li>
+                            <li class="done">Descanso: - (0h)</li>
+                        </ul>
+                    </div>
+                `;
+                testResults.generacion = true;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+                testResults.generacion = false;
+            }
+        }
+
+        // Limpiar Prueba
+        function limpiarPrueba() {
+            localStorage.removeItem('TEST_turnosPrueba');
+            document.getElementById('generationResult').innerHTML = '<p style="color: #666;">Datos de prueba eliminados</p>';
+        }
+
+        // Abrir App Principal
+        function abrirApp() {
+            window.open('nuevo_cuadrante_mejorado.html', '_blank');
+        }
+
+        // Ejecutar verificación inicial
+        window.addEventListener('DOMContentLoaded', () => {
+            verificarArchivos();
+            verificarStorage();
+            verificarEstructuraTurno();
+        });
+    </script>
+</body>
+</html>

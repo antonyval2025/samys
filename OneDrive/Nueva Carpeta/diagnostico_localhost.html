@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Persistencia - Localhost</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .output { background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; }
+        button { padding: 12px 24px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px; }
+        button:hover { background: linear-gradient(135deg, #0056b3 0%, #004085 100%); }
+        .section { margin: 20px 0; padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico de Persistencia - Localhost</h1>
+        <p>Este diagnóstico se ejecuta desde localhost y comparte localStorage con la aplicación principal.</p>
+
+        <div class="section">
+            <button onclick="ejecutarDiagnostico()">🔍 Ejecutar Diagnóstico</button>
+            <button onclick="limpiarLocalStorage()">🗑️ Limpiar localStorage</button>
+            <button onclick="abrirAplicacion()">📱 Abrir Aplicación Principal</button>
+        </div>
+
+        <h2>Resultado del Diagnóstico:</h2>
+        <div class="output" id="output">Haz clic en "Ejecutar Diagnóstico" para comenzar...</div>
+
+        <div class="section">
+            <h3>📋 Instrucciones:</h3>
+            <ol>
+                <li>Ejecuta el diagnóstico para ver el estado actual</li>
+                <li>Abre la aplicación principal en otra pestaña</li>
+                <li>Cambia el turno de Antony día 30</li>
+                <li>Vuelve aquí y ejecuta el diagnóstico nuevamente</li>
+                <li>Recarga la aplicación principal y verifica si los cambios persisten</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="js/modules.js"></script>
+    <script>
+        // Inicializar empleados con la lista completa
+        window.empleados = [
+            { id: 1, nombre: "Empleado 1", localidad: "Madrid", horasContrato: 160 },
+            { id: 2, nombre: "Empleado 2", localidad: "Madrid", horasContrato: 160 },
+            { id: 3, nombre: "Empleado 3", localidad: "Madrid", horasContrato: 160 },
+            { id: 4, nombre: "Empleado 4", localidad: "Madrid", horasContrato: 160 },
+            { id: 5, nombre: "Empleado 5", localidad: "Madrid", horasContrato: 160 },
+            { id: 6, nombre: "Empleado 6", localidad: "Madrid", horasContrato: 160 },
+            { id: 7, nombre: "Empleado 7", localidad: "Madrid", horasContrato: 160 },
+            { id: 8, nombre: "antony valencia", localidad: "Madrid", horasContrato: 154 }
+        ];
+
+        // Inicializar AppState
+        AppState.currentYear = new Date().getFullYear();
+        AppState.currentMonth = new Date().getMonth();
+
+        function ejecutarDiagnostico() {
+            const output = document.getElementById('output');
+            output.textContent = 'Ejecutando diagnóstico...\n';
+
+            try {
+                diagnosticoPersistencia();
+            } catch (error) {
+                output.textContent += '\n❌ ERROR: ' + error.message;
+            }
+        }
+
+        function limpiarLocalStorage() {
+            if (confirm('¿Estás seguro de que quieres limpiar todo localStorage? Se perderán todos los datos guardados.')) {
+                localStorage.clear();
+                document.getElementById('output').textContent = '🗑️ localStorage limpiado completamente';
+            }
+        }
+
+        function abrirAplicacion() {
+            window.open('nuevo_cuadrante_mejorado.html', '_blank');
+        }
+
+        function log(message) {
+            const output = document.getElementById('output');
+            output.textContent += message + '\n';
+            console.log(message);
+        }
+
+        function diagnosticoPersistencia() {
+            log('🧪 === DIAGNÓSTICO DE PERSISTENCIA (LOCALHOST) ===');
+            log('📅 Fecha actual: ' + new Date().toLocaleString());
+            log('🌐 Ejecutándose desde: ' + window.location.href);
+            log('');
+
+            // 1. Verificar localStorage
+            log('📦 LOCALSTORAGE:');
+            try {
+                const saved = localStorage.getItem('turnosAppState');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    log('✅ Datos encontrados en localStorage');
+                    log('📊 Empleados con turnos: ' + (state.scheduleData ? state.scheduleData.length : 0));
+                    log('📅 Mes/año guardado: ' + state.month + '/' + state.year);
+
+                    if (state.scheduleData) {
+                        log('');
+                        log('👥 LISTA DE EMPLEADOS EN LOCALSTORAGE:');
+                        state.scheduleData.forEach(([id, turnos], index) => {
+                            log(`  ${index + 1}. ID: ${id}, Turnos: ${turnos.length}`);
+                        });
+
+                        log('');
+                        log('🔍 BUSCANDO DÍA 30 EN TODOS LOS EMPLEADOS:');
+                        state.scheduleData.forEach(([id, turnos]) => {
+                            const turno30 = turnos.find(t => t.dia === 30);
+                            if (turno30) {
+                                log(`  ID ${id} - Día 30: ${turno30.turno} (Fecha: ${turno30.fecha})`);
+                            }
+                        });
+                    }
+                } else {
+                    log('❌ No hay datos en localStorage');
+                }
+            } catch (error) {
+                log('❌ Error leyendo localStorage: ' + error);
+            }
+
+            log('');
+            log('🏪 APPSTATE:');
+            log('📅 Mes/año actual: ' + AppState.currentMonth + '/' + AppState.currentYear);
+            log('📊 Empleados en AppState: ' + AppState.scheduleData.size);
+
+            if (AppState.scheduleData.size > 0) {
+                log('');
+                log('👥 EMPLEADOS EN APPSTATE:');
+                AppState.scheduleData.forEach((turnos, id) => {
+                    log(`  ID ${id}: ${turnos.length} turnos`);
+                    const turno30 = turnos.find(t => t.dia === 30);
+                    if (turno30) {
+                        log(`     Día 30: ${turno30.turno}`);
+                    }
+                });
+            }
+
+            log('');
+            log('👥 EMPLEADOS DISPONIBLES EN EL SISTEMA:');
+            if (window.empleados) {
+                window.empleados.forEach(emp => {
+                    log(`  ID ${emp.id}: ${emp.nombre}`);
+                });
+            }
+
+            log('');
+            log('🧪 === FIN DIAGNÓSTICO ===');
+        }
+
+        // Ejecutar diagnóstico automáticamente al cargar
+        setTimeout(() => {
+            ejecutarDiagnostico();
+        }, 500);
+    </script>
+</body>
+</html>

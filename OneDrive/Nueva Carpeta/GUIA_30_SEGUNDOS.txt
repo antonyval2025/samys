@@ -1,0 +1,92 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                     ⚡ GUÍA 30 SEGUNDOS - INICIO RÁPIDO                      ║
+║                    (Lee esto si tienes prisa)                               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+## ⚡ AHORA MISMO (5 segundos)
+
+Doble clic en:  iniciar.bat
+
+¡Listo! Se abre el navegador automáticamente.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🎯 CASOS DE USO RÁPIDOS
+
+### "Quiero probar la app"
+```
+Doble clic: iniciar.bat
+Resultado: App abierta en navegador
+```
+
+### "Quiero llevar a otro ordenador"
+```
+Doble clic: crear_paquete_distribucion.bat
+Resultado: Carpeta lista para copiar/email/USB
+```
+
+### "Quiero verificar que todo funciona"
+```
+Doble clic: prueba_final_simple.bat
+Resultado: Reporte de estado
+```
+
+### "Quiero recompilar después de cambios"
+```
+Doble clic: compilar_exe.bat
+Resultado: Nuevo servidor_turnos.exe generado
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 📖 SI NECESITAS AYUDA
+
+Problema              | Solución
+──────────────────────────────────────────────────────────────────────────────
+No abre navegador     | Abre: http://localhost:5001
+Puerto 5001 en uso    | Edita iniciar.bat, cambia 5001 por 5002
+Antivirus bloquea exe | Es falso positivo, agrega excepción
+Datos desaparecen     | Archiva turnos_database.db en lugar seguro
+Aplicación lenta      | Elimina empleados de prueba, reinicia
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 📚 LEE ESTO SEGÚN TU ROL
+
+👤 Usuario Final
+  → Lee: LEER_PRIMERO_PORTABLE.txt (la guía completa)
+
+👨‍💻 Desarrollador
+  → Lee: ARQUITECTURA.md (cómo está hecho)
+
+📦 Distribuidor
+  → Lee: GUIA_DISTRIBUCION_PAQUETE.md (paso a paso)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## ✅ VERIFICACIÓN RÁPIDA
+
+```
+¿Está todo listo?
+  → Ejecuta: prueba_final_simple.bat
+  → Debe mostrar: "RESULTADO: 10/10 verificaciones pasadas"
+  → Si ves eso: ¡Todo perfecto! ✓
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## 🎉 ERES LISTO!
+
+Tu aplicación está 100% funcionando y lista para usar.
+
+Próximos pasos:
+  1. Doble clic en iniciar.bat
+  2. Agrega empleados
+  3. Genera cuadrante
+  4. ¡Usa la app!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+v10.0 - ✅ LISTO PARA USAR

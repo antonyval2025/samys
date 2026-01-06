@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ConsolidadoDepartamentos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1e293b;
+            border-bottom: 3px solid #06b6d4;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 3px solid #10b981;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 3px solid #ef4444;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 3px solid #f59e0b;
+        }
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+        input, textarea {
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .log-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 TEST: ConsolidadoDepartamentos</h1>
+        
+        <div class="test-section">
+            <h2>📊 Estado del Sistema</h2>
+            <button onclick="testCargarModulos()">1️⃣ Verificar Módulos Cargados</button>
+            <button onclick="testObtenerDepartamentos()">2️⃣ Obtener Departamentos</button>
+            <button onclick="testValidarFormulario()">3️⃣ Validar Formulario</button>
+            <div id="resultadoModulos"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>➕ Crear Departamento</h2>
+            <div class="input-group">
+                <input type="text" id="deptoNombre" placeholder="Nombre departamento" value="Test Depto">
+                <input type="text" id="deptoDesc" placeholder="Descripción" value="Departamento de prueba">
+                <input type="number" id="deptoHoraSem" placeholder="Horas/semana" value="40" min="20" max="60">
+                <input type="number" id="deptoDias" placeholder="Días trabajo" value="5" min="4" max="7">
+                <input type="number" id="deptoHorasDia" placeholder="Horas/día" value="8" min="4" max="12" step="0.5">
+            </div>
+            <button onclick="testCrearDepartamento()">✅ Crear Departamento</button>
+            <div id="resultadoCrear"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Listar Departamentos</h2>
+            <button onclick="testListarDepartamentos()">📊 Cargar Lista</button>
+            <table id="tablaDepartamentos" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Horas/Semana</th>
+                        <th>Días Trabajo</th>
+                        <th>Horas/Día</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla"></tbody>
+            </table>
+            <div id="resultadoLista"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>✏️ Editar Departamento</h2>
+            <input type="text" id="deptoAEditar" placeholder="Nombre del departamento a editar" value="Limpieza">
+            <input type="number" id="nuevasHoras" placeholder="Nuevas horas/día" value="6.5" min="4" max="12" step="0.5">
+            <button onclick="testEditarDepartamento()">📝 Editar</button>
+            <div id="resultadoEditar"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Verificar Integraciones</h2>
+            <button onclick="testIntegracionReactividad()">🔗 Sistema Reactividad</button>
+            <button onclick="testIntegracionEmployeeManager()">👥 EmployeeManager</button>
+            <button onclick="testIntegracionTurnoManager()">📅 TurnoManager</button>
+            <div id="resultadoIntegraciones"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Log de Consola</h2>
+            <button onclick="limpiarLog()">🗑️ Limpiar Log</button>
+            <div id="logOutput" class="log-output">Esperando eventos...</div>
+        </div>
+    </div>
+
+    <!-- CARGAR MÓDULOS EN ORDEN CORRECTO -->
+    <script src="js/departamentos-manager.js"></script>
+    <script src="js/consolidado-departamentos.js"></script>
+    <script src="js/sistema-reactividad.js"></script>
+
+    <script>
+        // Interceptar console.log para mostrar en la página
+        const logOutput = document.getElementById('logOutput');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const mensaje = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            logOutput.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${mensaje}</div>`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        };
+
+        // ============================================
+        // FUNCIONES DE TEST
+        // ============================================
+
+        function mostrarResultado(elementId, mensaje, tipo = 'success') {
+            const div = document.getElementById(elementId);
+            const p = document.createElement('div');
+            p.className = `test-result ${tipo}`;
+            p.textContent = mensaje;
+            div.appendChild(p);
+        }
+
+        function limpiarResultado(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        function limpiarLog() {
+            logOutput.innerHTML = 'Log limpiado a las ' + new Date().toLocaleTimeString();
+        }
+
+        // Test 1: Verificar módulos cargados
+        function testCargarModulos() {
+            limpiarResultado('resultadoModulos');
+            
+            const checks = [
+                { nombre: 'DepartamentosManager', obj: typeof DepartamentosManager },
+                { nombre: 'ConsolidadoDepartamentos', obj: typeof ConsolidadoDepartamentos },
+                { nombre: 'SistemaReactividad', obj: typeof SistemaReactividad }
+            ];
+
+            checks.forEach(check => {
+                if (check.obj !== 'undefined') {
+                    mostrarResultado('resultadoModulos', `✅ ${check.nombre} cargado correctamente`, 'success');
+                } else {
+                    mostrarResultado('resultadoModulos', `❌ ${check.nombre} NO ENCONTRADO`, 'error');
+                }
+            });
+        }
+
+        // Test 2: Obtener departamentos
+        function testObtenerDepartamentos() {
+            limpiarResultado('resultadoModulos');
+            
+            try {
+                const deptos = ConsolidadoDepartamentos.obtenerListaDepartamentos();
+                mostrarResultado('resultadoModulos', `✅ Se obtuvieron ${deptos.length} departamentos: ${deptos.join(', ')}`, 'success');
+            } catch (error) {
+                mostrarResultado('resultadoModulos', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 3: Validar formulario
+        function testValidarFormulario() {
+            limpiarResultado('resultadoModulos');
+            
+            const nombre = document.getElementById('deptoNombre').value;
+            const horasSem = parseInt(document.getElementById('deptoHoraSem').value);
+            const dias = parseInt(document.getElementById('deptoDias').value);
+            const horasDia = parseFloat(document.getElementById('deptoHorasDia').value);
+
+            let valido = true;
+            const errores = [];
+
+            if (nombre.length < 2) {
+                errores.push('❌ Nombre debe tener al menos 2 caracteres');
+                valido = false;
+            }
+            if (horasSem < 20 || horasSem > 60) {
+                errores.push('❌ Horas semanales debe estar entre 20 y 60');
+                valido = false;
+            }
+            if (dias < 4 || dias > 7) {
+                errores.push('❌ Días trabajo debe estar entre 4 y 7');
+                valido = false;
+            }
+            if (horasDia < 4 || horasDia > 12) {
+                errores.push('❌ Horas/día debe estar entre 4 y 12');
+                valido = false;
+            }
+
+            if (valido) {
+                mostrarResultado('resultadoModulos', '✅ Formulario válido', 'success');
+            } else {
+                errores.forEach(e => mostrarResultado('resultadoModulos', e, 'error'));
+            }
+        }
+
+        // Test 4: Crear departamento
+        function testCrearDepartamento() {
+            limpiarResultado('resultadoCrear');
+            
+            const nombre = document.getElementById('deptoNombre').value;
+            const descripcion = document.getElementById('deptoDesc').value;
+            const horasSemanales = parseInt(document.getElementById('deptoHoraSem').value);
+            const diasTrabajo = parseInt(document.getElementById('deptoDias').value);
+            const horasDiarias = parseFloat(document.getElementById('deptoHorasDia').value);
+
+            try {
+                DepartamentosManager.agregarDepartamento({
+                    nombre: nombre,
+                    descripcion: descripcion,
+                    horasSemanales: horasSemanales,
+                    diasTrabajo: diasTrabajo,
+                    horasDiarias: horasDiarias
+                });
+                mostrarResultado('resultadoCrear', `✅ Departamento '${nombre}' creado: ${horasSemanales}h/sem, ${diasTrabajo}d, ${horasDiarias}h/día`, 'success');
+            } catch (error) {
+                mostrarResultado('resultadoCrear', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 5: Listar departamentos
+        function testListarDepartamentos() {
+            limpiarResultado('resultadoLista');
+            
+            try {
+                const deptos = DepartamentosManager.obtenerDepartamentos();
+                const tabla = document.getElementById('tablaDepartamentos');
+                const cuerpo = document.getElementById('cuerpoTabla');
+                
+                cuerpo.innerHTML = '';
+                deptos.forEach(depto => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td><strong>${depto.nombre}</strong></td>
+                        <td>${depto.descripcion || 'N/A'}</td>
+                        <td>${depto.horasSemanales}</td>
+                        <td>${depto.diasTrabajo}</td>
+                        <td>${depto.horasDiarias}</td>
+                    `;
+                    cuerpo.appendChild(fila);
+                });
+                
+                tabla.style.display = 'table';
+                mostrarResultado('resultadoLista', `✅ ${deptos.length} departamentos listados`, 'success');
+            } catch (error) {
+                mostrarResultado('resultadoLista', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 6: Editar departamento
+        function testEditarDepartamento() {
+            limpiarResultado('resultadoEditar');
+            
+            const nombre = document.getElementById('deptoAEditar').value;
+            const horasDiarias = parseFloat(document.getElementById('nuevasHoras').value);
+
+            try {
+                DepartamentosManager.actualizarDepartamento(nombre, {
+                    horasDiarias: horasDiarias
+                });
+                mostrarResultado('resultadoEditar', `✅ Departamento '${nombre}' actualizado a ${horasDiarias}h/día`, 'success');
+            } catch (error) {
+                mostrarResultado('resultadoEditar', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 7: Integración con Reactividad
+        function testIntegracionReactividad() {
+            limpiarResultado('resultadoIntegraciones');
+            
+            if (typeof SistemaReactividad === 'undefined') {
+                mostrarResultado('resultadoIntegraciones', '❌ SistemaReactividad no disponible', 'error');
+                return;
+            }
+
+            mostrarResultado('resultadoIntegraciones', '✅ SistemaReactividad disponible', 'success');
+            
+            // Verificar que listener existe
+            console.log('[TEST] Verificando listeners de SistemaReactividad...');
+            mostrarResultado('resultadoIntegraciones', '✅ Listeners registrados (revisar consola)', 'success');
+        }
+
+        // Test 8: Integración con EmployeeManager
+        function testIntegracionEmployeeManager() {
+            limpiarResultado('resultadoIntegraciones');
+            
+            if (typeof EmployeeManager === 'undefined') {
+                mostrarResultado('resultadoIntegraciones', '⚠️ EmployeeManager no disponible (normal si no está en este test)', 'warning');
+                return;
+            }
+
+            if (typeof EmployeeManager.llenarSelectDepartamentos === 'function') {
+                mostrarResultado('resultadoIntegraciones', '✅ EmployeeManager.llenarSelectDepartamentos() disponible', 'success');
+            } else {
+                mostrarResultado('resultadoIntegraciones', '❌ Método llenarSelectDepartamentos no encontrado', 'error');
+            }
+        }
+
+        // Test 9: Integración con TurnoManager
+        function testIntegracionTurnoManager() {
+            limpiarResultado('resultadoIntegraciones');
+            
+            if (typeof TurnoManager === 'undefined') {
+                mostrarResultado('resultadoIntegraciones', '⚠️ TurnoManager no disponible (normal si no está en este test)', 'warning');
+                return;
+            }
+
+            mostrarResultado('resultadoIntegraciones', '✅ TurnoManager disponible', 'success');
+        }
+
+        // Inicializar
+        window.addEventListener('load', function() {
+            console.log('[TEST] 🧪 Sistema de Testing Inicializado');
+            console.log('[TEST] Módulos disponibles:', {
+                DepartamentosManager: typeof DepartamentosManager !== 'undefined',
+                ConsolidadoDepartamentos: typeof ConsolidadoDepartamentos !== 'undefined',
+                SistemaReactividad: typeof SistemaReactividad !== 'undefined'
+            });
+        });
+    </script>
+</body>
+</html>

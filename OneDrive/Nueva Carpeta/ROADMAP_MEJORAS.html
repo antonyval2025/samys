@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROADMAP DE MEJORAS - Sistema de Gestión de Turnos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f7fafc;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        #content {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #0f172a;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #1e40af;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: #2563eb;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        h4 {
+            color: #3b82f6;
+            font-size: 14px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            color: #374151;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .header-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .header-info p {
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border-left: 4px solid #3b82f6;
+            padding-left: 20px;
+        }
+        
+        .feature-card {
+            background: #f0f9ff;
+            border: 1px solid #e0f2fe;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .priority-matrix {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        
+        .priority-matrix th {
+            background: #1e40af;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+        
+        .priority-matrix td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+        
+        .priority-matrix tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        .priority-alta {
+            background: #fef2f2 !important;
+            font-weight: 600;
+            color: #991b1b;
+        }
+        
+        .priority-media {
+            color: #b45309;
+        }
+        
+        .priority-baja {
+            color: #6b7280;
+        }
+        
+        .roadmap-phase {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .roadmap-phase h3 {
+            margin-top: 0;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .benefit-box {
+            background: #ecfdf5;
+            border-left: 3px solid #10b981;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .btn-download {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .btn-download:hover {
+            transform: translateY(-2px);
+        }
+        
+        .index {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+        
+        .index ol {
+            margin-left: 20px;
+        }
+        
+        .index li {
+            margin-bottom: 6px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            #content {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .btn-download {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="content">
+            <!-- HEADER -->
+            <div class="header-info">
+                <h1>🚀 ROADMAP DE MEJORAS</h1>
+                <p><strong>Sistema de Gestión de Turnos</strong></p>
+                <p>📅 Fecha: 29 de diciembre de 2025</p>
+                <p>📊 Estado: Análisis técnico de mejoras propuestas</p>
+                <p>🎯 Objetivo: Evaluar y priorizar mejoras sin afectar lo implementado</p>
+            </div>
+
+            <!-- ÍNDICE -->
+            <div class="index">
+                <h2>📋 ÍNDICE DE IDEAS</h2>
+                <ol>
+                    <li><strong>Animaciones y Transiciones Mejoradas</strong> - 4 mejoras visuales</li>
+                    <li><strong>Nuevas Opciones de Exportación</strong> - Excel, ICS, JSON, Google Sheets</li>
+                    <li><strong>Reportes Avanzados</strong> - Cumplimiento, equidad, dashboard, predicciones</li>
+                    <li><strong>Integraciones Adicionales</strong> - Teams, Slack, SMS, BD</li>
+                    <li><strong>Optimización de Rendimiento</strong> - Lazy loading, caché, compresión</li>
+                    <li><strong>Mejoras UX/UI Específicas</strong> - Dark mode, filtros, atajos</li>
+                </ol>
+            </div>
+
+            <!-- SECCIÓN 1: ANIMACIONES -->
+            <div class="section">
+                <h2>1️⃣ ANIMACIONES Y TRANSICIONES MEJORADAS</h2>
+                <p><strong>Descripción:</strong> Potenciar la experiencia visual con transiciones fluidas, efectos de carga y animaciones que refuercen las interacciones del usuario sin afectar el rendimiento.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">1.1 Animaciones de Transición en Celdas</div>
+                    <p>Cuando el usuario cambia un turno, la celda muestra una animación de cambio (fade, scale, color transition).</p>
+                    <h4>Impacto Visual:</h4>
+                    <ul>
+                        <li>Las celdas "parpadean" suavemente al cambiar</li>
+                        <li>El usuario recibe feedback inmediato y satisfactorio</li>
+                        <li>Aumenta la percepción de profesionalismo</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 30 minutos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">1.2 Animación de Carga del Cuadrante</div>
+                    <p>Efecto de "skeleton loading" o fade-in gradual cuando se abre el cuadrante individual.</p>
+                    <h4>Impacto Visual:</h4>
+                    <ul>
+                        <li>Sensación de fluidez al abrir modal</li>
+                        <li>Indican al usuario que se están cargando datos</li>
+                        <li>Mejora la percepción de velocidad</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 20 minutos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">1.3 Hover Effects Mejorados en Tarjetas</div>
+                    <p>Las tarjetas de resumen (Horas Contrato, Balance, etc.) cambian levemente al pasar el mouse.</p>
+                    <h4>Impacto Visual:</h4>
+                    <ul>
+                        <li>Elevación sutil (box-shadow aumenta)</li>
+                        <li>Color se intensifica ligeramente</li>
+                        <li>Cursor cambia a pointer para indicar interactividad</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Muy baja | <strong>Tiempo:</strong> 15 minutos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">1.4 Animación de Cambio de Mes</div>
+                    <p>Transición suave al cambiar entre meses (fade + slide).</p>
+                    <h4>Impacto Visual:</h4>
+                    <ul>
+                        <li>Sensación de navegación fluida</li>
+                        <li>No se siente abrupto el cambio de datos</li>
+                        <li>Profesionalismo visual</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 45 minutos</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Mejora UX, feedback visual inmediato, percepción profesional, diferencia visual
+                </div>
+                <div class="warning-box">
+                    <strong>⚠️ Desventajas:</strong> Pequeño peso CSS/JS adicional, sincronización temporal requerida
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: EXPORTACIONES -->
+            <div class="section">
+                <h2>2️⃣ NUEVAS OPCIONES DE EXPORTACIÓN</h2>
+                <p><strong>Descripción:</strong> Expandir más allá de PDF y WhatsApp: Excel detallado, ICS (calendario), JSON, etc.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">2.1 Exportar a Excel Mejorado ⭐ ALTA PRIORIDAD</div>
+                    <p>Descargar cuadrante completo en Excel con formateo profesional.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Columnas: Día | Turno | Horas | Horario | Notas</li>
+                        <li>Color de fondo por turno (igual que en pantalla)</li>
+                        <li>Bordes y fuentes profesionales</li>
+                        <li>Subtotales por semana/mes</li>
+                        <li>Gráfico de distribución de turnos</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2-3 horas</p>
+                    <p><strong>Beneficio:</strong> Excel editable, filtrable, con gráficos (vs PDF no editable)</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">2.2 Exportar a Calendario (ICS) ⭐ ALTA PRIORIDAD</div>
+                    <p>Descargar archivo .ics que importable a Google Calendar, Outlook, Apple Calendar.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Cada turno es un evento en el calendario</li>
+                        <li>Color del evento = color del turno</li>
+                        <li>Descripción incluye: tipo turno, horario, horas</li>
+                        <li>Se sincroniza automáticamente en calendarios externos</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 1-2 horas</p>
+                    <p><strong>Beneficio:</strong> Usuario ve turnos en calendario personal, recordatorios automáticos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">2.3 Exportar a JSON Estructurado</div>
+                    <p>Dump completo de datos en JSON para integraciones futuras.</p>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 30 minutos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">2.4 Exportar a Google Sheets (Cloud) ⭐ ALTA PRIORIDAD (después)</div>
+                    <p>Sincronizar cuadrante directamente con hoja de Google Sheets compartida.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Enlace directo a una sheet en la nube</li>
+                        <li>Equipo puede ver cambios en tiempo real</li>
+                        <li>Backup automático en Google Drive</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Medio | <strong>Complejidad:</strong> Alta | <strong>Tiempo:</strong> 4-6 horas</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Flexibilidad para usuarios, integración con ecosistemas populares, backup de datos
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: REPORTES -->
+            <div class="section">
+                <h2>3️⃣ REPORTES AVANZADOS</h2>
+                <p><strong>Descripción:</strong> Análisis profundo de datos: tendencias, cumplimiento, equidad de carga, predicciones.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">3.1 Reporte de Cumplimiento de Horas ⭐ ALTA PRIORIDAD</div>
+                    <p>Análisis comparativo entre horas contratadas vs trabajadas.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Gráfico de evolución semanal/mensual</li>
+                        <li>Alertas si está por debajo de lo esperado</li>
+                        <li>Proyección: si continúa así, ¿cuántas horas le faltarán?</li>
+                        <li>Desglose por tipo de turno</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2 horas</p>
+                    <p><strong>Beneficio:</strong> Managers pueden ver cumplimiento de horas en tiempo real</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">3.2 Análisis de Equidad de Carga ⭐ ALTA PRIORIDAD</div>
+                    <p>Comparar distribución de turnos nocturnos, guardias, descansos entre empleados.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>¿Quién tiene más turnos nocturnos?</li>
+                        <li>¿Quién tiene más guardias?</li>
+                        <li>¿Están balanceados los descansos?</li>
+                        <li>Matriz de comparación empleados vs empleados</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media-Alta | <strong>Tiempo:</strong> 3 horas</p>
+                    <p><strong>Beneficio:</strong> Detecta inequidades, cumplimiento normativo</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">3.3 Dashboard de Métricas Generales ⭐ ALTA PRIORIDAD</div>
+                    <p>Panel de control con KPIs principales del equipo.</p>
+                    <h4>Métricas:</h4>
+                    <ul>
+                        <li>Total empleados activos</li>
+                        <li>Cobertura general (% de turnos cubiertos)</li>
+                        <li>Horas totales este mes vs meta</li>
+                        <li>Guardias cubiertas vs necesarias</li>
+                        <li>Tasa de ausentismo</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Medio | <strong>Complejidad:</strong> Alta | <strong>Tiempo:</strong> 5-6 horas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">3.4 Reporte de Tendencias (Predicción)</div>
+                    <p>Machine learning simple para predecir problemas.</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 3-4 horas</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Inteligencia de datos, toma de decisiones basada en datos, detección automática de problemas, ROI muy alto
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: INTEGRACIONES -->
+            <div class="section">
+                <h2>4️⃣ INTEGRACIONES ADICIONALES</h2>
+                <p><strong>Descripción:</strong> Conectar con herramientas externas que los usuarios ya usan.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">4.1 Integración con Microsoft Teams</div>
+                    <p>Enviar notificaciones de cambios de turno a Teams en tiempo real.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Cuando se asigna un turno → Notificación en Teams</li>
+                        <li>Cuando hay cambio de turno → Alerta a empleado</li>
+                        <li>Channel dedicado por departamento</li>
+                        <li>Recordatorios diarios de turnos de mañana</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1-2 horas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">4.2 Integración con Slack</div>
+                    <p>Bot de Slack que responde comandos y notifica cambios.</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1.5 horas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">4.3 Integración con SMS (Twillio)</div>
+                    <p>Enviar notificaciones por SMS a empleados.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Cambios de turno por SMS inmediato</li>
+                        <li>Recordatorio el día anterior</li>
+                        <li>Confirmación de cambios solicitados</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Medio | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2-3 horas</p>
+                    <p><strong>Costo:</strong> ~$0.01 por SMS</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">4.4 Sincronización con BD Externa</div>
+                    <p>Integración con HR systems (SAP, Workday, BambooHR).</p>
+                    <p><strong>Riesgo:</strong> Alto | <strong>Complejidad:</strong> Muy Alta | <strong>Tiempo:</strong> 8+ horas</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Reduce fricción, integración con flujos existentes, valor agregado significativo
+                </div>
+            </div>
+
+            <!-- SECCIÓN 5: OPTIMIZACIÓN -->
+            <div class="section">
+                <h2>5️⃣ OPTIMIZACIÓN DE RENDIMIENTO</h2>
+                <p><strong>Descripción:</strong> Hacer la app más rápida, especialmente con muchos empleados y datos históricos.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">5.1 Lazy Loading del Cuadrante</div>
+                    <p>Cargar solo los datos visibles en pantalla, no todo a la vez.</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2-3 horas</p>
+                    <p><strong>Beneficio:</strong> 70% más rápido con muchos empleados</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">5.2 Caché de Datos Computados</div>
+                    <p>Guardar en memoria resultados de cálculos costosos.</p>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1 hora</p>
+                    <p><strong>Beneficio:</strong> 20-30% más rápido en promedio</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">5.3 Compresión de localStorage</div>
+                    <p>Comprimir datos antes de guardar (reduce tamaño 60%).</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 30 minutos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">5.4 Web Workers para Cálculos Pesados</div>
+                    <p>Ejecutar cálculos en thread separado (no congela UI).</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2 horas</p>
+                    <p><strong>Beneficio:</strong> UI nunca se congela, experiencia fluida</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Experiencia más rápida, escalable a más empleados, menor uso de recursos
+                </div>
+            </div>
+
+            <!-- SECCIÓN 6: UX/UI -->
+            <div class="section">
+                <h2>6️⃣ MEJORAS UX/UI ESPECÍFICAS</h2>
+                <p><strong>Descripción:</strong> Cambios pequeños pero significativos en la interfaz para mejorar usabilidad.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-title">6.1 Modo Oscuro Mejorado (Dark Mode Toggle)</div>
+                    <p>Botón para alternar entre tema claro y oscuro.</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 3-4 horas</p>
+                    <p><strong>Beneficio:</strong> Reduce fatiga visual, preferencia moderna esperada</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">6.2 Filtros y Búsqueda Avanzados ⭐ ALTA PRIORIDAD</div>
+                    <p>Filtrar cuadrante por departamento, turno, estado.</p>
+                    <h4>Características:</h4>
+                    <ul>
+                        <li>Dropdowns para filtrar</li>
+                        <li>Búsqueda por nombre (autocomplete)</li>
+                        <li>Combinación de filtros</li>
+                        <li>Guardar filtros predefinidos</li>
+                    </ul>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Media | <strong>Tiempo:</strong> 2 horas</p>
+                    <p><strong>Beneficio:</strong> Mejora enorme de usabilidad</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">6.3 Notificaciones Inteligentes en la Aplicación</div>
+                    <p>Sistema mejorado de notificaciones in-app.</p>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1-2 horas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">6.4 Tooltips y Ayuda Contextual</div>
+                    <p>Explicaciones flotantes sobre elementos complejos.</p>
+                    <p><strong>Riesgo:</strong> Muy bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1.5 horas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-title">6.5 Atajos de Teclado ⭐ ALTA PRIORIDAD</div>
+                    <p>Accesos rápidos sin mouse: Ctrl+S (guardar), Ctrl+M (mes siguiente), etc.</p>
+                    <p><strong>Riesgo:</strong> Bajo | <strong>Complejidad:</strong> Baja | <strong>Tiempo:</strong> 1 hora</p>
+                    <p><strong>Beneficio:</strong> Usuarios pueden trabajar 30% más rápido</p>
+                </div>
+
+                <div class="benefit-box">
+                    <strong>✅ Ventajas:</strong> Mejora significativa en facilidad de uso, accesibilidad, profesionalismo visual
+                </div>
+            </div>
+
+            <!-- MATRIZ DE PRIORIZACIÓN -->
+            <div class="section">
+                <h2>📊 MATRIZ DE PRIORIZACIÓN</h2>
+                <p>Todas las ideas comparadas por impacto, esfuerzo y ROI:</p>
+                <table class="priority-matrix">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Idea</th>
+                            <th>Impacto</th>
+                            <th>Esfuerzo</th>
+                            <th>ROI</th>
+                            <th>Prioridad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="priority-alta">
+                            <td>2.1</td>
+                            <td>Excel Mejorado</td>
+                            <td>Alto</td>
+                            <td>Medio</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>2.2</td>
+                            <td>ICS Calendario</td>
+                            <td>Alto</td>
+                            <td>Medio</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>3.1</td>
+                            <td>Cumplimiento Horas</td>
+                            <td>Muy Alto</td>
+                            <td>Medio</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>3.2</td>
+                            <td>Equidad de Carga</td>
+                            <td>Muy Alto</td>
+                            <td>Medio</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>3.3</td>
+                            <td>Dashboard Métricas</td>
+                            <td>Muy Alto</td>
+                            <td>Alto</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>6.2</td>
+                            <td>Filtros Avanzados</td>
+                            <td>Alto</td>
+                            <td>Medio</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-alta">
+                            <td>6.5</td>
+                            <td>Atajos de Teclado</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                            <td>Muy Alto</td>
+                            <td>ALTA ⭐</td>
+                        </tr>
+                        <tr class="priority-media">
+                            <td>1.1</td>
+                            <td>Animaciones Celdas</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                            <td>Medio</td>
+                            <td>MEDIA</td>
+                        </tr>
+                        <tr class="priority-media">
+                            <td>1.3</td>
+                            <td>Hover Tarjetas</td>
+                            <td>Medio</td>
+                            <td>Muy Bajo</td>
+                            <td>Medio</td>
+                            <td>MEDIA</td>
+                        </tr>
+                        <tr class="priority-media">
+                            <td>3.4</td>
+                            <td>Predicción/Tendencias</td>
+                            <td>Alto</td>
+                            <td>Medio</td>
+                            <td>Alto</td>
+                            <td>MEDIA-ALTA</td>
+                        </tr>
+                        <tr class="priority-media">
+                            <td>4.1</td>
+                            <td>Teams Integration</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                            <td>Medio</td>
+                            <td>MEDIA-ALTA</td>
+                        </tr>
+                        <tr class="priority-media">
+                            <td>4.2</td>
+                            <td>Slack Integration</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                            <td>Medio</td>
+                            <td>MEDIA-ALTA</td>
+                        </tr>
+                        <tr class="priority-baja">
+                            <td>1.2</td>
+                            <td>Animación Carga Modal</td>
+                            <td>Bajo</td>
+                            <td>Bajo</td>
+                            <td>Bajo</td>
+                            <td>BAJA</td>
+                        </tr>
+                        <tr class="priority-baja">
+                            <td>1.4</td>
+                            <td>Animación Cambio Mes</td>
+                            <td>Medio</td>
+                            <td>Bajo</td>
+                            <td>Bajo</td>
+                            <td>BAJA</td>
+                        </tr>
+                        <tr class="priority-baja">
+                            <td>2.3</td>
+                            <td>JSON Export</td>
+                            <td>Bajo</td>
+                            <td>Bajo</td>
+                            <td>Medio</td>
+                            <td>MEDIA</td>
+                        </tr>
+                        <tr class="priority-baja">
+                            <td>4.3</td>
+                            <td>SMS Notificaciones</td>
+                            <td>Medio</td>
+                            <td>Medio</td>
+                            <td>Medio</td>
+                            <td>MEDIA</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ROADMAP DE FASES -->
+            <div class="section">
+                <h2>🎯 ROADMAP DE 3 FASES RECOMENDADO</h2>
+                
+                <div class="roadmap-phase">
+                    <h3>FASE 1: ALTO IMPACTO + BAJO ESFUERZO (Semana 1-2)</h3>
+                    <p>Estas son "quick wins" que dan mucho valor sin complejidad.</p>
+                    <ol>
+                        <li><strong>Excel Mejorado</strong> (2.1) - Usuarios lo piden constantemente</li>
+                        <li><strong>ICS Calendario</strong> (2.2) - Integración natural con herramientas populares</li>
+                        <li><strong>Reporte Cumplimiento Horas</strong> (3.1) - Valor muy alto para managers</li>
+                        <li><strong>Filtros Avanzados</strong> (6.2) - Mejora enorme de usabilidad</li>
+                        <li><strong>Atajos de Teclado</strong> (6.5) - Rápido de implementar, users lo aman</li>
+                    </ol>
+                    <p><strong>Tiempo estimado:</strong> 12-14 horas</p>
+                    <p><strong>Valor percibido:</strong> ⭐⭐⭐⭐⭐</p>
+                </div>
+
+                <div class="roadmap-phase">
+                    <h3>FASE 2: REPORTES + ANÁLISIS (Semana 3-4)</h3>
+                    <p>Enfocarse en "business intelligence" que managers necesitan.</p>
+                    <ol>
+                        <li><strong>Análisis de Equidad de Carga</strong> (3.2) - Detectar inequidades</li>
+                        <li><strong>Dashboard de Métricas</strong> (3.3) - Vista general para supervisores</li>
+                        <li><strong>Teams Integration</strong> (4.1) - Comunicación centralizada</li>
+                        <li><strong>Reporte Tendencias</strong> (3.4) - Predicción y recomendaciones</li>
+                    </ol>
+                    <p><strong>Tiempo estimado:</strong> 14-16 horas</p>
+                    <p><strong>Valor percibido:</strong> ⭐⭐⭐⭐⭐</p>
+                </div>
+
+                <div class="roadmap-phase">
+                    <h3>FASE 3: PULIDO + OPTIMIZACIÓN (Semana 5-6)</h3>
+                    <p>Mejoras de experiencia y rendimiento.</p>
+                    <ol>
+                        <li><strong>Animaciones de Celdas</strong> (1.1) - Feedback visual profesional</li>
+                        <li><strong>Hover en Tarjetas</strong> (1.3) - Polish visual</li>
+                        <li><strong>Notificaciones Mejoradas</strong> (6.3) - Mejor UX</li>
+                        <li><strong>Dark Mode</strong> (6.1) - Feature esperada</li>
+                        <li><strong>Lazy Loading</strong> (5.1) - Si hay problemas de rendimiento</li>
+                        <li><strong>Slack Integration</strong> (4.2) - Complemento de Teams</li>
+                    </ol>
+                    <p><strong>Tiempo estimado:</strong> 12-14 horas</p>
+                    <p><strong>Valor percibido:</strong> ⭐⭐⭐⭐</p>
+                </div>
+            </div>
+
+            <!-- CONSIDERACIONES -->
+            <div class="section">
+                <h2>⚠️ CONSIDERACIONES IMPORTANTES</h2>
+                
+                <h3>✅ Preservar lo Logrado</h3>
+                <ul>
+                    <li>Todo lo actual funciona perfecto</li>
+                    <li>Los cambios deben ser <strong>aditivos</strong>, no reemplazar</li>
+                    <li>Versionar: cada feature nueva = rama separada en git</li>
+                    <li>Testing completo antes de merge</li>
+                    <li>Rollback plan si algo sale mal</li>
+                </ul>
+
+                <h3>📚 Dependencias Externas</h3>
+                <p>Minimizar: cada librería = potencial problema futuro</p>
+                <ul>
+                    <li>✅ Chart.js (muy estable, ligero)</li>
+                    <li>✅ SheetJS (muy usado)</li>
+                    <li>✅ LZ-String (muy pequeño)</li>
+                    <li>⚠️ Twillio (requiere API keys, costo)</li>
+                    <li>⚠️ Google Sheets API (complejidad OAuth)</li>
+                </ul>
+
+                <h3>🏗️ Mantener Arquitectura Limpia</h3>
+                <ul>
+                    <li>Cada feature nueva = nueva clase o módulo</li>
+                    <li>No mezclar en AppState ni TurnoManager</li>
+                    <li>Ejemplo: crear ReportManager.js, ExportManager.js, etc.</li>
+                    <li>Documentar cada adición</li>
+                </ul>
+            </div>
+
+            <!-- PRÓXIMAS ACCIONES -->
+            <div class="section">
+                <h2>🎬 PRÓXIMAS ACCIONES</h2>
+                
+                <h3>Esta semana:</h3>
+                <ol>
+                    <li>Evalúa cuál de la Fase 1 quieres primero</li>
+                    <li>Abre rama de git: feature/nombre-feature</li>
+                    <li>Comenzamos con la primera implementación</li>
+                </ol>
+
+                <h3>Cada feature:</h3>
+                <ol>
+                    <li>Planificación técnica detallada</li>
+                    <li>Implementación modular</li>
+                    <li>Testing funcional</li>
+                    <li>Demo para validación</li>
+                    <li>Merge a main</li>
+                </ol>
+
+                <div class="benefit-box">
+                    <strong>💡 Recomendación:</strong> Comenzar con <strong>Excel Mejorado (2.1)</strong> porque:
+                    <ul>
+                        <li>✅ Es rápido (2-3 horas)</li>
+                        <li>✅ Usuarios lo piden constantemente</li>
+                        <li>✅ No toca código core</li>
+                        <li>✅ Gran "win" visible inmediato</li>
+                        <li>✅ Preparación perfecta para ICS después</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <p>📄 Documento generado el 29 de diciembre de 2025</p>
+                <p>Sistema de Gestión de Turnos - Roadmap de Mejoras v2.0</p>
+                <p>Confidencial - Uso interno</p>
+            </div>
+
+            <!-- BOTÓN DESCARGAR -->
+            <center>
+                <button class="btn-download" onclick="descargarPDF()">📥 Descargar como PDF</button>
+            </center>
+        </div>
+    </div>
+
+    <script>
+        function descargarPDF() {
+            const elemento = document.getElementById('content');
+            const opciones = {
+                margin: 10,
+                filename: 'ROADMAP_MEJORAS_Sistema_Turnos.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            
+            html2pdf().set(opciones).from(elemento).save();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test TurnoManager</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .test { margin: 10px 0; padding: 10px; background: #2d2d30; border-left: 3px solid #007acc; }
+        .ok { border-left-color: #4ec9b0; }
+        .error { border-left-color: #f48771; }
+        .warning { border-left-color: #dcdcaa; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test TurnoManager</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = [];
+        const resultsDiv = document.getElementById('results');
+
+        function addTest(name, status, message) {
+            const div = document.createElement('div');
+            div.className = `test ${status}`;
+            div.textContent = `[${status.toUpperCase()}] ${name}: ${message}`;
+            resultsDiv.appendChild(div);
+            results.push({ name, status, message });
+        }
+
+        // Test 1: ¿Existe TurnoManager?
+        if (typeof window.TurnoManager === 'object') {
+            addTest('TurnoManager exists', 'ok', 'window.TurnoManager es un objeto');
+        } else {
+            addTest('TurnoManager exists', 'error', `window.TurnoManager es ${typeof window.TurnoManager}`);
+        }
+
+        // Test 2-9: Verificar cada función
+        const funciones = [
+            'inicializarDatos',
+            'reiniciarDatos',
+            'generarTurnosEmpleado',
+            'esCuadranteVacio',
+            'mostrarModalGeneracion',
+            'cerrarModalGeneracion',
+            'generarTurnos',
+            'verificarYMostrarBoton'
+        ];
+
+        funciones.forEach(func => {
+            if (typeof window.TurnoManager[func] === 'function') {
+                addTest(`TurnoManager.${func}`, 'ok', 'Función disponible');
+            } else {
+                addTest(`TurnoManager.${func}`, 'error', `Es ${typeof window.TurnoManager[func]}`);
+            }
+        });
+
+        // Test final: Resumen
+        const ok = results.filter(r => r.status === 'ok').length;
+        const errors = results.filter(r => r.status === 'error').length;
+        
+        const summaryDiv = document.createElement('div');
+        summaryDiv.className = `test ${errors === 0 ? 'ok' : 'error'}`;
+        summaryDiv.innerHTML = `<strong>═══════════════════════════════</strong><br>
+        ✅ EXITOSOS: ${ok}/${results.length}<br>
+        ❌ ERRORES: ${errors}/${results.length}<br>
+        <strong>═══════════════════════════════</strong>`;
+        resultsDiv.appendChild(summaryDiv);
+
+        console.log('Test completo:', { ok, errors, total: results.length });
+    </script>
+
+    <!-- Cargar el archivo HTML original -->
+    <script src="nuevo_cuadrante_mejorado.html"></script>
+</body>
+</html>

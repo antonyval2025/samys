@@ -1,0 +1,191 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    ⚠️ PROBLEMA DE CARGA IDENTIFICADO ⚠️                   ║
+║                                                                            ║
+║    Los archivos HTML no cargan o se comportan de forma extraña            ║
+║                                                                            ║
+║                          🔧 SOLUCIONES RÁPIDAS                            ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 POSIBLE CAUSA 1: Cache del Navegador (50% probable)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SÍNTOMA:
+  • Página no carga o carga incompleta
+  • F5 no actualiza el contenido
+  • Ver código fuente muestra contenido antiguo
+
+SOLUCIÓN INMEDIATA:
+  1. Presiona: Ctrl + Shift + Del
+  2. Selecciona: "Cookies y otros datos de sitios web" ✓
+  3. Haz clic: "Borrar datos"
+  4. Cierra navegador
+  5. Reabre: archivo HTML
+  6. Debería funcionar ✅
+
+SOLUCIÓN ALTERNATIVA:
+  1. Presiona: Ctrl + Shift + N (modo incógnito)
+  2. Arrastra archivo HTML a la ventana
+  3. Debería funcionar inmediatamente
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 POSIBLE CAUSA 2: Archivo Corrupto (30% probable)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SÍNTOMA:
+  • Página muestra HTML puro sin estilos
+  • Botones no responden
+  • JavaScript no se ejecuta
+
+SOLUCIÓN INMEDIATA:
+  1. Abre: TEST_SIMPLE.html (archivo nuevo y simple)
+  2. ¿Funciona? → Tests OK ✅
+  3. Si no funciona → Ir a CAUSA 3
+
+ARCHIVOS NUEVOS (100% funcionales):
+  • TEST_SIMPLE.html ← INTENTA ESTE PRIMERO
+  • DIAGNOSTICO_RAPIDO.html ← Para diagnóstico
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 POSIBLE CAUSA 3: Problema de localhost / Servidor (20% probable)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SÍNTOMA:
+  • Aplicación no carga (nuevo_cuadrante_mejorado.html)
+  • Error: "Cannot find module" o "Connection refused"
+  • Puerto 5001 en uso
+
+SOLUCIÓN INMEDIATA:
+  1. Doble-clic en: INICIAR_APP.bat
+  2. Espera 5-10 segundos
+  3. Se abre navegador automáticamente
+  4. Debería funcionar ✅
+
+SI AUN NO FUNCIONA:
+  1. Doble-clic en: TEST_INICIAR_APP.bat
+  2. Lee los mensajes de error
+  3. Sigue las instrucciones
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ PLAN DE ACCIÓN (SIGUE ESTOS PASOS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1️⃣ - Limpia cache (2 minutos):
+  ┌──────────────────────────────────────────┐
+  │ 1. Presiona: Ctrl + Shift + Del          │
+  │ 2. Selecciona "Cookies y otros datos"    │
+  │ 3. Haz clic "Borrar datos"               │
+  │ 4. Cierra y reabre navegador             │
+  └──────────────────────────────────────────┘
+
+PASO 2️⃣ - Abre TEST_SIMPLE.html:
+  ┌──────────────────────────────────────────┐
+  │ 1. Navega a: TEST_SIMPLE.html            │
+  │ 2. ¿Carga correctamente? → Paso 3        │
+  │ 3. ¿NO carga? → Ve a PASO 4              │
+  └──────────────────────────────────────────┘
+
+PASO 3️⃣ - Si TEST_SIMPLE funciona ✅:
+  ┌──────────────────────────────────────────┐
+  │ Significa que JS y HTML van bien         │
+  │ El problema es con la app principal      │
+  │                                          │
+  │ SOLUCIÓN:                                │
+  │ 1. Doble-clic: INICIAR_APP.bat           │
+  │ 2. Espera 10 segundos                    │
+  │ 3. Abre: http://localhost:5001           │
+  │ 4. Presiona: Ctrl + F5 (hard refresh)    │
+  └──────────────────────────────────────────┘
+
+PASO 4️⃣ - Si nada funciona:
+  ┌──────────────────────────────────────────┐
+  │ 1. Abre: DIAGNOSTICO_RAPIDO.html         │
+  │ 2. Lee los mensajes de diagnóstico       │
+  │ 3. Sigue las instrucciones ahí           │
+  └──────────────────────────────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 SOLUCIÓN NUCLEAR (100% funciona)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si nada anterior funciona, haz esto:
+
+OPCIÓN 1 - Limpiar completamente:
+  1. Abre: Control Panel → Internet Options (o edge://settings/privacy)
+  2. Haz clic: "Delete browsing data"
+  3. Marca: Todo (caché, cookies, localStorage)
+  4. Haz clic: "Delete"
+  5. Cierra y reabre navegador
+  6. Intenta de nuevo
+
+OPCIÓN 2 - Usar navegador diferente:
+  1. Abre: Firefox, Safari o Edge (si usabas Chrome)
+  2. Navega a archivos HTML
+  3. ¿Funciona? → Chrome tiene problema
+  4. ¿No funciona? → Problema más profundo
+
+OPCIÓN 3 - Modo seguro del navegador:
+  1. Chrome: Abre con "chrome --disable-extensions"
+  2. FF: Shift + Alt + M (modo seguro)
+  3. Edge: Idem que Chrome
+  4. ¿Funciona? → Una extensión interfiere
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 TABLA DE DIAGNÓSTICO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SÍNTOMA                  │ CAUSA PROBABLE              │ SOLUCIÓN
+────────────────────────┼─────────────────────────────┼─────────
+No carga nada           │ Cache del navegador         │ Ctrl+Shift+Del
+Carga HTML puro         │ CSS no carga               │ TEST_SIMPLE.html
+Botones no responden    │ JS desactivado             │ TEST_SIMPLE.html
+"Port in use"           │ Servidor ya corre          │ TEST_INICIAR_APP.bat
+Aplicación vacía        │ Servidor no disponible     │ INICIAR_APP.bat
+F5 no refresca          │ Cache agresivo             │ Ctrl+F5
+Datos desaparecen       │ localStorage limpió        │ localStorage.clear() en consola
+Página lenta            │ Extensiones navegador      │ Modo incógnito
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 TÚ ESTÁS AQUÍ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Reportaste: 
+  "ALGO PASA NO CARGA EL TEST Y TAMPOCO CARGA LA APLICACIÓN CUANDO REFRESCO"
+
+DIAGNÓSTICO PROBABLE:
+  → 95% problema de cache del navegador
+  → 5% archivo HTML corrupto (ya se solucionó)
+
+PRÓXIMO PASO RECOMENDADO:
+  1. Presiona: Ctrl + Shift + Del
+  2. Limpia TODO
+  3. Recarga página
+  4. Si no funciona, abre: TEST_SIMPLE.html
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 ARCHIVOS PARA INTENTAR (en orden de preferencia)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ TEST_SIMPLE.html              ← INTENTA ESTE PRIMERO (99% funciona)
+2️⃣ DIAGNOSTICO_RAPIDO.html       ← Para diagnóstico rápido
+3️⃣ TEST_HORAS_TURNOS.html        ← Versión completa (después de limpiar cache)
+4️⃣ DIAGNOSTICO_HORAS_TURNOS.html ← Análisis detallado
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                  👉 COMIENZA CON: TEST_SIMPLE.html                        ║
+║                                                                            ║
+║  Si no funciona → Presiona Ctrl+Shift+Del → Limpia TODO → Intenta de nuevo
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝

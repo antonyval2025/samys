@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Rendimiento - Sistema Turnos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e5e7eb; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { margin-bottom: 20px; color: #f97316; }
+        .test-section { background: #1a2332; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f97316; }
+        .test-section h2 { color: #f97316; margin-bottom: 15px; font-size: 18px; }
+        .metric { background: #0b1220; padding: 15px; margin: 10px 0; border-radius: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .metric-label { color: #94a3b8; font-weight: 500; }
+        .metric-value { color: #22c55e; font-weight: bold; font-size: 18px; }
+        .metric-value.warning { color: #f59e0b; }
+        .metric-value.error { color: #ef4444; }
+        button { background: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: 600; }
+        button:hover { background: #ea580c; }
+        .console-output { background: #000; color: #22c55e; padding: 15px; border-radius: 6px; font-family: 'Courier New'; font-size: 12px; max-height: 400px; overflow-y: auto; margin-top: 10px; }
+        .status { padding: 10px; border-radius: 6px; margin: 10px 0; }
+        .status.ok { background: #064e3b; color: #86efac; }
+        .status.warning { background: #78350f; color: #fcd34d; }
+        .status.error { background: #7f1d1d; color: #fca5a5; }
+        table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #1e293b; color: #f97316; }
+        tr:hover { background: #1a2f4d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Test de Rendimiento - Sistema de Gestión de Turnos</h1>
+        
+        <div class="test-section">
+            <h2>📊 Métricas Generales</h2>
+            <div id="metricsGeneral"></div>
+            <button onclick="testCargar()">Probar Carga Página</button>
+            <button onclick="testMemoria()">Analizar Memoria</button>
+        </div>
+
+        <div class="test-section">
+            <h2>⚙️ Prueba de Módulos</h2>
+            <div id="modulos"></div>
+            <button onclick="testModulos()">Verificar Módulos</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Prueba de Funcionalidades</h2>
+            <div id="funcionalidades"></div>
+            <button onclick="testFuncionalidades()">Probar Funcionalidades</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Análisis de DOM</h2>
+            <div id="dom"></div>
+            <button onclick="testDOM()">Analizar DOM</button>
+        </div>
+
+        <div class="test-section">
+            <h2>💾 Estado de Datos</h2>
+            <div id="datos"></div>
+            <button onclick="testDatos()">Verificar Datos</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Consola de Salida</h2>
+            <div class="console-output" id="console"></div>
+            <button onclick="document.getElementById('console').innerHTML = ''">Limpiar</button>
+        </div>
+    </div>
+
+    <script>
+        const log = (msg) => {
+            const console = document.getElementById('console');
+            console.innerHTML += msg + '\n';
+            console.scrollTop = console.scrollHeight;
+        };
+
+        function testCargar() {
+            const inicio = performance.now();
+            log('⏱️ Iniciando medición...\n');
+
+            // Simular recarga de recursos críticos
+            const recursos = ['html2canvas', 'jsPDF', 'AppState', 'ValidadorDatos', 'GeneradorReportes'];
+            let cargados = 0;
+
+            recursos.forEach(r => {
+                if (window[r]) {
+                    log(`✅ ${r} cargado`);
+                    cargados++;
+                } else {
+                    log(`❌ ${r} NO cargado`);
+                }
+            });
+
+            const tiempo = performance.now() - inicio;
+            log(`\n📊 ${cargados}/${recursos.length} módulos disponibles`);
+            log(`⏱️ Tiempo de análisis: ${tiempo.toFixed(2)}ms\n`);
+        }
+
+        function testMemoria() {
+            if (!performance.memory) {
+                log('⚠️ performance.memory no disponible\n');
+                return;
+            }
+
+            const mem = performance.memory;
+            const usado = (mem.usedJSHeapSize / 1048576).toFixed(2);
+            const total = (mem.totalJSHeapSize / 1048576).toFixed(2);
+            const limite = (mem.jsHeapSizeLimit / 1048576).toFixed(2);
+
+            log(`💾 Memoria Usada: ${usado} MB`);
+            log(`📦 Heap Total: ${total} MB`);
+            log(`⚡ Límite: ${limite} MB`);
+            log(`📈 Uso: ${((mem.usedJSHeapSize / mem.jsHeapSizeLimit) * 100).toFixed(1)}%\n`);
+
+            if (mem.usedJSHeapSize > mem.jsHeapSizeLimit * 0.8) {
+                log('⚠️ ADVERTENCIA: Uso de memoria alto!\n');
+            }
+        }
+
+        function testModulos() {
+            log('🔍 Verificando módulos cargados...\n');
+
+            const modulos = [
+                { nombre: 'ValidadorDatos', archivo: 'validador-datos.js' },
+                { nombre: 'AutoSaveManager', archivo: 'auto-save.js' },
+                { nombre: 'TabSyncManager', archivo: 'tab-sync.js' },
+                { nombre: 'GeneradorReportes', archivo: 'generador-reportes.js' },
+                { nombre: 'IntegracionWhatsApp', archivo: 'integracion-whatsapp.js' },
+                { nombre: 'SincronizacionDatos', archivo: 'sincronizacion-datos.js' },
+                { nombre: 'AnalizadorConflictos', archivo: 'analizador-conflictos.js' },
+                { nombre: 'DashboardAnalytica', archivo: 'dashboard-analytica.js' },
+                { nombre: 'OptimizadorTurnos', archivo: 'optimizador-turnos.js' },
+                { nombre: 'GestorMultiLocal', archivo: 'gestor-multilocal.js' },
+                { nombre: 'IntegracionCalendario', archivo: 'integracion-calendario.js' },
+                { nombre: 'SistemaNotificaciones', archivo: 'sistema-notificaciones.js' },
+                { nombre: 'DashboardAvanzado', archivo: 'dashboard-avanzado-s5.js' },
+                { nombre: 'SistemaAuditoriaAvanzado', archivo: 'sistema-auditoria-s5.js' },
+                { nombre: 'GestorBackups', archivo: 'gestor-backups-s5.js' }
+            ];
+
+            let cargados = 0;
+            const html = [];
+
+            modulos.forEach(m => {
+                if (window[m.nombre]) {
+                    html.push(`<div class="status ok">✅ ${m.nombre} (${m.archivo})</div>`);
+                    cargados++;
+                } else {
+                    html.push(`<div class="status error">❌ ${m.nombre} (${m.archivo})</div>`);
+                }
+            });
+
+            document.getElementById('modulos').innerHTML = html.join('');
+            log(`\n✅ ${cargados}/${modulos.length} módulos cargados correctamente\n`);
+        }
+
+        function testFuncionalidades() {
+            log('🎯 Probando funcionalidades...\n');
+
+            try {
+                // Test 1: Validación
+                if (typeof ValidadorDatos !== 'undefined') {
+                    const result = ValidadorDatos.validarEmpleado({
+                        nombre: 'Test', 
+                        email: 'test@test.com', 
+                        telefono: '123456789',
+                        horasContrato: 160
+                    });
+                    log(`✅ ValidadorDatos.validarEmpleado() funciona: ${result.valido}`);
+                } else {
+                    log(`❌ ValidadorDatos no disponible`);
+                }
+
+                // Test 2: AppState
+                if (typeof AppState !== 'undefined') {
+                    log(`✅ AppState disponible - Mes: ${AppState.currentMonth}, Año: ${AppState.currentYear}`);
+                } else {
+                    log(`❌ AppState no disponible`);
+                }
+
+                // Test 3: Empleados
+                if (window.empleados && Array.isArray(window.empleados)) {
+                    log(`✅ empleados cargado - Total: ${window.empleados.length}`);
+                } else {
+                    log(`❌ empleados no disponible`);
+                }
+
+                // Test 4: localStorage
+                const data = localStorage.getItem('turnosAppState');
+                if (data) {
+                    log(`✅ localStorage disponible - Tamaño: ${(data.length / 1024).toFixed(2)} KB`);
+                } else {
+                    log(`⚠️ localStorage vacío`);
+                }
+
+                log('');
+            } catch (error) {
+                log(`❌ Error durante pruebas: ${error.message}\n`);
+            }
+        }
+
+        function testDOM() {
+            const stats = {
+                'Total elementos': document.querySelectorAll('*').length,
+                'Buttons': document.querySelectorAll('button').length,
+                'Inputs': document.querySelectorAll('input').length,
+                'Modales': document.querySelectorAll('.modal').length,
+                'Scripts': document.querySelectorAll('script').length,
+                'CSS Links': document.querySelectorAll('link[rel="stylesheet"]').length
+            };
+
+            let html = '<table><tr><th>Elemento</th><th>Cantidad</th></tr>';
+            Object.entries(stats).forEach(([key, val]) => {
+                html += `<tr><td>${key}</td><td>${val}</td></tr>`;
+            });
+            html += '</table>';
+
+            document.getElementById('dom').innerHTML = html;
+            log('\n📊 Análisis de DOM completado\n');
+        }
+
+        function testDatos() {
+            const html = [];
+
+            // Estado AppState
+            if (typeof AppState !== 'undefined') {
+                html.push(`<div class="status ok">✅ AppState: Mes ${AppState.currentMonth}/${AppState.currentYear}</div>`);
+                html.push(`<div class="metric">
+                    <div class="metric-label">Turnos en memoria</div>
+                    <div class="metric-value">${AppState.scheduleData?.size || 0}</div>
+                </div>`);
+                html.push(`<div class="metric">
+                    <div class="metric-label">Cambios pendientes</div>
+                    <div class="metric-value ${(AppState.cambiosPendientes?.length || 0) > 10 ? 'warning' : ''}">${AppState.cambiosPendientes?.length || 0}</div>
+                </div>`);
+            }
+
+            // Empleados
+            if (window.empleados) {
+                html.push(`<div class="status ok">✅ Empleados: ${window.empleados.length} total</div>`);
+            }
+
+            // localStorage
+            const keys = Object.keys(localStorage);
+            html.push(`<div class="metric">
+                <div class="metric-label">Items en localStorage</div>
+                <div class="metric-value">${keys.length}</div>
+            </div>`);
+
+            document.getElementById('datos').innerHTML = html.join('');
+            log('\n💾 Datos cargados correctamente\n');
+        }
+
+        // Ejecutar tests al cargar
+        window.addEventListener('load', () => {
+            log('📋 Tests Automáticos de Rendimiento\n');
+            log('======================================\n');
+            testModulos();
+            testFuncionalidades();
+            testDOM();
+            testDatos();
+        });
+    </script>
+</body>
+</html>

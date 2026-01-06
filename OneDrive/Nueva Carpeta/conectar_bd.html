@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Turnos - Accediendo a BD</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 600px; text-align: center; padding: 40px; }
+        .logo { font-size: 48px; margin-bottom: 20px; }
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        p { color: #cbd5e1; margin: 10px 0; line-height: 1.6; }
+        .status { background: #1e293b; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #22c55e; }
+        .status.loading { border-left-color: #f59e0b; }
+        .status.error { border-left-color: #ef4444; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #475569; border-top: 3px solid #22c55e; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .button { background: #0ea5e9; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 20px; text-decoration: none; display: inline-block; }
+        .button:hover { background: #0284c7; }
+        .info { background: #064e3b; color: #d1fae5; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .database-info { background: #172554; color: #bfdbfe; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: left; }
+        code { background: #1e293b; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📋</div>
+        <h1>Sistema de Gestión de Turnos</h1>
+        <p>Conectando con base de datos permanente...</p>
+
+        <div id="status" class="status loading">
+            <span class="spinner"></span>
+            <span id="statusText">Verificando servidor Flask...</span>
+        </div>
+
+        <div class="database-info">
+            <strong>📊 Información de Base de Datos:</strong>
+            <p style="margin-top: 10px; font-size: 14px;">
+                <strong>Ubicación:</strong> <code>turnos_database.db</code><br>
+                <strong>Tipo:</strong> SQLite3<br>
+                <strong>Puerto servidor:</strong> 5001<br>
+                <strong>API Base:</strong> <code>http://localhost:5001/api/*</code>
+            </p>
+        </div>
+
+        <div class="info">
+            <strong>✅ Ventajas de esta arquitectura:</strong>
+            <ul style="text-align: left; margin-top: 10px;">
+                <li>Datos persistentes (nunca se pierden)</li>
+                <li>Base de datos independiente de la aplicación</li>
+                <li>Acceso desde múltiples navegadores</li>
+                <li>Respaldo simple (copiar archivo .db)</li>
+            </ul>
+        </div>
+
+        <a href="http://localhost:5001/" class="button" id="continueBtn" style="display: none;">Ir a la Aplicación →</a>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5001';
+        const statusDiv = document.getElementById('status');
+        const statusText = document.getElementById('statusText');
+        const continueBtn = document.getElementById('continueBtn');
+
+        async function verificarServidor() {
+            try {
+                // Intenta conectar a la API
+                statusText.textContent = 'Conectando a servidor (puerto 5001)...';
+                
+                const response = await fetch(`${API_URL}/api/empleados`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const datos = await response.json();
+                    
+                    statusDiv.classList.remove('loading');
+                    statusDiv.classList.add('success');
+                    statusDiv.style.borderLeftColor = '#22c55e';
+                    statusText.innerHTML = `<strong>✅ Servidor conectado</strong><br>Empleados en BD: ${datos.length}`;
+                    continueBtn.style.display = 'inline-block';
+                    
+                    console.log('✅ Servidor Flask respondiendo:', datos.length, 'empleados');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                statusDiv.classList.remove('loading');
+                statusDiv.classList.add('error');
+                statusDiv.style.borderLeftColor = '#ef4444';
+                statusText.innerHTML = `
+                    <strong>❌ No se puede conectar al servidor</strong><br>
+                    Error: ${error.message}<br>
+                    <br>
+                    <small>Asegúrate de que el servidor está corriendo:<br>
+                    <code style="color: #fca5a5;">python servidor_turnos.py</code></small>
+                `;
+                
+                console.error('❌ Error conectando:', error.message);
+                
+                // Reintentar en 3 segundos
+                setTimeout(verificarServidor, 3000);
+            }
+        }
+
+        // Iniciar verificación
+        window.addEventListener('load', verificarServidor);
+
+        // Crear evento para botón
+        continueBtn.addEventListener('click', () => {
+            window.location.href = API_URL;
+        });
+    </script>
+</body>
+</html>

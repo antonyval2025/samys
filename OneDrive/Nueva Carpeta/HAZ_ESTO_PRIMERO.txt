@@ -1,0 +1,119 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                            ┃
+┃        🚀 COMIENZA AQUI - HAZ ESTO AHORA MISMO             ┃
+┃                                                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+PASO 1: VERIFICACIÓN (30 segundos)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPCIÓN A - Automática (RECOMENDADA):
+
+  → Doble-clic en: diagnostico.bat
+  → Espera 10 segundos
+  → Lee los resultados
+  → Si todo es [OK], ve al PASO 2
+
+OPCIÓN B - Manual:
+
+  Abre terminal (CMD) y ejecuta:
+  
+  python --version          ← Debería mostrar Python 3.9+
+  pip list | findstr flask  ← Debería mostrar flask
+  
+  Si ambas dan resultado → OK, ve al PASO 2
+  Si alguna falla → Sigue las instrucciones de error
+
+PASO 2: INICIAR SERVIDOR (Inmediato)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  → Doble-clic en: START.bat
+  
+  Verás una terminal que dice:
+  
+  "Running on http://127.0.0.1:5001"
+  
+  ¡Perfecto! El servidor está corriendo.
+
+PASO 3: ABRIR APLICACIÓN (Inmediato)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Abre tu navegador (Chrome, Edge, Firefox) y ve a:
+  
+  http://localhost:5001
+  
+  Deberías ver la aplicación de gestión de turnos.
+  
+  ¡LISTO! 🎉
+
+PASO 4: TRABAJAR (Normal)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Ahora puedes:
+  
+  ✓ Agregar empleados
+  ✓ Generar turnos mensuales
+  ✓ Editar turnos
+  ✓ Ver reportes
+  ✓ Exportar a PDF
+  ✓ Compartir por WhatsApp
+
+PASO 5: DETENER (Cuando termines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  En la terminal del servidor (del PASO 2):
+  
+  Presiona: CTRL + C
+  
+  El servidor se detiene.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚡ VERSIÓN SUPER RÁPIDA (SI YA VERIFICASTE TODO):
+
+  1. Doble-clic: START.bat
+  2. Espera 3 segundos
+  3. Va a http://localhost:5001
+  4. Disfruta!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ ¿DUDAS?
+
+Python no funciona:
+  → Instala desde: https://www.python.org
+  → Marca "Add Python to PATH"
+  → Reinicia tu PC
+
+Flask no funciona:
+  → Abre terminal y ejecuta: pip install flask
+
+Página no se abre:
+  → Intenta: http://localhost:5001
+  → O abre manualmente en el navegador
+
+Puerto en uso:
+  → Ejecuta: diagnostico.bat (te lo dice)
+  → O cambia el puerto en servidor_turnos.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 MÁS INFORMACIÓN:
+
+  START.bat ........................ El script principal
+  diagnostico.bat ................. Revisar sistema
+  README_INICIAR.md ............... Documentación completa
+  LEER_PRIMERO_INICIO.txt ......... Guía detallada
+  RESUMEN_FINAL_HERRAMIENTAS.txt .. Visión general
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+¿LISTO?
+
+Haz doble-clic en START.bat AHORA MISMO
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                    ¡BIENVENIDO!                            ┃
+┃                                                            ┃
+┃        Tu aplicación de Turnos está lista para usar       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛

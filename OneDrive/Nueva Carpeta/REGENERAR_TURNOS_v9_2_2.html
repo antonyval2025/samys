@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regenerar Turnos con Horarios Correctos - v9.2.2</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #0b1220, #111827);
+            color: #f1f5f9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid #8b5cf6;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+        h1 {
+            color: #a78bfa;
+            margin: 0 0 30px 0;
+            font-size: 32px;
+        }
+        .warning {
+            background: rgba(251, 191, 36, 0.1);
+            border: 2px solid #fbbf24;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #fbbf24;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22c55e;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #22c55e;
+        }
+        button {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #93c5fd;
+            font-size: 14px;
+        }
+        .code {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border-left: 4px solid #22c55e;
+            overflow-x: auto;
+        }
+        .table-data {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #475569;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #334155;
+            font-weight: bold;
+        }
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1><span class="emoji">🔄</span>Regenerar Turnos v9.2.2</h1>
+    
+    <div class="warning">
+        <strong>⚠️ ADVERTENCIA:</strong> Este proceso limpiará localStorage y regenerará todos los turnos con los horarios correctos.
+        Se perderán cambios manuales no guardados.
+    </div>
+
+    <h2>Cambios que se aplicarán:</h2>
+    <table class="table-data">
+        <tr>
+            <th>Turno</th>
+            <th>Horario Anterior</th>
+            <th>Horario Nuevo</th>
+            <th>Horas Anterior</th>
+            <th>Horas Nueva</th>
+        </tr>
+        <tr>
+            <td>Tarde</td>
+            <td>16:00-00:00</td>
+            <td style="color: #22c55e; font-weight: bold;">14:30-21:00</td>
+            <td>8h</td>
+            <td style="color: #22c55e; font-weight: bold;">6.5h</td>
+        </tr>
+    </table>
+
+    <div class="info">
+        📊 <strong>Impacto:</strong> Empleados con turno principal "Tarde":<br>
+        - Semanal: 39 horas (6.5 × 6 días)<br>
+        - Mensual: 154 horas aproximadas
+    </div>
+
+    <h2>Opciones:</h2>
+    
+    <button onclick="limpiarYRegenerar()">
+        ✅ Limpiar localStorage y Regenerar Turnos
+    </button>
+
+    <button onclick="soloActualizarTipos()" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8);">
+        🔧 Solo Actualizar Tipos de Turno (sin limpiar)
+    </button>
+
+    <button onclick="mostrarDatos()" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+        📋 Ver Datos Actuales
+    </button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+function limpiarYRegenerar() {
+    const output = document.getElementById('output');
+    
+    if (!confirm('⚠️ ¿Estás seguro?\n\nEsto limpiará localStorage completamente y regenerará todos los turnos.\n\n¿Continuar?')) {
+        return;
+    }
+
+    try {
+        output.innerHTML = '<div class="info">⏳ Limpiando localStorage...</div>';
+        
+        // Paso 1: Limpiar localStorage
+        localStorage.clear();
+        output.innerHTML += '<div class="info">✅ localStorage limpiado</div>';
+        
+        // Paso 2: Recargar la página para reinitializar desde 0
+        output.innerHTML += '<div class="success">
+            <strong>✅ Completo!</strong><br>
+            La página se recargará en 2 segundos para regenerar todos los turnos con los horarios correctos...
+        </div>';
+        
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+        
+    } catch (e) {
+        output.innerHTML = '<div class="error" style="color: #ff6b6b;">❌ Error: ' + e.message + '</div>';
+    }
+}
+
+function soloActualizarTipos() {
+    const output = document.getElementById('output');
+    
+    try {
+        output.innerHTML = '<div class="info">⏳ Actualizando tipos de turno...</div>';
+        
+        // Crear la configuración correcta de tipos de turno
+        const tiposTurno = {
+            mañana: { id: 1, nombre: "Mañana", inicial: "M", horario: "08:00-16:00", color: "#d4edda", horas: 8 },
+            tarde: { id: 2, nombre: "Tarde", inicial: "T", horario: "14:30-21:00", color: "#fff3cd", horas: 6.5 },
+            noche: { id: 3, nombre: "Noche", inicial: "N", horario: "00:00-08:00", color: "#f8d7da", horas: 8 },
+            guardia: { id: 4, nombre: "Guardia", inicial: "GD", horario: "12:00-08:00", color: "#d8b4fe", horas: 20 },
+            mixto: { id: 5, nombre: "Mixto", inicial: "X", horario: "Variable", color: "#cce5ff", horas: 6 },
+            asuntospropios: { id: 6, nombre: "Asuntos propios", inicial: "AP", horario: "Variable", color: "#e0e7ff", horas: 8 },
+            descanso: { id: 7, nombre: "Descanso", inicial: "D", horario: "-", color: "#e2e3e5", horas: 0 },
+            vacaciones: { id: 8, nombre: "Vacaciones", inicial: "V", horario: "-", color: "#d0ebff", horas: 0 },
+            baja: { id: 9, nombre: "Baja médica", inicial: "B", horario: "-", color: "#ffe3e3", horas: 0 },
+            festivo: { id: 10, nombre: "Festivo", inicial: "F", horario: "-", color: "#f8d7da", horas: 0 },
+            libre: { id: 11, nombre: "Libre", inicial: "L", horario: "-", color: "#e2e3e5", horas: 0 }
+        };
+        
+        // Guardar en localStorage
+        localStorage.setItem('tiposTurnoData', JSON.stringify(tiposTurno));
+        
+        output.innerHTML += '<div class="success">
+            ✅ <strong>Tipos de turno actualizados!</strong><br>
+            La configuración de "Tarde" ahora es: 14:30-21:00, 6.5h
+        </div>';
+        
+        output.innerHTML += '<div class="info">
+            💡 <strong>Nota:</strong><br>
+            - Los turnos ya existentes conservarán sus horas antiguas<br>
+            - Los nuevos turnos generados tendrán las horas correctas (6.5h)<br>
+            - Si quieres regenerar TODOS los turnos, usa la opción "Limpiar localStorage"
+        </div>';
+        
+    } catch (e) {
+        output.innerHTML = '<div style="color: #ff6b6b;">❌ Error: ' + e.message + '</div>';
+    }
+}
+
+function mostrarDatos() {
+    const output = document.getElementById('output');
+    
+    try {
+        const tiposTurnoData = JSON.parse(localStorage.getItem('tiposTurnoData') || '{}');
+        const empleadosData = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+        
+        output.innerHTML = '<h3>📋 Configuración Actual de Tipos de Turno:</h3>';
+        
+        if (Object.keys(tiposTurnoData).length === 0) {
+            output.innerHTML += '<div class="info">⚠️ tiposTurnoData está vacío en localStorage</div>';
+        } else {
+            output.innerHTML += '<table class="table-data"><tr><th>Turno</th><th>Horario</th><th>Horas</th></tr>';
+            
+            Object.entries(tiposTurnoData).forEach(([key, value]) => {
+                const highlight = key === 'tarde' ? ' style="background: rgba(34, 197, 94, 0.2);"' : '';
+                output.innerHTML += `<tr${highlight}>
+                    <td><strong>${value.nombre}</strong></td>
+                    <td>${value.horario}</td>
+                    <td>${value.horas}h</td>
+                </tr>`;
+            });
+            
+            output.innerHTML += '</table>';
+        }
+        
+        output.innerHTML += `<h3>👥 Empleados Configurados: ${empleadosData.length}</h3>`;
+        if (empleadosData.length > 0) {
+            output.innerHTML += '<table class="table-data"><tr><th>Nombre</th><th>Turno Principal</th><th>Horas Contrato</th></tr>';
+            
+            empleadosData.forEach(emp => {
+                output.innerHTML += `<tr>
+                    <td>${emp.nombre}</td>
+                    <td>${emp.turnoPrincipal}</td>
+                    <td>${emp.horasContrato}h</td>
+                </tr>`;
+            });
+            
+            output.innerHTML += '</table>';
+        }
+        
+    } catch (e) {
+        output.innerHTML = '<div style="color: #ff6b6b;">❌ Error: ' + e.message + '</div>';
+    }
+}
+</script>
+
+</body>
+</html>

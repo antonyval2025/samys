@@ -1,0 +1,79 @@
+ 
+============================================================================ 
+GESTOR DE TURNOS - INICIALIZACION 
+Timestamp: 2025-12-26_11-40-40 
+============================================================================ 
+[PASO 1/5] Detectando procesos anteriores... 
+    [+] No hay procesos Python activos 
+[PASO 2/5] Limpiando puertos en uso... 
+    [*] Puerto 5001 en uso por PID: 1256 
+    [+] Puertos limpiados 
+[PASO 3/5] Verificando archivos necesarios... 
+    [+] servidor_turnos.py OK 
+    [+] nuevo_cuadrante_mejorado.html OK 
+    [+] launcher_simple.py OK 
+    [+] Todos los archivos verificados correctamente 
+[PASO 4/6] Detectando puerto disponible... 
+    [+] Puerto 5001 disponible 
+    [*] Usando puerto: 5001 
+[PASO 5/6] Iniciando servidor en puerto 5001... 
+    [*] Esperando servidor con validacion HTTP... 
+
+============================================================
+                GESTOR DE TURNOS - INICIANDO                
+============================================================
+
+Traceback (most recent call last):
+  File "C:\Users\samys\OneDrive\Nueva Carpeta\launcher_simple.py", line 95, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\samys\OneDrive\Nueva Carpeta\launcher_simple.py", line 41, in main
+    print("[+] Archivos verificados \u2713")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\samys\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 25: character maps to <undefined>
+    [*] Intento 1/30 - Puerto 5001 no en netstat 
+    [*] Intento 2/30 - Puerto 5001 no en netstat 
+    [*] Intento 3/30 - Puerto 5001 no en netstat 
+    [*] Intento 4/30 - Puerto 5001 no en netstat 
+    [*] Intento 5/30 - Puerto 5001 no en netstat 
+    [*] Puerto 5001 no responde. Probando siguiente... 
+    [*] Intento 6/30 - Puerto 8080 no en netstat 
+    [*] Intento 7/30 - Puerto 8080 no en netstat 
+    [*] Intento 8/30 - Puerto 8080 no en netstat 
+    [*] Intento 9/30 - Puerto 8080 no en netstat 
+    [*] Intento 10/30 - Puerto 8080 no en netstat 
+    [*] Puerto 8080 no responde. Probando siguiente... 
+    [*] Intento 11/30 - Puerto 8080 no en netstat 
+    [*] Intento 12/30 - Puerto 8080 no en netstat 
+    [*] Intento 13/30 - Puerto 8080 no en netstat 
+    [*] Intento 14/30 - Puerto 8080 no en netstat 
+    [*] Intento 15/30 - Puerto 8080 no en netstat 
+    [*] Puerto 8080 no responde. Probando siguiente... 
+    [*] Intento 16/30 - Puerto 8080 no en netstat 
+    [*] Intento 17/30 - Puerto 8080 no en netstat 
+    [*] Intento 18/30 - Puerto 8080 no en netstat 
+    [*] Intento 19/30 - Puerto 8080 no en netstat 
+    [*] Intento 20/30 - Puerto 8080 no en netstat 
+    [*] Puerto 8080 no responde. Probando siguiente... 
+    [*] Intento 21/30 - Puerto 8080 no en netstat 
+    [*] Intento 22/30 - Puerto 8080 no en netstat 
+    [*] Intento 23/30 - Puerto 8080 no en netstat 
+    [*] Intento 24/30 - Puerto 8080 no en netstat 
+    [*] Intento 25/30 - Puerto 8080 no en netstat 
+    [*] Puerto 8080 no responde. Probando siguiente... 
+    [*] Intento 26/30 - Puerto 8080 no en netstat 
+    [*] Intento 27/30 - Puerto 8080 no en netstat 
+    [*] Intento 28/30 - Puerto 8080 no en netstat 
+    [*] Intento 29/30 - Puerto 8080 no en netstat 
+    [*] Intento 30/30 - Puerto 8080 no en netstat 
+    [ Server no responde en puertos esperados 
+    [*] Continuando de todas formas... 
+    [+] Servidor inicializado correctamente 
+[PASO 6/6] Preparando para abrir navegador... 
+[*] Abriendo navegador en puerto 5001... 
+[+] Navegador abierto 
+Cierre: 26/12/2025 11:42:03,21 
+============================================================================ 

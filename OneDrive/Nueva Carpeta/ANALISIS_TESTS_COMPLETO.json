@@ -1,0 +1,378 @@
+{
+  "resumen_general": {
+    "total_archivos_analizados": 5,
+    "archivos_con_errores": 4,
+    "archivos_sin_errores": 1,
+    "total_problemas_encontrados": 18,
+    "severidad_critica": 8,
+    "severidad_warning": 7,
+    "severidad_info": 3,
+    "fecha_analisis": "2026-01-02"
+  },
+  "analisis_por_archivo": [
+    {
+      "archivo": "test-semana-1.html",
+      "ruta": "c:\\Users\\samys\\OneDrive\\Nueva Carpeta\\test-semana-1.html",
+      "status": "warning",
+      "lineas_totales": 241,
+      "problemas": [
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 85,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/validador-datos.js\" no existe o no está accesible. El archivo ValidadorDatos se intenta utilizar pero nunca se carga correctamente",
+          "solución": "Crear archivo js/validador-datos.js con clase ValidadorDatos que implemente métodos validarEmpleado() y validarTurno()",
+          "impacto": "Test 1, 2, 5 fallarán: ReferenceError: ValidadorDatos is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 86,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/auto-save.js\" no existe. AutoSaveManager nunca se instancia",
+          "solución": "Crear archivo js/auto-save.js con clase AutoSaveManager que tenga propiedades INTERVAL_MS (30000) y DEBOUNCE_MS (500)",
+          "impacto": "Test 3 falla: ReferenceError: AutoSaveManager is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 87,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/tab-sync.js\" no existe. TabSyncManager nunca se inicializa",
+          "solución": "Crear archivo js/tab-sync.js con clase TabSyncManager que implemente init(), propiedades isInitialized, tabId, listeners",
+          "impacto": "Test 4 falla: ReferenceError: TabSyncManager is not defined"
+        },
+        {
+          "tipo": "LOGICA_TEST",
+          "linea": 162,
+          "severidad": "warning",
+          "descripción": "Test 5 intenta validar turno con atributos 'mes' y 'anio' pero ValidadorDatos.validarTurno() probablemente espera objetos diferentes",
+          "solución": "Verificar que ValidadorDatos.validarTurno() acepte estructura {empleadoId, turno, dia, mes, anio}",
+          "impacto": "Test 5 puede fallar si la firma de método no coincide"
+        },
+        {
+          "tipo": "LOGICA_TEST",
+          "linea": 177,
+          "severidad": "info",
+          "descripción": "Test 6 verifica que ValidadorDatos sea de tipo 'function' pero en ES6 debería ser 'object' (clase)",
+          "solución": "Cambiar línea 177 a: validadorCargado: typeof ValidadorDatos === 'object',",
+          "impacto": "Test 6 dará falso negativo si ValidadorDatos es una clase ES6"
+        }
+      ]
+    },
+    {
+      "archivo": "test-semana-2.html",
+      "ruta": "c:\\Users\\samys\\OneDrive\\Nueva Carpeta\\test-semana-2.html",
+      "status": "error",
+      "lineas_totales": 267,
+      "problemas": [
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 95,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/generador-reportes.js\" no existe o falta crear la clase GeneradorReportes",
+          "solución": "Crear archivo js/generador-reportes.js con métodos estáticos: generarReporteMensual(), generarReporteEmpleado(empleadoId)",
+          "impacto": "Tests 1 y 2 fallan: ReferenceError: GeneradorReportes is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 96,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/integracion-whatsapp.js\" no existe. IntegracionWhatsApp nunca se carga",
+          "solución": "Crear archivo js/integracion-whatsapp.js con métodos: validarTelefono(tel), formatearTelefonoWhatsApp(tel)",
+          "impacto": "Tests 3 y 4 fallan: ReferenceError: IntegracionWhatsApp is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 97,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/sincronizacion-datos.js\" no existe. SincronizacionDatos nunca se instancia",
+          "solución": "Crear archivo js/sincronizacion-datos.js con clase SincronizacionDatos con métodos init(), obtenerEstadoSync(), crearBackupLocal()",
+          "impacto": "Tests 5 y 6 fallan: ReferenceError: SincronizacionDatos is not defined"
+        },
+        {
+          "tipo": "DATO_MOCK_INCORRECTO",
+          "linea": 136,
+          "severidad": "warning",
+          "descripción": "AppState.scheduleData usa Map pero al guardarse en localStorage se convierte a Array. Esto causa inconsistencia en tests posteriores",
+          "solución": "Usar JSON.stringify(Array.from(AppState.scheduleData.entries())) al guardar y Map(JSON.parse(...)) al cargar",
+          "impacto": "Tests que usan AppState.scheduleData pueden fallar si no se reconvierte el Map"
+        },
+        {
+          "tipo": "FORMATO_EMAIL",
+          "linea": 118,
+          "severidad": "info",
+          "descripción": "Algunos teléfonos de prueba tienen formato inconsistente (645123456 vs 612345678). Debería tener formato E.164",
+          "solución": "Estandarizar teléfonos a +34XXXXXXXXX o XXXXXXXXX con 9 dígitos",
+          "impacto": "Validación de teléfono puede ser inconsistente"
+        }
+      ]
+    },
+    {
+      "archivo": "test-semana-3.html",
+      "ruta": "c:\\Users\\samys\\OneDrive\\Nueva Carpeta\\test-semana-3.html",
+      "status": "error",
+      "lineas_totales": 280,
+      "problemas": [
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 95,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/analizador-conflictos.js\" no existe. AnalizadorConflictos nunca se carga",
+          "solución": "Crear archivo js/analizador-conflictos.js con métodos: init(), analizarEmpleado(empleadoId), obtenerResumen()",
+          "impacto": "Tests 1 y 2 fallan: ReferenceError: AnalizadorConflictos is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 96,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/dashboard-analytica.js\" no existe. DashboardAnalytica nunca se instancia",
+          "solución": "Crear archivo js/dashboard-analytica.js con métodos: init(), obtenerMetricas(), generarGraficoDistribucion(), generarGraficoTurnos()",
+          "impacto": "Tests 3 y 4 fallan: ReferenceError: DashboardAnalytica is not defined"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 97,
+          "severidad": "critica",
+          "descripción": "Script src=\"js/optimizador-turnos.js\" no existe. OptimizadorTurnos nunca se carga",
+          "solución": "Crear archivo js/optimizador-turnos.js con métodos: init(), obtenerResumen(), obtenerMejorSugerencia()",
+          "impacto": "Tests 5 y 6 fallan: ReferenceError: OptimizadorTurnos is not defined"
+        },
+        {
+          "tipo": "DATOS_CONFLICTIVOS",
+          "linea": 126,
+          "severidad": "warning",
+          "descripción": "AppState.scheduleData contiene 14 turnos nocturnos consecutivos (días 2-15) para empleado 1. Esto genera conflicto de validación.",
+          "solución": "Cambiar a máximo 7 turnos nocturnos consecutivos seguidos de descansos, según restricciones laborales",
+          "impacto": "Test 2 puede fallar si AnalizadorConflictos valida correctamente"
+        },
+        {
+          "tipo": "LOGICA_TEST",
+          "linea": 206,
+          "severidad": "warning",
+          "descripción": "Test 4 espera que DashboardAnalytica.generarGraficoTurnos() retorne string con 'TURNOS', pero la estructura real podría ser objeto con propiedades",
+          "solución": "Estandarizar retorno de generarGrafico* a objeto {exito, labels, datos, grafico}",
+          "impacto": "Test 4 fallará si estructura no es string"
+        }
+      ]
+    },
+    {
+      "archivo": "test-semana-4.html",
+      "ruta": "c:\\Users\\samys\\OneDrive\\Nueva Carpeta\\test-semana-4.html",
+      "status": "error",
+      "lineas_totales": 534,
+      "problemas": [
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 273,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/gestor-multilocal.js\" comienza con / (raíz absoluta). Debería ser \"js/gestor-multilocal.js\" (relativa)",
+          "solución": "Cambiar todas las rutas de /js/ a js/ para que funcionen en cualquier directorio",
+          "impacto": "Los 3 módulos no se cargarán en contexto local (file://), solo funcionan en servidor HTTP"
+        },
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 274,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/integracion-calendario.js\" tiene ruta absoluta incorrecta",
+          "solución": "Cambiar a src=\"js/integracion-calendario.js\"",
+          "impacto": "IntegracionCalendario nunca se cargará"
+        },
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 275,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/sistema-notificaciones.js\" tiene ruta absoluta incorrecta",
+          "solución": "Cambiar a src=\"js/sistema-notificaciones.js\"",
+          "impacto": "SistemaNotificaciones nunca se cargará"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 273,
+          "severidad": "critica",
+          "descripción": "Incluso si las rutas se corrijen, los archivos js/gestor-multilocal.js, js/integracion-calendario.js, js/sistema-notificaciones.js no existen",
+          "solución": "Crear los 3 archivos con las clases correspondientes en carpeta js/",
+          "impacto": "Todos los tests del archivo (18 tests) fallarán"
+        },
+        {
+          "tipo": "VARIABLE_NO_DEFINIDA",
+          "linea": 291,
+          "severidad": "warning",
+          "descripción": "El código define empleados global dentro del script pero no define AppState. Algunos tests pueden requerir AppState",
+          "solución": "Agregar mock de AppState similar a test-semana-2.html",
+          "impacto": "Si algún módulo llama AppState, obtendrá ReferenceError"
+        },
+        {
+          "tipo": "LOGICA_TEST",
+          "linea": 380,
+          "severidad": "warning",
+          "descripción": "Test verifica IntegracionCalendario.esFestivo('2025-01-01') pero no tiene forma de ejecutar antes de cargar fecha actual",
+          "solución": "Pasar año dinámico: new Date().getFullYear() + '-01-01'",
+          "impacto": "Test fallará si año es diferente o fecha no es exactamente '2025-01-01'"
+        }
+      ]
+    },
+    {
+      "archivo": "test-semana-5.html",
+      "ruta": "c:\\Users\\samys\\OneDrive\\Nueva Carpeta\\test-semana-5.html",
+      "status": "error",
+      "lineas_totales": 562,
+      "problemas": [
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 247,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/dashboard-avanzado-s5.js\" comienza con / (raíz absoluta)",
+          "solución": "Cambiar a src=\"js/dashboard-avanzado-s5.js\"",
+          "impacto": "DashboardAvanzado nunca se cargará"
+        },
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 248,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/sistema-auditoria-s5.js\" tiene ruta absoluta",
+          "solución": "Cambiar a src=\"js/sistema-auditoria-s5.js\"",
+          "impacto": "SistemaAuditoriaAvanzado nunca se cargará"
+        },
+        {
+          "tipo": "RUTA_SCRIPT_INCORRECTA",
+          "linea": 249,
+          "severidad": "critica",
+          "descripción": "Script src=\"/js/gestor-backups-s5.js\" tiene ruta absoluta",
+          "solución": "Cambiar a src=\"js/gestor-backups-s5.js\"",
+          "impacto": "GestorBackups nunca se cargará"
+        },
+        {
+          "tipo": "DEPENDENCIA_NO_SATISFECHA",
+          "linea": 247,
+          "severidad": "critica",
+          "descripción": "Los archivos js/dashboard-avanzado-s5.js, js/sistema-auditoria-s5.js, js/gestor-backups-s5.js no existen",
+          "solución": "Crear los 3 archivos en carpeta js/ con las clases DashboardAvanzado, SistemaAuditoriaAvanzado, GestorBackups",
+          "impacto": "Todos los 18 tests fallarán por ReferenceError"
+        },
+        {
+          "tipo": "MOCK_INCOMPLETO",
+          "linea": 203,
+          "severidad": "warning",
+          "descripción": "Se crea mock de SistemaAuditoriaAvanzado que solo retorna {exito: true} pero los tests esperan estructura más compleja con id, registros, etc.",
+          "solución": "Expandir mock para retornar estructuras completas: {exito: true, id: 'uuid', registros: [], total: 0}",
+          "impacto": "Tests de auditoría pueden pasar falsamente aunque la implementación real sea incorrecta"
+        },
+        {
+          "tipo": "VALOR_NUMERICO",
+          "linea": 450,
+          "severidad": "info",
+          "descripción": "Test 5 verifica (resultado.sospechosas.length) pero mock inicial no retorna array en resultado.sospechosas",
+          "solución": "Agregar a mock: sospechosas: [] en respuesta de detectarActividadesSospechosas()",
+          "impacto": "Test 5 podría fallar con TypeError"
+        }
+      ]
+    }
+  ],
+  "resumen_por_categoria": {
+    "dependencias_no_satisfechas": {
+      "cantidad": 8,
+      "critica": 8,
+      "archivos_afectados": [
+        "test-semana-1.html (3 módulos)",
+        "test-semana-2.html (3 módulos)",
+        "test-semana-3.html (3 módulos)",
+        "test-semana-4.html (3 módulos + rutas incorrectas)",
+        "test-semana-5.html (3 módulos + rutas incorrectas)"
+      ],
+      "modulos_faltantes": [
+        "js/validador-datos.js",
+        "js/auto-save.js",
+        "js/tab-sync.js",
+        "js/generador-reportes.js",
+        "js/integracion-whatsapp.js",
+        "js/sincronizacion-datos.js",
+        "js/analizador-conflictos.js",
+        "js/dashboard-analytica.js",
+        "js/optimizador-turnos.js",
+        "js/gestor-multilocal.js",
+        "js/integracion-calendario.js",
+        "js/sistema-notificaciones.js",
+        "js/dashboard-avanzado-s5.js",
+        "js/sistema-auditoria-s5.js",
+        "js/gestor-backups-s5.js"
+      ]
+    },
+    "rutas_incorrectas": {
+      "cantidad": 6,
+      "critica": 6,
+      "archivos_afectados": [
+        "test-semana-4.html (3 rutas con /)",
+        "test-semana-5.html (3 rutas con /)"
+      ],
+      "patron": "Todas usan src=\"/js/archivo.js\" en lugar de src=\"js/archivo.js\""
+    },
+    "logica_test": {
+      "cantidad": 4,
+      "warning": 4,
+      "problemas": [
+        "Test 6 de semana-1 verifica typeof ValidadorDatos === 'function' pero debería ser 'object'",
+        "Test 5 de semana-2 tiene estructura de datos inconsistente con Map/Array",
+        "Test 4 de semana-3 espera string pero podría obtener objeto",
+        "Test de calendario en semana-4 usa fecha hardcodeada '2025-01-01'"
+      ]
+    },
+    "mocks_incompletos": {
+      "cantidad": 2,
+      "warning": 2,
+      "archivos": [
+        "test-semana-5.html: SistemaAuditoriaAvanzado retorna estructura simple pero tests esperan compleja"
+      ]
+    }
+  },
+  "plan_de_accion": {
+    "paso_1_crear_modulos_js": {
+      "prioridad": "CRITICA",
+      "modulos_a_crear": 15,
+      "tiempo_estimado_horas": 12,
+      "detalles": "Crear carpeta js/ con los 15 módulos faltantes. Cada módulo debe tener al menos los métodos referenciados en los tests"
+    },
+    "paso_2_corregir_rutas": {
+      "prioridad": "CRITICA",
+      "archivos_a_editar": 2,
+      "cambios": 6,
+      "tiempo_estimado_minutos": 5,
+      "detalles": "Cambiar en test-semana-4.html y test-semana-5.html todas las rutas /js/ a js/"
+    },
+    "paso_3_validar_logica_tests": {
+      "prioridad": "ALTA",
+      "archivos_a_revisar": 5,
+      "cambios_logica": 4,
+      "tiempo_estimado_minutos": 30,
+      "detalles": "Corregir validaciones de tipo, estructuras de datos y valores hardcodeados en tests"
+    },
+    "paso_4_expandir_mocks": {
+      "prioridad": "MEDIA",
+      "archivos_a_editar": 1,
+      "cambios": 3,
+      "tiempo_estimado_minutos": 15,
+      "detalles": "Expandir mocks en test-semana-5.html para retornar estructuras completas"
+    },
+    "paso_5_validar_integracion": {
+      "prioridad": "MEDIA",
+      "archivos_a_probar": 5,
+      "tiempo_estimado_horas": 2,
+      "detalles": "Ejecutar cada test en navegador para verificar que cargue correctamente"
+    }
+  },
+  "estadisticas_modulos": {
+    "modulos_esperados": 15,
+    "modulos_encontrados": 0,
+    "porcentaje_implementacion": "0%",
+    "metodos_js_referenciados": 78,
+    "metodos_no_verificados": 78
+  },
+  "recomendaciones_generales": [
+    "Crear estructura de carpetas: js/ en raíz de proyecto",
+    "Implementar módulos en orden: semana-1 → semana-2 → semana-3 → semana-4 → semana-5",
+    "Usar prefijo 's#' (ej: s5) en archivos de semanas posteriores para evitar conflictos de nombres",
+    "Crear archivo maestro MODULOS_REFERENCIA.md que documente firma de cada método esperado",
+    "Implementar verificación automática: script que valide que todos los módulos están cargados antes de ejecutar tests",
+    "Considerar usar archivo config.json para mapeo dinámico de rutas de módulos",
+    "Validar que AppState esté disponible globalmente en todos los tests"
+  ],
+  "nota_importante": "Los archivos test-semana-X.html están correctamente estructurados como suites de prueba, pero dependen 100% de módulos JavaScript externos que NO EXISTEN. Sin estos módulos, TODOS los tests fallarán con ReferenceError. La prioridad #1 es crear la carpeta js/ y todos los módulos."
+}

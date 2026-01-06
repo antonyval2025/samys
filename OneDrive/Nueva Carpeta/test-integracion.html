@@ -1,0 +1,398 @@
+<!-- 
+    TEST VERIFICACIÓN DE INTEGRACIÓN
+    Abre esta página en el navegador junto con nuevo_cuadrante_mejorado.html
+    para validar que todos los módulos están cargando correctamente
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Integración - Sistema de Turnos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; margin-bottom: 30px; }
+        h2 { color: #3498db; margin-top: 25px; margin-bottom: 15px; font-size: 1.2rem; }
+        .test-section {
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .status {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        .status.ok { background: #2ecc71; }
+        .status.error { background: #e74c3c; }
+        .status.warning { background: #f39c12; }
+        .status.pending { background: #95a5a6; }
+        .message {
+            flex: 1;
+        }
+        .code {
+            background: #2c3e50;
+            color: #2ecc71;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        .error-detail {
+            background: #ffe3e3;
+            color: #c92a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .button {
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        .button:hover { background: #2980b9; }
+        .summary {
+            background: #d4edda;
+            border: 2px solid #2ecc71;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .summary.warning {
+            background: #fff3cd;
+            border-color: #f39c12;
+        }
+        .summary.error {
+            background: #f8d7da;
+            border-color: #e74c3c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Integración - Sistema de Gestión de Turnos</h1>
+        
+        <div id="results"></div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="button" onclick="ejecutarTests()">🔄 Ejecutar Tests</button>
+            <button class="button" onclick="limpiarConsola()">🧹 Limpiar Consola</button>
+            <button class="button" onclick="exportarResultados()">💾 Descargar Resultados</button>
+        </div>
+    </div>
+
+    <script>
+        const resultados = {
+            modulos: [],
+            clases: [],
+            datos: [],
+            funcionalidad: [],
+            errores: []
+        };
+
+        function agregarResultado(categoria, nombre, estado, mensaje = '', detalles = '') {
+            const item = { nombre, estado, mensaje, detalles };
+            if (!resultados[categoria]) resultados[categoria] = [];
+            resultados[categoria].push(item);
+            console.log(`[${estado}] ${categoria} > ${nombre}:`, mensaje);
+        }
+
+        function crearElementoTest(estado, titulo, descripcion = '', error = '') {
+            const div = document.createElement('div');
+            div.className = 'test-item';
+            
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${estado === 'ok' ? 'ok' : estado === 'error' ? 'error' : 'warning'}`;
+            statusDiv.textContent = estado === 'ok' ? '✓' : estado === 'error' ? '✕' : '⚠';
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message';
+            msgDiv.innerHTML = `<strong>${titulo}</strong><br><small>${descripcion}</small>`;
+            
+            if (error) {
+                const errDiv = document.createElement('div');
+                errDiv.className = 'error-detail';
+                errDiv.textContent = error;
+                msgDiv.appendChild(errDiv);
+            }
+            
+            div.appendChild(statusDiv);
+            div.appendChild(msgDiv);
+            return div;
+        }
+
+        function crearSeccion(titulo) {
+            const div = document.createElement('div');
+            div.className = 'test-section';
+            div.innerHTML = `<h2>${titulo}</h2>`;
+            return div;
+        }
+
+        function ejecutarTests() {
+            resultados = {
+                modulos: [],
+                clases: [],
+                datos: [],
+                funcionalidad: [],
+                errores: []
+            };
+            
+            document.getElementById('results').innerHTML = '';
+            
+            // Test 1: Módulos Cargados
+            const seccionModulos = crearSeccion('📦 Módulos Cargados');
+            
+            const modulosPruebas = [
+                { nombre: 'modules.js', obj: 'AppState' },
+                { nombre: 'balanceo-y-restricciones.js', obj: 'BalanceadorTurnos' },
+                { nombre: 'reportes-y-prediccion.js', obj: 'GeneradorReportes' },
+                { nombre: 'soporte-multilocal.js', obj: 'GestorLocales' }
+            ];
+            
+            modulosPruebas.forEach(mod => {
+                if (typeof window[mod.obj] !== 'undefined') {
+                    seccionModulos.appendChild(crearElementoTest('ok', 
+                        `✓ ${mod.nombre}`, 
+                        `Clase ${mod.obj} disponible en window`));
+                    agregarResultado('modulos', mod.nombre, 'ok', `Clase ${mod.obj} cargada`);
+                } else {
+                    seccionModulos.appendChild(crearElementoTest('error', 
+                        `✕ ${mod.nombre}`, 
+                        `Clase ${mod.obj} NO ENCONTRADA`,
+                        `Verificar que ${mod.nombre} está en js/ y es referenciado en HTML`));
+                    agregarResultado('modulos', mod.nombre, 'error', `Clase ${mod.obj} no encontrada`);
+                }
+            });
+            document.getElementById('results').appendChild(seccionModulos);
+            
+            // Test 2: Clases y Métodos
+            const seccionClases = crearSeccion('🏗️ Clases y Métodos');
+            
+            const clasesValidar = [
+                { clase: 'AppState', metodos: ['loadFromStorage', 'saveToStorage', 'agregarCambio'] },
+                { clase: 'ValidadorTurnos', metodos: ['validarEmpleado', 'validarDistribucionTurnos'] },
+                { clase: 'BalanceadorTurnos', metodos: ['calcularEquidad', 'aplicarBalanceoAutomatico'] },
+                { clase: 'GeneradorReportes', metodos: ['generarReporteRotacion', 'exportarReporteHTML'] },
+                { clase: 'SistemaAuditoria', metodos: ['registrarCambio', 'obtenerHistorialEmpleado'] }
+            ];
+            
+            clasesValidar.forEach(item => {
+                const clase = window[item.clase];
+                if (clase) {
+                    item.metodos.forEach(metodo => {
+                        if (typeof clase[metodo] === 'function' || typeof clase.prototype[metodo] === 'function') {
+                            seccionClases.appendChild(crearElementoTest('ok',
+                                `✓ ${item.clase}.${metodo}()`,
+                                'Método disponible'));
+                            agregarResultado('clases', `${item.clase}.${metodo}`, 'ok', 'Método encontrado');
+                        } else {
+                            seccionClases.appendChild(crearElementoTest('warning',
+                                `⚠ ${item.clase}.${metodo}()`,
+                                'Método no encontrado o es propiedad'));
+                            agregarResultado('clases', `${item.clase}.${metodo}`, 'warning', 'Método no encontrado');
+                        }
+                    });
+                }
+            });
+            document.getElementById('results').appendChild(seccionClases);
+            
+            // Test 3: Datos Globales
+            const seccionDatos = crearSeccion('💾 Datos Globales');
+            
+            if (typeof empleados !== 'undefined' && Array.isArray(empleados)) {
+                seccionDatos.appendChild(crearElementoTest('ok',
+                    `✓ Variable empleados`,
+                    `${empleados.length} empleados cargados`));
+                agregarResultado('datos', 'empleados', 'ok', `${empleados.length} empleados`);
+            } else {
+                seccionDatos.appendChild(crearElementoTest('error',
+                    `✕ Variable empleados`,
+                    'No encontrada en window'));
+                agregarResultado('datos', 'empleados', 'error', 'No cargada');
+            }
+            
+            if (typeof tiposTurno !== 'undefined' && typeof tiposTurno === 'object') {
+                const tipos = Object.keys(tiposTurno).length;
+                seccionDatos.appendChild(crearElementoTest('ok',
+                    `✓ Tipos de Turno`,
+                    `${tipos} tipos disponibles: ${Object.keys(tiposTurno).join(', ')}`));
+                agregarResultado('datos', 'tiposTurno', 'ok', `${tipos} tipos cargados`);
+            } else {
+                seccionDatos.appendChild(crearElementoTest('error',
+                    `✕ Tipos de Turno`,
+                    'No encontrados'));
+                agregarResultado('datos', 'tiposTurno', 'error', 'No cargados');
+            }
+            
+            if (typeof AppState !== 'undefined' && AppState.scheduleData instanceof Map) {
+                seccionDatos.appendChild(crearElementoTest('ok',
+                    `✓ AppState.scheduleData`,
+                    `${AppState.scheduleData.size} empleados con datos de turnos`));
+                agregarResultado('datos', 'scheduleData', 'ok', `${AppState.scheduleData.size} empleados`);
+            } else {
+                seccionDatos.appendChild(crearElementoTest('warning',
+                    `⚠ AppState.scheduleData`,
+                    'No es una instancia de Map o está vacía'));
+                agregarResultado('datos', 'scheduleData', 'warning', 'Vacía o inválida');
+            }
+            document.getElementById('results').appendChild(seccionDatos);
+            
+            // Test 4: Funcionalidad Básica
+            const seccionFun = crearSeccion('⚙️ Funcionalidad Básica');
+            
+            try {
+                const reporte = GeneradorReportes.generarReporteRotacion(AppState.scheduleData, empleados);
+                if (reporte && reporte.empleados) {
+                    seccionFun.appendChild(crearElementoTest('ok',
+                        `✓ Generar Reporte Rotación`,
+                        `Reporte creado con ${reporte.empleados.length} empleados`));
+                    agregarResultado('funcionalidad', 'generarReporte', 'ok', 'Reporte generado');
+                } else {
+                    throw new Error('Reporte inválido');
+                }
+            } catch (e) {
+                seccionFun.appendChild(crearElementoTest('error',
+                    `✕ Generar Reporte Rotación`,
+                    'Error al generar',
+                    e.message));
+                agregarResultado('funcionalidad', 'generarReporte', 'error', e.message);
+            }
+            
+            try {
+                const equidad = BalanceadorTurnos.calcularEquidad(AppState.scheduleData);
+                if (equidad >= 0 && equidad <= 1) {
+                    seccionFun.appendChild(crearElementoTest('ok',
+                        `✓ Calcular Equidad`,
+                        `Índice de equidad: ${(equidad * 100).toFixed(1)}%`));
+                    agregarResultado('funcionalidad', 'calcularEquidad', 'ok', `Equidad: ${equidad}`);
+                } else {
+                    throw new Error('Valor fuera de rango 0-1');
+                }
+            } catch (e) {
+                seccionFun.appendChild(crearElementoTest('warning',
+                    `⚠ Calcular Equidad`,
+                    'Error en cálculo',
+                    e.message));
+                agregarResultado('funcionalidad', 'calcularEquidad', 'warning', e.message);
+            }
+            
+            document.getElementById('results').appendChild(seccionFun);
+            
+            // Resumen
+            const totalTests = resultados.modulos.length + resultados.clases.length + resultados.datos.length + resultados.funcionalidad.length;
+            const testsOk = Object.values(resultados).flat().filter(r => r.estado === 'ok').length;
+            const testsError = Object.values(resultados).flat().filter(r => r.estado === 'error').length;
+            
+            const resumen = document.createElement('div');
+            let claseResumen = 'summary';
+            if (testsError > 0) claseResumen += ' error';
+            else if (totalTests - testsOk > 0) claseResumen += ' warning';
+            
+            resumen.className = claseResumen;
+            resumen.innerHTML = `
+                <h2>📊 Resumen de Tests</h2>
+                <table>
+                    <tr>
+                        <td><strong>Total Tests</strong></td>
+                        <td><strong>${totalTests}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>✅ Exitosos</td>
+                        <td><span style="color: #2ecc71;"><strong>${testsOk}</strong></span></td>
+                    </tr>
+                    <tr>
+                        <td>⚠️ Advertencias</td>
+                        <td><span style="color: #f39c12;"><strong>${totalTests - testsOk - testsError}</strong></span></td>
+                    </tr>
+                    <tr>
+                        <td>❌ Errores</td>
+                        <td><span style="color: #e74c3c;"><strong>${testsError}</strong></span></td>
+                    </tr>
+                </table>
+                <p style="margin-top: 15px;">
+                    <strong>Resultado:</strong> 
+                    ${testsError === 0 ? '✅ La integración está COMPLETA y funcionando correctamente' : '❌ Hay errores que deben ser corregidos'}
+                </p>
+            `;
+            document.getElementById('results').appendChild(resumen);
+            
+            console.log('=== RESULTADOS DEL TEST ===', resultados);
+        }
+        
+        function limpiarConsola() {
+            console.clear();
+            console.log('Consola limpiada. Ejecuta ejecutarTests() para ver nuevamente los resultados.');
+        }
+        
+        function exportarResultados() {
+            const json = JSON.stringify(resultados, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-integracion-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Ejecutar tests automáticamente al cargar
+        window.addEventListener('load', ejecutarTests);
+    </script>
+</body>
+</html>

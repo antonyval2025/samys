@@ -1,0 +1,288 @@
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                       EJECUCIÓN INTERACTIVA DE PRUEBAS                       ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+🎯 PASO 1: Abre la aplicación en el navegador
+───────────────────────────────────────────────────────────────────────────────
+
+1. Ejecuta: iniciar_app.bat
+2. Espera a que aparezca: "Servidor iniciado..."
+3. Abre navegador: http://localhost:5001
+4. Presiona F12 para abrir la consola del desarrollador
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 OPCIÓN 1: PRUEBA VISUAL (MÁS FÁCIL)
+───────────────────────────────────────────────────────────────────────────────
+
+1. En la misma pestaña, copia esta URL en la barra de direcciones:
+   
+   http://localhost:5001/test_persistencia_visual.html
+
+2. O simplemente busca "test_persistencia_visual.html" en el navegador
+
+3. Verás una interfaz morada con botones grandes:
+   ┌──────────────────────────────────────────┐
+   │  ▶️  EJECUTAR TODAS LAS PRUEBAS         │
+   │  ▶️  SOLO PERSISTENCIA EMPLEADOS        │
+   │  ▶️  SOLO PERSISTENCIA TURNOS           │
+   │  🧹 LIMPIAR RESULTADOS                 │
+   │  🚨 LIMPIAR localStorage (⚠️ PELIGRO)  │
+   └──────────────────────────────────────────┘
+
+4. Haz clic en "▶️ EJECUTAR TODAS LAS PRUEBAS"
+
+5. Espera 2-3 segundos
+
+6. Verás una tabla con resultados:
+   ✅ Prueba 1: PASADA (verde)
+   ✅ Prueba 2: PASADA (verde)
+   ✅ Prueba 3: PASADA (verde)
+   ...
+   
+   Si todo es verde = ✅ ÉXITO
+   Si hay rojo = ❌ PROBLEMA
+
+7. Al final verás:
+   Pruebas Pasadas: 18
+   Pruebas Fallidas: 0
+   Tasa de Éxito: 100%
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 OPCIÓN 2: PRUEBA AVANZADA (CONSOLA)
+───────────────────────────────────────────────────────────────────────────────
+
+1. Abre: http://localhost:5001/nuevo_cuadrante_mejorado.html
+
+2. Presiona F12 para abrir la consola
+
+3. Copia el contenido COMPLETO de: test_persistencia_completo.js
+
+4. Pégalo en la consola (deberías ver el código)
+
+5. Presiona Enter
+
+6. Verás reportes detallados:
+   
+   ✅ TEST 1.1: Verificar empleados por defecto
+      └─ Tiempo: 2ms
+      └─ Resultado: PASADA
+   
+   ✅ TEST 1.2: Buscar Antony en lista
+      └─ Tiempo: 1ms
+      └─ Resultado: PASADA
+   
+   ... (14+ pruebas más)
+   
+   RESUMEN FINAL:
+   ─────────────
+   Total de pruebas: 18
+   Pruebas pasadas: 18
+   Pruebas fallidas: 0
+   Tasa de éxito: 100%
+
+═══════════════════════════════════════════════════════════════════════════════
+
+👥 OPCIÓN 3: PRUEBA MANUAL (SIN SCRIPTS)
+───────────────────────────────────────────────────────────────────────────────
+
+ESCENARIO 1: Crear Empleado y Verificar Persistencia
+─────────────────────────────────────────
+
+1. Abre http://localhost:5001
+2. Haz clic en "👥 Gestionar Empleados"
+3. Rellena el formulario:
+   - Nombre: "Test Empleado 2024"
+   - Email: "test@example.com"
+   - Teléfono: "123456789"
+   - Horas: "160"
+4. Haz clic en "✅ Crear Empleado"
+5. Verás el nuevo empleado en la lista
+6. Presiona F5 (recarga la página)
+7. Abre "👥 Gestionar Empleados" de nuevo
+8. ✅ El empleado "Test Empleado 2024" sigue ahí = PASADA
+
+ESCENARIO 2: Cambiar Turno y Verificar Persistencia
+──────────────────────────────────
+
+1. En el cuadrante general, haz clic en un turno gris (descanso)
+2. Abre el modal y selecciona "Mañana" (08:00-16:00)
+3. Haz clic en "💾 Guardar Cambios"
+4. Presiona F5 (recarga la página)
+5. Vuelve a ese turno
+6. ✅ Sigue siendo "Mañana" = PASADA
+
+ESCENARIO 3: Verificar que Antony está Presente
+────────────────────────────────────
+
+1. Abre http://localhost:5001
+2. Abre "👥 Gestionar Empleados"
+3. Busca "Antony" en la lista
+4. ✅ Antony García Rodríguez está presente = PASADA
+5. Presiona F5 (recarga)
+6. Abre de nuevo "👥 Gestionar Empleados"
+7. ✅ Antony sigue ahí = PASADA
+
+ESCENARIO 4: Cambios Masivos
+──────────────────────────────
+
+1. En "⚙️ Edición Masiva":
+   - Selecciona 3 empleados
+   - Rango de días: 5-10
+   - Nuevo turno: "Noche"
+   - Haz clic en "📊 Aplicar Cambios"
+2. Verás que aparecieron los cambios en la tabla
+3. Presiona F5 (recarga)
+4. ✅ Los turnos nocturnos siguen en días 5-10 = PASADA
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE VALIDACIÓN
+───────────────────────────────────────────────────────────────────────────────
+
+Marca cada item conforme lo valides:
+
+PERSISTENCIA DE EMPLEADOS:
+  ☐ Antony aparece en la lista de empleados
+  ☐ Puedo crear un empleado nuevo
+  ☐ El empleado nuevo persiste tras F5
+  ☐ El empleado se guarda en localStorage.empleadosData
+
+PERSISTENCIA DE TURNOS:
+  ☐ Puedo cambiar un turno a cualquier tipo
+  ☐ El cambio persiste tras F5
+  ☐ Los cambios masivos se guardan todos
+  ☐ Se guardan en localStorage.turnosAppState
+
+INTEGRIDAD:
+  ☐ No hay errores rojos en la consola (F12)
+  ☐ Las horas se calculan correctamente
+  ☐ Los tipos de turno son válidos (mañana, tarde, noche, etc)
+  ☐ No hay datos corruptos o duplicados
+
+ROBUSTEZ:
+  ☐ localStorage.clear() + F5 muestra empleados por defecto
+  ☐ Cambios no se pierden si cierro la pestaña
+  ☐ Los datos se sincronizan entre múltiples pestañas
+  ☐ Sistema es estable tras 10 cambios rápidos
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 CÓMO LEER LOS RESULTADOS
+───────────────────────────────────────────────────────────────────────────────
+
+EN LA PRUEBA VISUAL (test_persistencia_visual.html):
+
+┌─────────────────────────────────────┐
+│ ✅ TEST 1.1: PASADA (verde)         │  ← Significa que el test fue exitoso
+├─────────────────────────────────────┤
+│ ⏳ TEST 1.2: PENDIENTE (naranja)    │  ← Todavía se está ejecutando
+├─────────────────────────────────────┤
+│ ❌ TEST 1.3: FALLIDA (rojo)         │  ← Significa que falló (problema)
+├─────────────────────────────────────┤
+│ ℹ️ TEST 1.4: INFO (azul)            │  ← Información adicional
+└─────────────────────────────────────┘
+
+EN LA CONSOLA (test_persistencia_completo.js):
+
+✅ = Test pasó correctamente
+❌ = Test falló
+→ = Paso intermedio
+ℹ = Información adicional
+⏱ = Tiempo de ejecución
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🆘 SOLUCIÓN DE PROBLEMAS
+───────────────────────────────────────────────────────────────────────────────
+
+PROBLEMA: "No puedo abrir test_persistencia_visual.html"
+SOLUCIÓN: 
+  1. Verifica que http://localhost:5001 funciona
+  2. Prueba: http://localhost:5001/nuevo_cuadrante_mejorado.html
+  3. Si no funciona, reinicia con: iniciar_app.bat
+
+PROBLEMA: "El servidor no funciona"
+SOLUCIÓN:
+  1. Cierra iniciar_app.bat
+  2. Abre terminal PowerShell como administrador
+  3. Ejecuta: iniciar_app.bat nuevamente
+  4. Espera 5 segundos
+
+PROBLEMA: "Los test dicen que Antony no existe"
+SOLUCIÓN:
+  1. Ejecuta: localStorage.clear() en la consola
+  2. Presiona F5
+  3. Vuelve a ejecutar los test
+
+PROBLEMA: "Fallan los test de persistencia"
+SOLUCIÓN:
+  1. Abre consola (F12)
+  2. Ejecuta: localStorage.getItem('empleadosData')
+  3. Verifica que tenga contenido (no vacío)
+  4. Si está vacío, presiona F5
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 COMANDOS ÚTILES DE CONSOLA
+───────────────────────────────────────────────────────────────────────────────
+
+Ver todos los empleados:
+  console.log(empleados)
+
+Buscar Antony específicamente:
+  empleados.find(e => e.nombre.includes('Antony'))
+
+Ver todos los turnos guardados:
+  console.log(AppState.scheduleData)
+
+Ver los cambios pendientes:
+  console.log(AppState.cambiosPendientes)
+
+Ver el tamaño de datos en localStorage:
+  JSON.stringify(localStorage).length
+
+Limpiar localStorage (⚠️ CUIDADO):
+  localStorage.clear()
+
+Recargar la página:
+  location.reload()
+
+Forzar guardar cambios:
+  AppState.saveToStorage()
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RESULTADO ESPERADO
+───────────────────────────────────────────────────────────────────────────────
+
+Si todo funciona correctamente, deberías ver:
+
+✅ Tasa de éxito: 100%
+✅ Antony en la lista de empleados
+✅ Todos los cambios de turnos persisten
+✅ localStorage.clear() no causa problemas
+✅ No hay errores rojos en consola
+✅ La aplicación es ESTABLE y SEGURA
+
+═══════════════════════════════════════════════════════════════════════════════
+
+❓ ¿PREGUNTAS?
+───────────────────────────────────────────────────────────────────────────────
+
+Si algo falla, verifica:
+
+1. ¿Está el servidor ejecutándose? 
+   → Mira la ventana de PowerShell de iniciar_app.bat
+
+2. ¿Es localhost:5001?
+   → Intenta http://localhost:5001 en el navegador
+
+3. ¿Hay errores en la consola (F12)?
+   → Captura pantalla del error y revisa mensajes rojos
+
+4. ¿Antony está en la lista?
+   → Ejecuta en consola: empleados.find(e => e.nombre.includes('Antony'))
+
+═══════════════════════════════════════════════════════════════════════════════

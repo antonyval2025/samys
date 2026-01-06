@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Buttons Click Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .test-section { margin: 20px 0; padding: 15px; border-left: 4px solid #3498db; background: #ecf7ff; }
+        .button { padding: 10px 20px; margin: 5px; cursor: pointer; background: #3498db; color: white; border: none; border-radius: 5px; }
+        .button:hover { background: #2980b9; }
+        .result { padding: 10px; margin: 5px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test - Validar Función de Botones</h1>
+        <div id="results"></div>
+
+        <div class="test-section">
+            <h2>Prueba de Clics</h2>
+            <button class="button" onclick="testGestorLocales()">Test: Gestionar Locales</button>
+            <button class="button" onclick="testGestorDepartamentos()">Test: Gestionar Departamentos</button>
+            <button class="button" onclick="clearModals()">Limpiar Modales</button>
+        </div>
+    </div>
+
+    <!-- Cargar módulos -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/modules.js"></script>
+    <script src="js/balanceo-y-restricciones.js"></script>
+    <script src="js/reportes-y-prediccion.js"></script>
+    <script src="js/soporte-multilocal.js"></script>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+
+        function addResult(title, success, message) {
+            const div = document.createElement('div');
+            div.className = `result ${success ? 'success' : error ? 'error' : 'info'}`;
+            div.innerHTML = `<strong>${title}</strong>: ${message}`;
+            resultsDiv.appendChild(div);
+            console.log(`${title}: ${message}`);
+        }
+
+        function clearModals() {
+            document.querySelectorAll('.modal').forEach(m => m.remove());
+            addResult('✅ Modales Borrados', true, 'Todos los modales fueron removidos del DOM');
+        }
+
+        function testGestorLocales() {
+            addResult('🔍 Test: Gestionar Locales', true, 'Iniciando...');
+            
+            try {
+                // Verificar que la clase existe
+                if (typeof GestorLocales === 'undefined') {
+                    addResult('❌ GestorLocales NO existe', false, 'La clase no está definida');
+                    return;
+                }
+                addResult('✅ GestorLocales existe', true, 'Clase accesible');
+
+                // Verificar que el método existe
+                if (typeof GestorLocales.mostrarModalGestión !== 'function') {
+                    addResult('❌ mostrarModalGestión NO es función', false, `Tipo: ${typeof GestorLocales.mostrarModalGestión}`);
+                    return;
+                }
+                addResult('✅ mostrarModalGestión existe', true, 'Método accesible');
+
+                // Verificar AppState
+                if (typeof AppState === 'undefined') {
+                    addResult('❌ AppState NO existe', false, 'AppState no está definido');
+                    return;
+                }
+                addResult('✅ AppState existe', true, `userRole: ${AppState.userRole}`);
+
+                // Verificar canEditShifts
+                if (typeof AppState.canEditShifts !== 'function') {
+                    addResult('❌ canEditShifts NO existe', false, 'Método no existe');
+                    return;
+                }
+                
+                const canEdit = AppState.canEditShifts();
+                if (!canEdit) {
+                    addResult('⚠️ canEditShifts retorna false', false, `userRole='${AppState.userRole}' no tiene permisos`);
+                    return;
+                }
+                addResult('✅ canEditShifts retorna true', true, `Tienes permisos para editar`);
+
+                // Verificar NotificationSystem
+                if (typeof NotificationSystem === 'undefined') {
+                    addResult('❌ NotificationSystem NO existe', false, 'Sistema de notificaciones no disponible');
+                    return;
+                }
+                addResult('✅ NotificationSystem existe', true, 'Sistema de notificaciones disponible');
+
+                // Intentar llamar al método
+                addResult('🔄 Llamando GestorLocales.mostrarModalGestión()...', true, 'A punto de ejecutar');
+                GestorLocales.mostrarModalGestión();
+
+                // Verificar que se creó el modal en el DOM
+                const modal = document.getElementById('modalGestionLocales');
+                if (modal) {
+                    addResult('✅ Modal creado en el DOM', true, 'El elemento existe en el documento');
+                    addResult('✅ ¡ÉXITO!', true, 'El botón "Gestionar Locales" FUNCIONA CORRECTAMENTE');
+                } else {
+                    addResult('❌ Modal NO se creó', false, 'El elemento no aparece en el DOM');
+                }
+
+            } catch (e) {
+                addResult('❌ ERROR CRÍTICO', false, `${e.name}: ${e.message}`);
+                console.error('Stack:', e.stack);
+            }
+        }
+
+        function testGestorDepartamentos() {
+            addResult('🔍 Test: Gestionar Departamentos', true, 'Iniciando...');
+            
+            try {
+                // Verificar que la clase existe
+                if (typeof GestorDepartamentos === 'undefined') {
+                    addResult('❌ GestorDepartamentos NO existe', false, 'La clase no está definida');
+                    return;
+                }
+                addResult('✅ GestorDepartamentos existe', true, 'Clase accesible');
+
+                // Verificar que el método existe
+                if (typeof GestorDepartamentos.mostrarModalGestión !== 'function') {
+                    addResult('❌ mostrarModalGestión NO es función', false, `Tipo: ${typeof GestorDepartamentos.mostrarModalGestión}`);
+                    return;
+                }
+                addResult('✅ mostrarModalGestión existe', true, 'Método accesible');
+
+                // Verificar que GestorLocales tiene localActualId
+                if (GestorLocales.localActualId === null || GestorLocales.localActualId === undefined) {
+                    addResult('⚠️ GestorLocales.localActualId es null', false, 'No hay local seleccionado');
+                }
+                addResult('✅ GestorLocales.localActualId definido', true, `Valor: ${GestorLocales.localActualId}`);
+
+                // Intentar llamar al método
+                addResult('🔄 Llamando GestorDepartamentos.mostrarModalGestión()...', true, 'A punto de ejecutar');
+                GestorDepartamentos.mostrarModalGestión();
+
+                // Verificar que se creó el modal en el DOM
+                const modal = document.getElementById('modalGestionDeptos');
+                if (modal) {
+                    addResult('✅ Modal creado en el DOM', true, 'El elemento existe en el documento');
+                    addResult('✅ ¡ÉXITO!', true, 'El botón "Gestionar Departamentos" FUNCIONA CORRECTAMENTE');
+                } else {
+                    addResult('❌ Modal NO se creó', false, 'El elemento no aparece en el DOM');
+                }
+
+            } catch (e) {
+                addResult('❌ ERROR CRÍTICO', false, `${e.name}: ${e.message}`);
+                console.error('Stack:', e.stack);
+            }
+        }
+
+        // Auto-test al cargar
+        window.addEventListener('load', () => {
+            console.log('=== PÁGINA CARGADA, MÓDULOS LISTOS ===');
+            addResult('🎯 Página lista', true, 'Los módulos están cargados. Haz clic en los botones de prueba');
+        });
+    </script>
+</body>
+</html>

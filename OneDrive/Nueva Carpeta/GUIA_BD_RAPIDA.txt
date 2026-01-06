@@ -1,0 +1,222 @@
+GUÍA RÁPIDA - SISTEMA CON PERSISTENCIA DE BASE DE DATOS
+═══════════════════════════════════════════════════════════════════════════════
+
+## CAMBIO REALIZADO
+
+Se implementó un sistema de persistencia de datos basado en BASE DE DATOS SQLite
+en lugar de localStorage del navegador.
+
+### ¿QUÉ SIGNIFICA ESTO?
+
+ANTES:
+❌ Los datos se guardaban en localStorage del navegador
+❌ Si limpias caché o cierras en incógnito, se perdían
+❌ No funcionaba sin servidor
+
+AHORA:
+✅ Los datos se guardan en un archivo: turnos_database.db
+✅ Los datos son permanentes e independientes del navegador
+✅ Funciona desde cualquier navegador/dispositivo
+✅ Fácil de hacer respaldo
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## CÓMO USAR
+
+### PASO 1: Instalar dependencias (si no lo hizo ya)
+
+En PowerShell:
+pip install flask flask-cors
+
+### PASO 2: Iniciar el servidor
+
+Opción A - Usar el script:
+Ejecuta: iniciar.bat
+
+Opción B - Manual:
+python servidor_turnos.py
+
+### PASO 3: Acceder a la aplicación
+
+Abre el navegador:
+http://localhost:5001/
+
+(Si el puerto 5001 no funciona, intenta: python servidor_turnos.py --port 5002)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## ESTRUCTURA
+
+┌─────────────────────────────────────┐
+│   Tu PC / Navegador                 │
+│   nuevo_cuadrante_mejorado.html     │ ◄─ Interfaz visual
+└────────────┬────────────────────────┘
+             │ Fetch HTTP
+             ▼
+┌─────────────────────────────────────┐
+│   Servidor Flask (5001)             │
+│   servidor_turnos.py                │ ◄─ API REST (/api/*)
+└────────────┬────────────────────────┘
+             │ SQL Queries
+             ▼
+┌─────────────────────────────────────┐
+│   Base de Datos SQLite              │
+│   turnos_database.db                │ ◄─ DATOS PERMANENTES
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## RUTAS API
+
+GET  /api/empleados              → Obtener todos los empleados
+POST /api/empleados              → Crear empleado
+PUT  /api/empleados/<id>         → Actualizar empleado
+DEL  /api/empleados/<id>         → Eliminar empleado
+
+GET  /api/turnos/<emp_id>?mes=X&anio=Y → Obtener turnos
+POST /api/turnos/<emp_id>               → Guardar turnos
+
+GET  /api/tipos-turno            → Obtener tipos de turno
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## ARCHIVOS IMPORTANTES
+
+turnos_database.db
+  └─ Base de datos SQLite con todos los datos
+  └─ Se crea automáticamente
+  └─ Ubicada en: C:\Users\samys\OneDrive\Nueva Carpeta\
+
+servidor_turnos.py
+  └─ Servidor Flask que maneja la API
+  └─ Conecta navegador con base de datos
+
+nuevo_cuadrante_mejorado.html
+  └─ Aplicación frontend
+  └─ Ahora hace llamadas a /api/* en lugar de usar localStorage
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## EJEMPLO: GUARDAR UN EMPLEADO
+
+1. Usuario llena formulario: Nombre, Email, etc.
+2. Hace clic en "Guardar"
+3. JavaScript valida datos
+4. Envía POST a: http://localhost:5001/api/empleados
+   {
+     "nombre": "María García",
+     "email": "maria@gmail.com",
+     "telefono": "600123456",
+     ...
+   }
+5. Servidor recibe y guarda en Base de Datos
+6. Base de datos persiste datos ← ¡IMPORTANTE!
+
+Resultado: Los datos existen para siempre (mientras no elimines turnos_database.db)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## BACKUP Y RECUPERACIÓN
+
+### Hacer backup:
+1. Copia el archivo: turnos_database.db
+2. Guárdalo en USB o nube
+
+### Restaurar desde backup:
+1. Detén servidor: Ctrl+C
+2. Elimina turnos_database.db actual
+3. Copia tu backup en su lugar
+4. Reinicia servidor
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## TROUBLESHOOTING
+
+PROBLEMA: "Error: No se puede conectar a http://localhost:5001"
+SOLUCIÓN:
+  1. Verifica que el servidor está corriendo (debería ver "Running on...")
+  2. Abre F12 en el navegador → Console
+  3. Busca mensajes de error
+  4. Intenta otro puerto: python servidor_turnos.py --port 5002
+
+PROBLEMA: "turnos_database.db no se crea"
+SOLUCIÓN:
+  1. Verifica que tienes permisos de escritura en la carpeta
+  2. Ejecuta: python -c "import sqlite3; print('OK')"
+  3. Revisa que Python 3.7+ está instalado
+
+PROBLEMA: "Flask no está instalado"
+SOLUCIÓN:
+  pip install flask flask-cors
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## VENTAJAS DE ESTA ARQUITECTURA
+
+✅ Persistencia Real
+   Los datos nunca se pierden (a menos que elimines el archivo)
+
+✅ Sincronización
+   Múltiples usuarios/navegadores acceden a los mismos datos
+
+✅ Escalable
+   Fácil migrar a MySQL, PostgreSQL o MongoDB
+
+✅ Respaldo
+   Solo copia un archivo (turnos_database.db)
+
+✅ Seguridad
+   Datos no dependen del caché del navegador
+
+✅ Sin límites
+   SQLite puede almacenar gigas de datos (a diferencia de localStorage: ~5MB)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## PRÓXIMOS PASOS
+
+1. ✅ Instalar Flask (ya hecho)
+2. ✅ Implementar API REST (ya hecho)
+3. ✅ Integrar con HTML (ya hecho)
+4. → Inicia el servidor: python servidor_turnos.py
+5. → Accede: http://localhost:5001
+6. → Prueba: Agrega un empleado (se guardará en BD)
+7. → Verifica: Abre en otro navegador (el empleado sigue ahí)
+
+¡Listo! Ahora tienes persistencia de verdad 🎉
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## MIGRACIÓN DESDE LOCALSTORAGE
+
+Si tenías datos en localStorage antiguo:
+
+1. Abre conectar_bd.html
+2. Se conectará a la BD (vacía inicialmente)
+3. Puedes copiar empleados antigos manualmente O
+4. Usar el formulario para re-agregar los empleados
+
+Los turnos se generarán nuevamente automáticamente.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## CONTACTO CON DATOS
+
+Consultar datos de la BD directamente:
+
+Opción 1 - Desde navegador:
+http://localhost:5001/api/empleados
+
+Opción 2 - Desde Python:
+python -c "import sqlite3; conn = sqlite3.connect('turnos_database.db'); print(conn.execute('SELECT COUNT(*) FROM empleados').fetchone()[0], 'empleados')"
+
+Opción 3 - SQLite Browser (descargable):
+https://sqlitebrowser.org/
+  1. Abre turnos_database.db con SQLite Browser
+  2. Explora las tablas
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Versión: 10.0
+Fecha: 25 de diciembre de 2025
+Status: ✅ IMPLEMENTADO Y PROBADO

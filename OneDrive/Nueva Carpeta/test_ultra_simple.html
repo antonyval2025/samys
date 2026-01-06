@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Ultra-Simple FASE 1</title>
+    <style>
+        body { font-family: monospace; margin: 20px; background: #1e1e1e; color: #00ff00; }
+        .box { background: #2d2d2d; padding: 20px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #00ff00; }
+        h1 { color: #00ff00; }
+        h2 { color: #ffff00; margin-top: 20px; }
+        button { background: #00ff00; color: #000; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
+        button:hover { background: #00cc00; }
+        .ok { color: #00ff00; }
+        .err { color: #ff0000; }
+        .warn { color: #ffff00; }
+        pre { background: #000; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Ultra-Simple FASE 1</h1>
+    
+    <div class="box">
+        <h2>TEST 1: ¿Existe SidebarSemana3Module globalmente?</h2>
+        <div id="test1"></div>
+        <button onclick="test1()">EJECUTAR</button>
+    </div>
+
+    <div class="box">
+        <h2>TEST 2: ¿Está en window?</h2>
+        <div id="test2"></div>
+        <button onclick="test2()">EJECUTAR</button>
+    </div>
+
+    <div class="box">
+        <h2>TEST 3: Obtener tipo y propiedades</h2>
+        <div id="test3"></div>
+        <button onclick="test3()">EJECUTAR</button>
+    </div>
+
+    <div class="box">
+        <h2>TEST 4: Llamar init() directamente</h2>
+        <div id="test4"></div>
+        <button onclick="test4()">EJECUTAR</button>
+    </div>
+
+    <div class="box">
+        <h2>TEST 5: Llamar abrirAnalisis() directamente</h2>
+        <div id="test5"></div>
+        <button onclick="test5()">EJECUTAR</button>
+    </div>
+
+    <div class="box">
+        <h2>🔍 Consola en Vivo</h2>
+        <pre id="consola"></pre>
+    </div>
+
+    <script>
+        let consola_logs = [];
+        const log = console.log;
+        console.log = function(...args) {
+            log.apply(console, args);
+            consola_logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+            document.getElementById('consola').textContent = consola_logs.join('\n');
+            document.getElementById('consola').scrollTop = document.getElementById('consola').scrollHeight;
+        };
+
+        function test1() {
+            console.log('[TEST 1] Verificando SidebarSemana3Module...');
+            let html = '';
+            
+            if (typeof SidebarSemana3Module === 'undefined') {
+                html += '<span class="err">❌ NO EXISTE</span>';
+                console.error('SidebarSemana3Module no está definido en window');
+            } else {
+                html += '<span class="ok">✅ EXISTE</span>';
+                html += '<p>Tipo: ' + typeof SidebarSemana3Module + '</p>';
+                html += '<p>Propiedades: ' + Object.keys(SidebarSemana3Module).join(', ') + '</p>';
+                console.log('✅ SidebarSemana3Module encontrado:');
+                console.log(SidebarSemana3Module);
+            }
+            
+            document.getElementById('test1').innerHTML = html;
+        }
+
+        function test2() {
+            console.log('[TEST 2] Verificando window.SidebarSemana3Module...');
+            let html = '';
+            
+            if (!window.hasOwnProperty('SidebarSemana3Module')) {
+                html += '<span class="err">❌ NO está en window</span>';
+                console.error('SidebarSemana3Module no está en window');
+            } else {
+                html += '<span class="ok">✅ Está en window</span>';
+                console.log('✅ Confirmado en window');
+            }
+            
+            document.getElementById('test2').innerHTML = html;
+        }
+
+        function test3() {
+            console.log('[TEST 3] Tipo y propiedades...');
+            let html = '';
+            
+            if (typeof SidebarSemana3Module === 'undefined') {
+                html += '<span class="err">❌ No definido</span>';
+            } else {
+                const type = typeof SidebarSemana3Module;
+                const keys = Object.keys(SidebarSemana3Module);
+                html += `<p>Tipo: <span class="ok">${type}</span></p>`;
+                html += `<p>Propiedades públicas: ${keys.length}</p>`;
+                html += `<p>Lista: ${keys.join(', ')}</p>`;
+                console.log('Tipo:', type);
+                console.log('Propiedades:', keys);
+            }
+            
+            document.getElementById('test3').innerHTML = html;
+        }
+
+        function test4() {
+            console.log('[TEST 4] Llamando init()...');
+            let html = '';
+            
+            try {
+                if (typeof SidebarSemana3Module === 'undefined') {
+                    throw new Error('SidebarSemana3Module no existe');
+                }
+                
+                if (typeof SidebarSemana3Module.init !== 'function') {
+                    throw new Error('SidebarSemana3Module.init no es función');
+                }
+                
+                console.log('Llamando init()...');
+                SidebarSemana3Module.init();
+                
+                const estado = SidebarSemana3Module.obtenerEstado();
+                html += '<span class="ok">✅ init() ejecutado sin errores</span>';
+                html += '<pre>' + JSON.stringify(estado, null, 2) + '</pre>';
+                console.log('✅ init() exitoso. Estado:', estado);
+                
+            } catch (e) {
+                html += '<span class="err">❌ Error: ' + e.message + '</span>';
+                console.error('Error en init():', e);
+            }
+            
+            document.getElementById('test4').innerHTML = html;
+        }
+
+        function test5() {
+            console.log('[TEST 5] Llamando abrirAnalisis()...');
+            let html = '';
+            
+            try {
+                if (typeof SidebarSemana3Module === 'undefined') {
+                    throw new Error('SidebarSemana3Module no existe');
+                }
+                
+                if (typeof SidebarSemana3Module.abrirAnalisis !== 'function') {
+                    throw new Error('SidebarSemana3Module.abrirAnalisis no es función');
+                }
+                
+                console.log('Llamando abrirAnalisis()...');
+                SidebarSemana3Module.abrirAnalisis();
+                
+                const modal = document.getElementById('modalSemana3');
+                if (!modal) {
+                    html += '<span class="warn">⚠️ abrirAnalisis() ejecutó pero modal no encontrado en DOM</span>';
+                    console.warn('Modal no existe en DOM');
+                } else if (modal.classList.contains('active')) {
+                    html += '<span class="ok">✅ Modal abierto correctamente</span>';
+                    console.log('✅ Modal abierto');
+                } else {
+                    html += '<span class="warn">⚠️ Modal existe pero no está activo</span>';
+                    console.warn('Modal no está activo');
+                }
+                
+            } catch (e) {
+                html += '<span class="err">❌ Error: ' + e.message + '</span>';
+                console.error('Error en abrirAnalisis():', e);
+            }
+            
+            document.getElementById('test5').innerHTML = html;
+        }
+
+        // Auto-ejecutar al cargar
+        window.addEventListener('load', function() {
+            console.log('════════════════════════════════════════');
+            console.log('TEST ULTRA-SIMPLE FASE 1 - INICIANDO');
+            console.log('════════════════════════════════════════');
+            console.log('');
+            
+            // Pequeño delay para asegurar que todos los scripts cargaron
+            setTimeout(() => {
+                console.log('[AUTO] Verificación automática a los 2 segundos...');
+                test1();
+                test2();
+                test3();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

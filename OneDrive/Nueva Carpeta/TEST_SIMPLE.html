@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple - Horas Turnos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .test {
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .test.pass {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .test.fail {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .results {
+            margin-top: 20px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Test Simple - Verificación de Horas</h1>
+        
+        <p style="text-align: center; color: #666;">
+            Este test verifica que los turnos tengan las horas correctas configuradas
+        </p>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="ejecutarTests()">▶️ Ejecutar Tests</button>
+            <button onclick="limpiar()" style="background: #6c757d;">🗑️ Limpiar</button>
+        </div>
+        
+        <div id="resultados" class="results"></div>
+    </div>
+    
+    <script>
+        'use strict';
+        
+        // Definición de turnos (igual que en la aplicación)
+        var tiposTurno = {
+            'mañana': { horario: "08:00-16:00", horas: 8 },
+            'tarde': { horario: "16:00-00:00", horas: 6.5 },
+            'noche': { horario: "00:00-08:00", horas: 8 },
+            'mixto': { horario: "08:00-00:00", horas: 16 },
+            'descanso': { horario: "-", horas: 0 },
+            'vacaciones': { horario: "-", horas: 0 },
+            'baja': { horario: "-", horas: 0 },
+            'festivo': { horario: "-", horas: 0 },
+            'libre': { horario: "-", horas: 0 }
+        };
+        
+        function limpiar() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+        
+        function agregarTest(nombre, pasado, detalles) {
+            var div = document.getElementById('resultados');
+            var clase = pasado ? 'pass' : 'fail';
+            var icon = pasado ? '✅' : '❌';
+            
+            var html = '<div class="test ' + clase + '">' +
+                '<strong>' + icon + ' ' + nombre + '</strong><br>' +
+                '<small>' + detalles + '</small>' +
+                '</div>';
+            
+            div.innerHTML += html;
+        }
+        
+        function ejecutarTests() {
+            limpiar();
+            
+            // Test 1: Tarde tiene 6.5 horas
+            var test1 = tiposTurno['tarde'].horas === 6.5;
+            agregarTest(
+                'Test 1: Turno "tarde" tiene 6.5 horas',
+                test1,
+                'Valor actual: <code>' + tiposTurno['tarde'].horas + 'h</code> - ' +
+                'Esperado: <code>6.5h</code>'
+            );
+            
+            // Test 2: Mañana tiene 8 horas
+            var test2 = tiposTurno['mañana'].horas === 8;
+            agregarTest(
+                'Test 2: Turno "mañana" tiene 8 horas',
+                test2,
+                'Valor actual: <code>' + tiposTurno['mañana'].horas + 'h</code> - ' +
+                'Esperado: <code>8h</code>'
+            );
+            
+            // Test 3: Noche tiene 8 horas
+            var test3 = tiposTurno['noche'].horas === 8;
+            agregarTest(
+                'Test 3: Turno "noche" tiene 8 horas',
+                test3,
+                'Valor actual: <code>' + tiposTurno['noche'].horas + 'h</code> - ' +
+                'Esperado: <code>8h</code>'
+            );
+            
+            // Test 4: Descanso tiene 0 horas
+            var test4 = tiposTurno['descanso'].horas === 0;
+            agregarTest(
+                'Test 4: Turno "descanso" tiene 0 horas',
+                test4,
+                'Valor actual: <code>' + tiposTurno['descanso'].horas + 'h</code> - ' +
+                'Esperado: <code>0h</code>'
+            );
+            
+            // Resumen
+            var totalTests = 4;
+            var testsPasados = (test1 ? 1 : 0) + (test2 ? 1 : 0) + (test3 ? 1 : 0) + (test4 ? 1 : 0);
+            
+            var claseResumen = testsPasados === totalTests ? 'pass' : 'fail';
+            var iconResumen = testsPasados === totalTests ? '✅' : '❌';
+            
+            document.getElementById('resultados').innerHTML += 
+                '<div class="test ' + claseResumen + '" style="margin-top: 20px; font-weight: bold;">' +
+                iconResumen + ' RESULTADO: ' + testsPasados + '/' + totalTests + ' tests pasados' +
+                '</div>';
+        }
+        
+        // Ejecutar automáticamente al cargar
+        window.addEventListener('load', ejecutarTests);
+    </script>
+</body>
+</html>

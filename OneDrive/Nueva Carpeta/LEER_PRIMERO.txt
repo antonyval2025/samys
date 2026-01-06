@@ -1,0 +1,56 @@
+════════════════════════════════════════════════════════════════
+                 APLICACIÓN DE GESTIÓN DE TURNOS
+════════════════════════════════════════════════════════════════
+
+✅ INSTRUCCIONES SIMPLES:
+
+1. SOLO HACES DOBLE-CLIC EN: launcher.exe
+   ↓
+   • Se inicia el servidor automáticamente
+   • Se abre el navegador automáticamente
+   • Listo para trabajar
+
+2. Cuando termines de trabajar:
+   • Puedes cerrar el navegador normalmente
+   • Cierra la ventana del launcher si quieres
+
+════════════════════════════════════════════════════════════════
+
+🔧 ¿QUÉ CONTIENE EL ARCHIVO?
+
+launcher.exe
+  → Inicia todo automáticamente
+  → No necesita nada instalado
+  → 8 MB (todo incluido)
+
+servidor_turnos.exe
+  → Servidor web (se ejecuta en background)
+  → Se inicia automáticamente desde launcher.exe
+  → No necesitas hacer nada con él
+
+nuevo_cuadrante_mejorado.html
+  → Aplicación web
+  → Se abre en el navegador automáticamente
+
+════════════════════════════════════════════════════════════════
+
+💡 NOTA IMPORTANTE:
+
+La primera vez puede tardar 2-3 segundos en iniciar el servidor.
+Después es CASI INSTANTÁNEO.
+
+Si algo falla, cierra todo y vuelve a hacer doble-clic en
+launcher.exe
+
+════════════════════════════════════════════════════════════════
+
+¿Preguntas?
+El archivo está diseñado para trabajar sin necesidad de:
+  ❌ Instalar Python
+  ❌ Instalar nada en la computadora
+  ❌ Hacer configuración
+  ❌ Usar el terminal
+
+Solo: launcher.exe → ENTER
+
+════════════════════════════════════════════════════════════════

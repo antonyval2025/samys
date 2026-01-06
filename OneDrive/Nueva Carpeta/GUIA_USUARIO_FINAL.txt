@@ -1,0 +1,278 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║            SISTEMA DE GESTIÓN DE TURNOS                             ║
+║            GUÍA PARA EL USUARIO FINAL                               ║
+║                                                                       ║
+║            ✅ SIN INSTALACIÓN - FUNCIONA YA                         ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                      INICIO INMEDIATO (3 PASOS)                      │
+└───────────────────────────────────────────────────────────────────────┘
+
+PASO 1: Localiza servidor_turnos.exe
+────────────────────────────────────
+   📁 Debe estar en la carpeta del sistema
+   🔍 Busca un archivo llamado: servidor_turnos.exe
+
+
+PASO 2: Haz DOBLE CLIC en servidor_turnos.exe
+─────────────────────────────────────────────
+   🖱️  Se abrirá una ventana negra (cmd)
+   ⚠️  NO la cierres - el servidor está corriendo
+   
+   Deberías ver:
+   ============================================================
+   🚀 SERVIDOR DE GESTIÓN DE TURNOS
+   ============================================================
+   ✓ Servidor iniciado correctamente
+   ✓ Accede a: http://localhost:8000/nuevo_cuadrante_mejorado.html
+
+
+PASO 3: Abre tu navegador y accede a http://localhost:8000
+────────────────────────────────────────────────────────
+   🌐 Chrome, Firefox, Edge o cualquier navegador
+   📍 Escribe: http://localhost:8000
+   🎉 ¡Listo! Ya tienes la aplicación corriendo
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                           ¡FUNCIONA YA!                              │
+└───────────────────────────────────────────────────────────────────────┘
+
+Ahora puedes:
+  ✓ Crear turnos
+  ✓ Editar turnos
+  ✓ Ver cuadrantes
+  ✓ Filtrar por localidad/departamento
+  ✓ Exportar a PDF
+  ✓ Compartir por WhatsApp
+  ✓ Y mucho más...
+
+Tus datos se guardan AUTOMÁTICAMENTE
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                       PREGUNTAS FRECUENTES                           │
+└───────────────────────────────────────────────────────────────────────┘
+
+¿Dónde se guardan mis datos?
+├─ En tu navegador (localStorage)
+├─ Se guardan automáticamente
+├─ Están seguros en tu ordenador
+└─ NO se envían a internet
+
+
+¿Necesito conexión a internet?
+├─ NO
+├─ Funciona 100% offline
+├─ Sin servidores externos
+└─ Todo local
+
+
+¿Puedo usar en mi teléfono/tablet?
+├─ SÍ, en la misma red
+├─ Desde tu PC:
+│  └─ Abre PowerShell/cmd
+│  └─ Escribe: ipconfig
+│  └─ Busca "IPv4 Address": 192.168.x.x
+├─ Desde mobile:
+│  └─ Abre navegador
+│  └─ Escribe: http://192.168.x.x:8000
+└─ (Reemplaza 192.168.x.x con tu IP real)
+
+
+¿Puedo dejar la ventana cmd abierta todo el tiempo?
+├─ SÍ, sin problemas
+├─ Así cualquiera en la red accede
+├─ Presiona CTRL+C para detener
+└─ Cuando cierres la ventana, el servidor se detiene
+
+
+¿Qué pasa si cierro la ventana cmd?
+├─ El servidor se detiene
+├─ La aplicación ya abierta sigue funcionando
+├─ Pero no puedes hacer cambios
+└─ Vuelve a ejecutar servidor_turnos.exe
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                      SOLUCIÓN DE PROBLEMAS                           │
+└───────────────────────────────────────────────────────────────────────┘
+
+❌ ERROR: "Puerto 8000 ya en uso"
+
+SOLUCIÓN:
+   └─ Otro servidor está usando ese puerto
+   └─ Opción 1: Cierra la otra ventana del servidor
+   └─ Opción 2: En PowerShell:
+       └─ taskkill /F /IM python.exe
+       └─ Luego vuelve a ejecutar
+
+
+❌ ERROR: El .exe no funciona
+
+SOLUCIÓN:
+   └─ Opción 1: Intenta iniciar_servidor.bat
+      └─ Necesita Python instalado
+   └─ Opción 2: Intenta iniciar_servidor.ps1
+      └─ Script PowerShell alternativo
+   └─ Opción 3: Usa Python directamente
+      └─ python -m http.server 8000
+
+
+❌ ERROR: No veo la aplicación en http://localhost:8000
+
+SOLUCIÓN:
+   └─ Verifica que la ventana cmd muestre:
+      └─ "✓ Servidor iniciado correctamente"
+   └─ Intenta en otro navegador
+   └─ Limpia caché (CTRL+SHIFT+DEL → Borrar caché)
+   └─ Recarga F5 o CTRL+R
+
+
+❌ ERROR: Los datos no se guardan
+
+SOLUCIÓN:
+   └─ IMPORTANTE: Usa http://localhost:8000
+   └─ NO uses file:/// (eso no funciona)
+   └─ Para diagnosticar:
+      └─ Abre navegador
+      └─ Presiona F12
+      └─ Consola
+      └─ Escribe: diag()
+      └─ Lee la salida
+
+
+❌ ERROR: No puedo acceder desde otro ordenador
+
+SOLUCIÓN:
+   └─ Por defecto, solo acceso local (localhost)
+   └─ Para acceso remoto:
+      └─ En cmd: ipconfig /all
+      └─ Busca tu IP: 192.168.x.x
+      └─ Desde otro PC: http://192.168.x.x:8000
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                        DIAGNÓSTICO AVANZADO                          │
+└───────────────────────────────────────────────────────────────────────┘
+
+Si algo no funciona, ejecuta el diagnóstico:
+
+PASO 1: En navegador abierto en http://localhost:8000
+PASO 2: Presiona F12 (abre herramientas de desarrollador)
+PASO 3: Haz clic en "Consola"
+PASO 4: Escribe: diag()
+PASO 5: Lee la salida
+
+Te dirá:
+  ✓ Si localStorage está disponible
+  ✓ Cuántos datos hay guardados
+  ✓ Si estás en el protocolo correcto
+  ✓ Si el servidor está accesible
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                        CONSEJOS Y TRUCOS                             │
+└───────────────────────────────────────────────────────────────────────┘
+
+✓ TIP 1: Crea un acceso directo
+  └─ Doble clic en servidor_turnos.exe
+  └─ Clic derecho → Crear acceso directo
+  └─ Pega en escritorio
+
+
+✓ TIP 2: Abre automáticamente en navegador
+  └─ Ejecuta servidor_turnos.exe
+  └─ Se abre automáticamente http://localhost:8000
+
+
+✓ TIP 3: Usa en toda la red
+  └─ Tu PC actúa como servidor
+  └─ Otros PCs accesan por red
+  └─ Todos ven los mismos datos (comparten localStorage)
+     └─ NOTA: Cada navegador tiene su propio localStorage
+
+
+✓ TIP 4: Exporta datos regularmente
+  └─ Usa botón "Exportar"
+  └─ Guarda copias en PDF/Excel
+  └─ Así tienes respaldo
+
+
+✓ TIP 5: Limpia caché periódicamente
+  └─ F12 → Pestaña "Almacenamiento"
+  └─ Si hay conflictos, borra datos de este sitio
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                         CARACTERÍSTICAS                              │
+└───────────────────────────────────────────────────────────────────────┘
+
+✅ Gestión de cuadrantes mensuales
+✅ Múltiples tipos de turno
+✅ Gestión de localidades
+✅ Gestión de departamentos
+✅ Filtros por localidad y departamento
+✅ Edición individual de turnos
+✅ Edición masiva de turnos
+✅ Exportación a PDF
+✅ Exportación a Excel
+✅ Compartir por WhatsApp
+✅ Reportes y análisis
+✅ Datos persistentes
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                      REQUISITOS TÉCNICOS                             │
+└───────────────────────────────────────────────────────────────────────┘
+
+HARDWARE:
+  └─ Cualquier PC moderno
+  └─ Al menos 500 MB de espacio libre
+  └─ 2 GB de RAM recomendado
+
+SOFTWARE:
+  └─ Windows Vista o superior (para .exe)
+  └─ O Python 3.6+ (para .bat)
+  └─ Navegador moderno:
+     └─ Chrome 90+
+     └─ Firefox 88+
+     └─ Edge 90+
+     └─ Safari 14+
+
+CONEXIÓN:
+  └─ Funciona completamente offline
+  └─ NO necesita internet
+
+
+┌───────────────────────────────────────────────────────────────────────┐
+│                      SOPORTE Y AYUDA                                 │
+└───────────────────────────────────────────────────────────────────────┘
+
+Si tienes problemas:
+
+1. Lee este documento nuevamente
+2. Intenta los pasos de "Solución de problemas"
+3. Ejecuta el diagnóstico (diag())
+4. Si persiste, contacta al administrador
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+                         ¡LISTO PARA EMPEZAR!
+
+                    1. Ejecuta: servidor_turnos.exe
+                    2. Abre: http://localhost:8000
+                    3. ¡Disfruta!
+
+═══════════════════════════════════════════════════════════════════════════
+
+Versión:          8.0+
+Última actualización: 15 de diciembre de 2025
+Licencia:         Privada
+
+═══════════════════════════════════════════════════════════════════════════

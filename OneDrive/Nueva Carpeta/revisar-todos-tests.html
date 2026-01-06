@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisar Todos los Tests - Debug Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #4ec9b0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        
+        .section {
+            background: #252526;
+            border: 1px solid #404040;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        
+        .section-title {
+            color: #569cd6;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .error-log {
+            background: #1e1e1e;
+            border-left: 3px solid #f48771;
+            padding: 10px;
+            margin: 5px 0;
+            color: #f48771;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            background: #1e1e1e;
+            border-left: 3px solid #4ec9b0;
+            padding: 10px;
+            margin: 5px 0;
+            color: #4ec9b0;
+            font-size: 12px;
+        }
+        
+        .warning {
+            background: #1e1e1e;
+            border-left: 3px solid #dcdcaa;
+            padding: 10px;
+            margin: 5px 0;
+            color: #dcdcaa;
+            font-size: 12px;
+        }
+        
+        .info {
+            background: #1e1e1e;
+            border-left: 3px solid #9cdcfe;
+            padding: 10px;
+            margin: 5px 0;
+            color: #9cdcfe;
+            font-size: 12px;
+        }
+        
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: #005a9e;
+        }
+        
+        .test-file {
+            margin: 10px 0;
+        }
+        
+        .file-name {
+            color: #ce9178;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug Completo - Revisar Todos los Tests</h1>
+        
+        <div class="section">
+            <div class="section-title">⚡ Controles</div>
+            <button onclick="cargarTodosModulos()">Cargar Todos los Módulos</button>
+            <button onclick="ejecutarTests()">Ejecutar Tests</button>
+            <button onclick="limpiarConsola()">Limpiar Consola</button>
+            <button onclick="descargarErrores()">Descargar Informe</button>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📋 Estado de Carga de Módulos</div>
+            <div id="moduleStatus"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">❌ Errores Detectados</div>
+            <div id="errors"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">✅ Información de Carga</div>
+            <div id="console"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📊 Resultados de Tests</div>
+            <div id="testResults"></div>
+        </div>
+    </div>
+
+    <!-- ============= CARGAR TODOS LOS MÓDULOS ============= -->
+    <script src="js/validador-datos.js"></script>
+    <script src="js/auto-save.js"></script>
+    <script src="js/tab-sync.js"></script>
+    <script src="js/generador-reportes.js"></script>
+    <script src="js/integracion-whatsapp.js"></script>
+    <script src="js/sincronizacion-datos.js"></script>
+    <script src="js/analizador-conflictos.js"></script>
+    <script src="js/dashboard-analytica.js"></script>
+    <script src="js/optimizador-turnos.js"></script>
+    <script src="js/gestor-multi-local.js"></script>
+    <script src="js/integracion-calendario.js"></script>
+    <script src="js/sistema-notificaciones.js"></script>
+    <script src="js/dashboard-avanzado.js"></script>
+    <script src="js/sistema-auditoria-avanzado.js"></script>
+    <script src="js/gestor-backups.js"></script>
+
+    <script>
+        // ============= GLOBAL STATE =============
+        const errorLog = [];
+        const consoleLog = [];
+        const moduleList = [
+            'ValidadorDatos',
+            'AutoSaveManager',
+            'TabSyncManager',
+            'GeneradorReportes',
+            'IntegracionWhatsApp',
+            'SincronizacionDatos',
+            'AnalizadorConflictos',
+            'DashboardAnalytica',
+            'OptimizadorTurnos',
+            'GestorMultiLocal',
+            'IntegracionCalendario',
+            'SistemaNotificaciones',
+            'DashboardAvanzado',
+            'SistemaAuditoriaAvanzado',
+            'GestorBackups'
+        ];
+
+        // ============= INTERCEPTAR CONSOLE =============
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleLog.push('LOG: ' + args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleLog.push('ERROR: ' + args.join(' '));
+            errorLog.push('ERROR: ' + args.join(' '));
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            consoleLog.push('WARN: ' + args.join(' '));
+        };
+
+        // ============= INTERCEPTAR ERRORES GLOBALES =============
+        window.addEventListener('error', (event) => {
+            const msg = `${event.filename}:${event.lineno}:${event.colno} - ${event.message}`;
+            errorLog.push('GLOBAL ERROR: ' + msg);
+            consoleLog.push('GLOBAL ERROR: ' + msg);
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            errorLog.push('UNHANDLED PROMISE: ' + event.reason);
+            consoleLog.push('UNHANDLED PROMISE: ' + event.reason);
+        });
+
+        // ============= CREAR ESTADO GLOBAL =============
+        if (typeof empleados === 'undefined') {
+            window.empleados = [
+                { id: 1, nombre: 'Juan García', email: 'juan@test.com', telefono: '645123456', horasContrato: 160, departamento: 'Operaciones', estado: 'activo' },
+                { id: 2, nombre: 'María López', email: 'maria@test.com', telefono: '612345678', horasContrato: 160, departamento: 'Ventas', estado: 'activo' }
+            ];
+        }
+
+        if (typeof AppState === 'undefined') {
+            window.AppState = {
+                currentMonth: 0,
+                currentYear: 2026,
+                scheduleData: new Map([
+                    [1, [
+                        { dia: 1, turno: 'mañana', mes: 0, anio: 2026, horas: 8 },
+                        { dia: 2, turno: 'tarde', mes: 0, anio: 2026, horas: 8 }
+                    ]],
+                    [2, [
+                        { dia: 1, turno: 'tarde', mes: 0, anio: 2026, horas: 8 }
+                    ]]
+                ]),
+                cambiosPendientes: []
+            };
+        }
+
+        // ============= FUNCIONES DE CONTROL =============
+        function cargarTodosModulos() {
+            const statusDiv = document.getElementById('moduleStatus');
+            statusDiv.innerHTML = '';
+
+            moduleList.forEach(module => {
+                const existe = typeof window[module] !== 'undefined';
+                const tipoModulo = typeof window[module];
+                
+                const div = document.createElement('div');
+                if (existe) {
+                    div.className = 'success';
+                    div.textContent = `✅ ${module}: ${tipoModulo}`;
+                } else {
+                    div.className = 'error-log';
+                    div.textContent = `❌ ${module}: NO CARGADO`;
+                    errorLog.push(`Módulo no cargado: ${module}`);
+                }
+                statusDiv.appendChild(div);
+            });
+        }
+
+        function ejecutarTests() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '';
+            
+            let totalTests = 0;
+            let passedTests = 0;
+
+            // Test de cada módulo
+            const tests = [
+                {
+                    name: 'ValidadorDatos.validarEmpleado()',
+                    fn: () => ValidadorDatos.validarEmpleado({
+                        nombre: 'Test',
+                        email: 'test@test.com',
+                        telefono: '123456789',
+                        horasContrato: 160
+                    })
+                },
+                {
+                    name: 'GeneradorReportes.generarReporteMensual()',
+                    fn: () => GeneradorReportes.generarReporteMensual()
+                },
+                {
+                    name: 'IntegracionWhatsApp.validarTelefono()',
+                    fn: () => IntegracionWhatsApp.validarTelefono('645123456')
+                },
+                {
+                    name: 'SincronizacionDatos.init()',
+                    fn: () => { SincronizacionDatos.init(); return true; }
+                },
+                {
+                    name: 'AnalizadorConflictos.analizarConflictos()',
+                    fn: () => AnalizadorConflictos.analizarConflictos(1)
+                }
+            ];
+
+            tests.forEach(test => {
+                totalTests++;
+                const div = document.createElement('div');
+                
+                try {
+                    const result = test.fn();
+                    div.className = 'success';
+                    div.textContent = `✅ ${test.name} - OK`;
+                    passedTests++;
+                } catch (e) {
+                    div.className = 'error-log';
+                    div.textContent = `❌ ${test.name} - ERROR: ${e.message}`;
+                    errorLog.push(`Test falló: ${test.name} - ${e.message}`);
+                }
+                resultsDiv.appendChild(div);
+            });
+
+            const resumenDiv = document.createElement('div');
+            resumenDiv.className = 'info';
+            resumenDiv.textContent = `📊 Total: ${totalTests} | Pasados: ${passedTests} | Fallidos: ${totalTests - passedTests}`;
+            resultsDiv.appendChild(resumenDiv);
+        }
+
+        function limpiarConsola() {
+            document.getElementById('console').innerHTML = '';
+            errorLog.length = 0;
+            consoleLog.length = 0;
+        }
+
+        function descargarErrores() {
+            const informe = {
+                timestamp: new Date().toISOString(),
+                errores: errorLog,
+                modulosCargados: moduleList.map(m => ({
+                    nombre: m,
+                    cargado: typeof window[m] !== 'undefined',
+                    tipo: typeof window[m]
+                })),
+                empleados: typeof empleados !== 'undefined',
+                appState: typeof AppState !== 'undefined'
+            };
+
+            const blob = new Blob([JSON.stringify(informe, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'debug-informe.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Mostrar consola dinámicamente
+        setInterval(() => {
+            const consoleDiv = document.getElementById('console');
+            const errorDiv = document.getElementById('errors');
+            
+            // Mostrar últimos 10 logs
+            if (consoleLog.length > 0) {
+                consoleDiv.innerHTML = consoleLog.slice(-10).map(log => {
+                    const div = document.createElement('div');
+                    div.className = log.includes('ERROR') ? 'error-log' : log.includes('WARN') ? 'warning' : 'info';
+                    div.textContent = log.substring(0, 100);
+                    return div.outerHTML;
+                }).join('');
+            }
+            
+            // Mostrar errores
+            if (errorLog.length > 0) {
+                errorDiv.innerHTML = errorLog.slice(-5).map(err => {
+                    const div = document.createElement('div');
+                    div.className = 'error-log';
+                    div.textContent = err;
+                    return div.outerHTML;
+                }).join('');
+            }
+        }, 1000);
+
+        // Auto-cargar módulos y ejecutar tests
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                cargarTodosModulos();
+                ejecutarTests();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

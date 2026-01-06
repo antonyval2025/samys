@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Script Loading</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        .test { padding: 10px; margin: 10px 0; border-left: 4px solid #3498db; }
+        .success { background: #d4edda; color: #155724; border-left-color: #28a745; }
+        .error { background: #f8d7da; color: #721c24; border-left-color: #dc3545; }
+        .loading { background: #fff3cd; color: #856404; border-left-color: #ffc107; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test de Carga de Scripts</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(msg, type = 'loading') {
+            const div = document.createElement('div');
+            div.className = `test ${type}`;
+            div.textContent = msg;
+            output.appendChild(div);
+            console.log(msg);
+        }
+
+        log('✓ HTML cargado correctamente', 'success');
+        log('Cargando scripts...', 'loading');
+    </script>
+
+    <!-- Cargar CDN primero -->
+    <script>log('Cargando html2canvas...', 'loading');</script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>log('✓ html2canvas cargado', 'success');</script>
+
+    <script>log('Cargando jsPDF...', 'loading');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>log('✓ jsPDF cargado', 'success');</script>
+
+    <!-- Cargar módulos locales -->
+    <script>log('Cargando modules.js...', 'loading');</script>
+    <script src="js/modules.js"></script>
+    <script>
+        try {
+            if (typeof AppState === 'undefined') throw new Error('AppState no definido');
+            log('✓ modules.js cargado - AppState disponible', 'success');
+        } catch (e) {
+            log(`✗ ERROR en modules.js: ${e.message}`, 'error');
+            throw e;
+        }
+    </script>
+
+    <script>log('Cargando balanceo-y-restricciones.js...', 'loading');</script>
+    <script src="js/balanceo-y-restricciones.js"></script>
+    <script>
+        try {
+            if (typeof BalanceadorTurnos === 'undefined') throw new Error('BalanceadorTurnos no definido');
+            log('✓ balanceo-y-restricciones.js cargado', 'success');
+        } catch (e) {
+            log(`✗ ERROR en balanceo-y-restricciones.js: ${e.message}`, 'error');
+            throw e;
+        }
+    </script>
+
+    <script>log('Cargando reportes-y-prediccion.js...', 'loading');</script>
+    <script src="js/reportes-y-prediccion.js"></script>
+    <script>
+        try {
+            if (typeof GeneradorReportes === 'undefined') throw new Error('GeneradorReportes no definido');
+            log('✓ reportes-y-prediccion.js cargado', 'success');
+        } catch (e) {
+            log(`✗ ERROR en reportes-y-prediccion.js: ${e.message}`, 'error');
+            throw e;
+        }
+    </script>
+
+    <script>log('Cargando soporte-multilocal.js...', 'loading');</script>
+    <script src="js/soporte-multilocal.js"></script>
+    <script>
+        try {
+            if (typeof GestorLocales === 'undefined') throw new Error('GestorLocales no definido');
+            if (typeof GestorDepartamentos === 'undefined') throw new Error('GestorDepartamentos no definido');
+            log('✓ soporte-multilocal.js cargado - GestorLocales y GestorDepartamentos disponibles', 'success');
+        } catch (e) {
+            log(`✗ ERROR en soporte-multilocal.js: ${e.message}`, 'error');
+            throw e;
+        }
+    </script>
+
+    <script>log('Cargando calendario-visual.js...', 'loading');</script>
+    <script src="js/calendario-visual.js"></script>
+    <script>
+        try {
+            if (typeof CalendarioVisual === 'undefined') throw new Error('CalendarioVisual no definido');
+            log('✓ calendario-visual.js cargado', 'success');
+        } catch (e) {
+            log(`✗ ERROR en calendario-visual.js: ${e.message}`, 'error');
+            throw e;
+        }
+    </script>
+
+    <script>
+        log('═══════════════════════════════════════════', 'success');
+        log('✓ ¡TODOS LOS SCRIPTS CARGADOS CORRECTAMENTE!', 'success');
+        log('═══════════════════════════════════════════', 'success');
+    </script>
+
+    <script>
+        // Capturar errores globales
+        window.addEventListener('error', (e) => {
+            log(`✗ ERROR NO CAPTURADO: ${e.message} en ${e.filename}:${e.lineno}`, 'error');
+        });
+        
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`✗ PROMISE REJECTION: ${e.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

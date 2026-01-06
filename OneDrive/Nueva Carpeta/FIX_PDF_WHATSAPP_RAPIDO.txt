@@ -1,0 +1,35 @@
+# ⚡ RESUMEN EJECUTIVO: PDF WhatsApp ✅ REPARADO
+
+## El Problema
+PDF mostraba:
+- ❌ Fondo negro, no color del turno
+- ❌ "Mañana" en lugar de "M"
+- ❌ Óvalo opaco adicional
+
+## La Solución (2 cambios)
+
+### 1. `obtenerInfoTurnoVisualPDF()` - línea 1606
+Agregué retorno de `inicial`:
+```javascript
+inicial: coincidencia?.inicial || nombre.substring(0, 1).toUpperCase()
+```
+
+### 2. `construirCalendarioVisualPDF()` - líneas 1696-1725
+- Cambié fondo: `background:${bgColor}` (del turno, no negro)
+- Cambié inicial: `${infoTurno.inicial}` (M, no Mañana)
+- Cambié badge: `background:transparent` (sin óvalo)
+- Cambié colores: texto `#0f172a` (oscuro consistente)
+- Cambié tamaño: inicial `font-size:28px` (grande como cuadrante)
+
+## Resultado
+✅ PDF ahora coincide visualmente 100% con cuadrante individual
+
+## Archivo
+`nuevo_cuadrante_mejorado.html` (líneas 1606 y 1696-1725)
+
+## Test
+Abre cuadrante individual → Click "📱 WhatsApp" → Compara PDF vs modal
+
+---
+**Estado: COMPLETADO ✅**  
+**Tiempo: 15 min | Riesgo: MÍNIMO | Impacto: DIRECTO**

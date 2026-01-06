@@ -1,0 +1,198 @@
+{
+  "fecha_analisis": "2 de enero de 2026",
+  "total_errores_encontrados": 7,
+  "archivos_analizados": 12,
+  "errores": [
+    {
+      "id": 1,
+      "archivo": "js/dashboard-analytica.js",
+      "linea": 65,
+      "tipo": "Typo - Nombre de propiedad mal escrito",
+      "codigo_actual": "desviacioEstantdar: 0,",
+      "codigo_correcto": "desviacionEstandar: 0,",
+      "descripcion": "La propiedad 'desviacioEstantdar' tiene dos errores de ortografía: 'Esantdar' debería ser 'Estándar'. Además, falta calcular este valor.",
+      "severidad": "MEDIA",
+      "impacto": "La propiedad nunca se calcula correctamente. Métodos que dependan de esta métrica para análisis de equidad retornarán undefined o valores incorrectos.",
+      "solucion": "1. Cambiar el nombre a 'desviacionEstandar'. 2. Implementar el cálculo en calcularMetricas() usando la fórmula: sqrt(sum((valor - media)^2) / n)"
+    },
+    {
+      "id": 2,
+      "archivo": "js/sistema-notificaciones.js",
+      "linea": 24,
+      "tipo": "Typo - Nombre de variable mal escrito",
+      "codigo_actual": "static colaNotiicaciones = [];",
+      "codigo_correcto": "static colaNotificaciones = [];",
+      "descripcion": "La variable 'colaNotiicaciones' tiene una duplicación de 'i' (Notii en lugar de Noti). Esto causará errores cuando se intente acceder a ella.",
+      "severidad": "CRÍTICA",
+      "impacto": "Cualquier código que intente acceder a 'colaNotiicaciones' fallará. Se encontró en líneas 249, 270 donde se hace push() a esta cola.",
+      "solucion": "Renombrar a 'colaNotificaciones' en todas las referencias (líneas: 24, 249, 270)"
+    },
+    {
+      "id": 3,
+      "archivo": "js/optimizador-turnos.js",
+      "linea": 104,
+      "tipo": "Typo - Nombre de variable mal escrito",
+      "codigo_actual": "const carrasArray = Object.values(cargas);",
+      "codigo_correcto": "const cargasArray = Object.values(cargas);",
+      "descripcion": "La variable 'carrasArray' debería ser 'cargasArray'. Este nombre es inconsistente con la variable padre 'cargas' y puede causar confusión.",
+      "severidad": "MEDIA",
+      "impacto": "Aunque funciona, el código es confuso. Además, si alguien intenta debuggear, buscará 'cargasArray' pero encontrará 'carrasArray'. Se usa en líneas 104, 105, 107, 110.",
+      "solucion": "Renombrar 'carrasArray' a 'cargasArray' en todas las referencias dentro de detectarDesequilibrios()"
+    },
+    {
+      "id": 4,
+      "archivo": "js/integracion-calendario.js",
+      "linea": 21,
+      "tipo": "Método llamado pero no definido",
+      "codigo_actual": "this.cargarFestivosEspaña();",
+      "codigo_correcto": "this.cargarFestivosEspana();",
+      "descripcion": "El método se llama 'cargarFestivosEspaña()' pero está definido como 'cargarFestivosEspana()' (línea 28). El carácter especial 'ñ' no coincide.",
+      "severidad": "CRÍTICA",
+      "impacto": "TypeError: this.cargarFestivosEspaña is not a function. La inicialización del módulo fallará.",
+      "solucion": "Usar el nombre correcto del método: 'this.cargarFestivosEspana()' (sin ñ). O cambiar la definición del método a 'cargarFestivosEspaña' si se quiere mantener la ñ."
+    },
+    {
+      "id": 5,
+      "archivo": "js/generador-reportes.js",
+      "linea": 20,
+      "tipo": "Método llamado pero no definido",
+      "codigo_actual": "periodo: `${this.getNombreMes(mes)}/${año}`,",
+      "codigo_correcto": "periodo: `${this.getNombreMes(mes)}/${año}`,",
+      "descripcion": "El método 'getNombreMes()' es llamado pero su implementación está en la línea 357. Sin embargo, el método no es estático, por lo que la llamada 'this.getNombreMes()' funcionará. Verificación: sí está definido.",
+      "severidad": "BAJA",
+      "impacto": "No hay error real. Este es un falso positivo - el método sí está definido.",
+      "solucion": "Sin acción requerida. El código está correcto."
+    },
+    {
+      "id": 6,
+      "archivo": "js/dashboard-avanzado-s5.js",
+      "linea": 50,
+      "tipo": "Método llamado pero no definido",
+      "codigo_actual": "costoLaboral: this.estimarCostoLaboral(turnos),",
+      "codigo_correcto": "Verificado - método está definido en línea 162",
+      "descripcion": "El método 'estimarCostoLaboral()' es llamado en el cálculo de KPIs. La implementación está en línea 162 del mismo archivo.",
+      "severidad": "BAJA",
+      "impacto": "No hay error. El método sí está definido.",
+      "solucion": "Sin acción requerida. El código está correcto."
+    },
+    {
+      "id": 7,
+      "archivo": "js/dashboard-analytica.js",
+      "linea": 65,
+      "tipo": "Propiedad no calculada",
+      "codigo_actual": "desviacioEstantdar: 0,",
+      "codigo_correcto": "desviacionEstandar: this.calcularDesviacionEstandar(horasPorEmpleado),",
+      "descripcion": "La propiedad 'desviacioEstantdar' se inicializa a 0 pero nunca se calcula en el método 'calcularMetricas()'. No hay código que actualice este valor después.",
+      "severidad": "MEDIA",
+      "impacto": "Reportes y análisis de equidad mostrarán 0 para la desviación estándar, indicando falsamente un balance perfecto cuando podría haber desigualdad.",
+      "solucion": "Implementar el cálculo de desviación estándar después de calcular el índice de Gini. Ejemplo: const desviacion = Math.sqrt(dataEmpleados.reduce((sum, e) => sum + Math.pow(e.horas - promedio, 2), 0) / dataEmpleados.length); this.metricas.equidad.desviacionEstandar = desviacion;"
+    }
+  ],
+  "resumen": {
+    "errores_criticos": 2,
+    "errores_medios": 3,
+    "errores_bajos": 2,
+    "falsos_positivos": 2,
+    "categorias": {
+      "typos_variables": 2,
+      "metodos_no_definidos": 1,
+      "propiedades_mal_nombradas": 2,
+      "propiedades_no_calculadas": 1,
+      "metodos_definidos_correctamente": 2
+    }
+  },
+  "recomendaciones": [
+    {
+      "prioridad": 1,
+      "accion": "Renombrar 'colaNotiicaciones' a 'colaNotificaciones' en sistema-notificaciones.js",
+      "archivos_afectados": ["js/sistema-notificaciones.js"],
+      "lineas_a_cambiar": [24, 249, 270]
+    },
+    {
+      "prioridad": 2,
+      "accion": "Renombrar llamada de método: 'cargarFestivosEspaña()' a 'cargarFestivosEspana()' en integracion-calendario.js",
+      "archivos_afectados": ["js/integracion-calendario.js"],
+      "lineas_a_cambiar": [21]
+    },
+    {
+      "prioridad": 3,
+      "accion": "Corregir typo 'desviacioEstantdar' a 'desviacionEstandar' en dashboard-analytica.js",
+      "archivos_afectados": ["js/dashboard-analytica.js"],
+      "lineas_a_cambiar": [65]
+    },
+    {
+      "prioridad": 4,
+      "accion": "Renombrar 'carrasArray' a 'cargasArray' en optimizador-turnos.js",
+      "archivos_afectados": ["js/optimizador-turnos.js"],
+      "lineas_a_cambiar": [104, 105, 107, 110]
+    },
+    {
+      "prioridad": 5,
+      "accion": "Implementar cálculo de desviación estándar en dashboard-analytica.js",
+      "archivos_afectados": ["js/dashboard-analytica.js"],
+      "lineas_a_cambiar": [65, "método calcularMetricas()"]
+    }
+  ],
+  "archivos_verificados": [
+    {
+      "nombre": "js/generador-reportes.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Método 'detectarConflictosReporte()' está definido correctamente."
+    },
+    {
+      "nombre": "js/integracion-whatsapp.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'validarTelefono()' y 'formatearTelefonoWhatsApp()' están bien implementados."
+    },
+    {
+      "nombre": "js/sincronizacion-datos.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'sincronizarLocal()', 'sincronizarCloud()', 'recopilarDatos()' están definidos correctamente."
+    },
+    {
+      "nombre": "js/analizador-conflictos.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos de análisis están implementados correctamente."
+    },
+    {
+      "nombre": "js/dashboard-analytica.js",
+      "estado": "⚠️ 2 errores encontrados",
+      "notas": "Typo en propiedad 'desviacioEstantdar' y propiedad no calculada."
+    },
+    {
+      "nombre": "js/optimizador-turnos.js",
+      "estado": "⚠️ 1 error encontrado",
+      "notas": "Typo en nombre de variable 'carrasArray' (debería ser 'cargasArray')."
+    },
+    {
+      "nombre": "js/gestor-multilocal.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'saveToStorage()' y 'loadFromStorage()' están implementados."
+    },
+    {
+      "nombre": "js/integracion-calendario.js",
+      "estado": "❌ 1 error crítico encontrado",
+      "notas": "Llamada a 'cargarFestivosEspaña()' pero método definido como 'cargarFestivosEspana()'."
+    },
+    {
+      "nombre": "js/sistema-notificaciones.js",
+      "estado": "❌ 1 error crítico encontrado",
+      "notas": "Variable 'colaNotiicaciones' mal escrita (tiene 'ii' en lugar de 'i')."
+    },
+    {
+      "nombre": "js/dashboard-avanzado-s5.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'estimarCostoLaboral()', 'obtenerTurnosMes()' están definidos correctamente."
+    },
+    {
+      "nombre": "js/sistema-auditoria-s5.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'obtenerIPSimulada()' y 'obtenerIdSesion()' están implementados."
+    },
+    {
+      "nombre": "js/gestor-backups-s5.js",
+      "estado": "✅ Sin errores críticos",
+      "notas": "Métodos 'calcularChecksum()', 'comprimirDatos()', 'descomprimirDatos()' están definidos."
+    }
+  ]
+}

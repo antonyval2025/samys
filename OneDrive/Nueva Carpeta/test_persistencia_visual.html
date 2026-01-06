@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Pruebas de Persistencia - Gestor de Turnos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .controles {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .test-suite {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .test-suite-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-suite-content {
+            padding: 20px;
+        }
+        
+        .test-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+            background: #f9fafb;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .test-item.pass {
+            border-left-color: #22c55e;
+            background: #f0fdf4;
+            color: #166534;
+        }
+        
+        .test-item.fail {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        
+        .test-item.pending {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+            color: #92400e;
+        }
+        
+        .test-item.info {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+        
+        .summary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .summary-card.success {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .summary-card.fail {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .summary-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Suite de Pruebas de Persistencia</h1>
+            <p>Verifica que todos los datos se guardan y recuperan correctamente en localStorage</p>
+        </div>
+        
+        <div class="controles">
+            <button class="btn btn-primary" onclick="iniciarPruebas()">
+                ▶️ Ejecutar Todas las Pruebas
+            </button>
+            <button class="btn btn-success" onclick="pruebaSoloEmpleados()">
+                👥 Solo Empleados
+            </button>
+            <button class="btn btn-success" onclick="pruebaSoloTurnos()">
+                🔄 Solo Turnos
+            </button>
+            <button class="btn btn-warning" onclick="limpiarResultados()">
+                🗑️ Limpiar Resultados
+            </button>
+            <button class="btn btn-danger" onclick="limpiarLocalStorage()">
+                ⚠️ Limpiar localStorage
+            </button>
+        </div>
+        
+        <div id="resultados"></div>
+    </div>
+    
+    <script>
+        // Variables globales
+        let testsPassed = 0;
+        let testsFailed = 0;
+        let suiteName = '';
+        
+        function mostrarLoading(mensaje = 'Ejecutando pruebas...') {
+            document.getElementById('resultados').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    ${mensaje}
+                </div>
+            `;
+        }
+        
+        function agregarTest(status, mensaje, detalle = '') {
+            const div = document.getElementById('resultados');
+            const testDiv = document.createElement('div');
+            testDiv.className = `test-item ${status}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const emoji = {
+                'pass': '✅',
+                'fail': '❌',
+                'pending': '⏳',
+                'info': 'ℹ️'
+            };
+            
+            testDiv.innerHTML = `[${timestamp}] ${emoji[status]} ${mensaje}${detalle ? '<br><small>' + detalle + '</small>' : ''}`;
+            div.appendChild(testDiv);
+            
+            if (status === 'pass') testsPassed++;
+            if (status === 'fail') testsFailed++;
+        }
+        
+        function mostrarSummary() {
+            const total = testsPassed + testsFailed;
+            const porcentaje = total > 0 ? ((testsPassed / total) * 100).toFixed(1) : 0;
+            
+            const summary = `
+                <div class="summary">
+                    <h2 style="color: #333; margin-bottom: 20px;">📊 Resumen de Pruebas</h2>
+                    <div class="summary-grid">
+                        <div class="summary-card success">
+                            <div class="summary-value">${testsPassed}</div>
+                            <div class="summary-label">Pruebas Pasadas</div>
+                        </div>
+                        <div class="summary-card ${testsFailed > 0 ? 'fail' : 'success'}">
+                            <div class="summary-value">${testsFailed}</div>
+                            <div class="summary-label">Pruebas Fallidas</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-value">${porcentaje}%</div>
+                            <div class="summary-label">Tasa de Éxito</div>
+                        </div>
+                    </div>
+                    ${testsFailed === 0 ? '<p style="color: #22c55e; font-weight: 600; font-size: 18px; text-align: center;">🎉 ¡TODAS LAS PRUEBAS PASARON!</p>' : '<p style="color: #ef4444; font-weight: 600; text-align: center;">⚠️ Revisa los detalles arriba</p>'}
+                </div>
+            `;
+            
+            document.getElementById('resultados').innerHTML += summary;
+        }
+        
+        function limpiarResultados() {
+            testsPassed = 0;
+            testsFailed = 0;
+            document.getElementById('resultados').innerHTML = '';
+        }
+        
+        function limpiarLocalStorage() {
+            if (confirm('⚠️ ¿Seguro que quieres limpiar localStorage? Se perderán todos los datos.')) {
+                localStorage.clear();
+                alert('localStorage limpiado. Recarga la página para ver cambios.');
+            }
+        }
+        
+        // Pruebas de Empleados
+        async function pruebaSoloEmpleados() {
+            limpiarResultados();
+            mostrarLoading('Probando persistencia de empleados...');
+            setTimeout(() => {
+                document.getElementById('resultados').innerHTML = '';
+                
+                agregarTest('info', 'Verificando empleados en memoria');
+                
+                if (typeof empleados !== 'undefined' && empleados.length > 0) {
+                    agregarTest('pass', `Se encontraron ${empleados.length} empleados`);
+                } else {
+                    agregarTest('fail', 'No hay empleados en memoria');
+                    mostrarSummary();
+                    return;
+                }
+                
+                agregarTest('info', 'Buscando a Antony');
+                const antony = empleados.find(e => e.nombre.includes('Antony'));
+                if (antony) {
+                    agregarTest('pass', `Antony encontrado (ID: ${antony.id})`);
+                } else {
+                    agregarTest('fail', 'Antony NO encontrado');
+                }
+                
+                agregarTest('info', 'Verificando localStorage');
+                const stored = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+                if (stored.length === empleados.length) {
+                    agregarTest('pass', `localStorage sincronizado (${stored.length} empleados)`);
+                } else {
+                    agregarTest('fail', `Mismatch: memoria=${empleados.length}, storage=${stored.length}`);
+                }
+                
+                mostrarSummary();
+            }, 500);
+        }
+        
+        // Pruebas de Turnos
+        async function pruebaSoloTurnos() {
+            limpiarResultados();
+            mostrarLoading('Probando persistencia de turnos...');
+            setTimeout(() => {
+                document.getElementById('resultados').innerHTML = '';
+                
+                agregarTest('info', 'Verificando datos de AppState');
+                
+                if (typeof AppState !== 'undefined' && AppState.scheduleData) {
+                    const totalTurnos = Array.from(AppState.scheduleData.values())
+                        .reduce((sum, arr) => sum + arr.length, 0);
+                    
+                    if (totalTurnos > 0) {
+                        agregarTest('pass', `Se encontraron ${totalTurnos} turnos`);
+                    } else {
+                        agregarTest('pending', 'No hay turnos generados');
+                    }
+                } else {
+                    agregarTest('fail', 'AppState no está disponible');
+                    mostrarSummary();
+                    return;
+                }
+                
+                agregarTest('info', 'Verificando persistencia en storage');
+                const stored = localStorage.getItem('turnosAppState');
+                if (stored) {
+                    agregarTest('pass', 'Datos de turnos encontrados en localStorage');
+                } else {
+                    agregarTest('info', 'localStorage vacío (generarán al crear turnos)');
+                }
+                
+                mostrarSummary();
+            }, 500);
+        }
+        
+        // Ejecutar todas las pruebas
+        async function iniciarPruebas() {
+            limpiarResultados();
+            mostrarLoading('Iniciando suite completa de pruebas...');
+            
+            setTimeout(() => {
+                document.getElementById('resultados').innerHTML = '';
+                
+                // Suite 1: Empleados
+                const div1 = document.createElement('div');
+                div1.className = 'test-suite';
+                div1.innerHTML = '<div class="test-suite-header">👥 SUITE 1: Persistencia de Empleados</div>' +
+                    '<div class="test-suite-content" id="suite1"></div>';
+                document.getElementById('resultados').appendChild(div1);
+                
+                agregarTest('info', 'Verificando empleados en memoria');
+                
+                if (typeof empleados !== 'undefined' && empleados.length > 0) {
+                    agregarTest('pass', `${empleados.length} empleados cargados`);
+                } else {
+                    agregarTest('fail', 'No hay empleados');
+                }
+                
+                const antony = empleados?.find(e => e.nombre?.includes('Antony'));
+                agregarTest(antony ? 'pass' : 'fail', 
+                    antony ? `Antony presente (ID: ${antony.id})` : 'Antony ausente');
+                
+                const stored = JSON.parse(localStorage.getItem('empleadosData') || '[]');
+                agregarTest(stored.length === empleados?.length ? 'pass' : 'fail',
+                    `localStorage: ${stored.length} empleados (memoria: ${empleados?.length})`);
+                
+                // Suite 2: Turnos
+                const div2 = document.createElement('div');
+                div2.className = 'test-suite';
+                div2.innerHTML = '<div class="test-suite-header">🔄 SUITE 2: Persistencia de Turnos</div>' +
+                    '<div class="test-suite-content" id="suite2"></div>';
+                document.getElementById('resultados').appendChild(div2);
+                
+                agregarTest('info', 'Verificando turnos en AppState');
+                
+                if (typeof AppState !== 'undefined' && AppState.scheduleData) {
+                    const totalTurnos = Array.from(AppState.scheduleData.values())
+                        .reduce((sum, arr) => sum + arr.length, 0);
+                    agregarTest(totalTurnos > 0 ? 'pass' : 'info',
+                        totalTurnos > 0 ? `${totalTurnos} turnos encontrados` : 'Sin turnos generados aún');
+                } else {
+                    agregarTest('fail', 'AppState no disponible');
+                }
+                
+                // Suite 3: localStorage
+                const div3 = document.createElement('div');
+                div3.className = 'test-suite';
+                div3.innerHTML = '<div class="test-suite-header">💾 SUITE 3: Estado de localStorage</div>' +
+                    '<div class="test-suite-content" id="suite3"></div>';
+                document.getElementById('resultados').appendChild(div3);
+                
+                const empleadosSize = new Blob([localStorage.getItem('empleadosData') || '']).size;
+                const turnosSize = new Blob([localStorage.getItem('turnosAppState') || '']).size;
+                const totalSize = empleadosSize + turnosSize;
+                
+                agregarTest('pass', `Tamaño empleados: ${empleadosSize} bytes`);
+                agregarTest(turnosSize > 0 ? 'pass' : 'info', 
+                    `Tamaño turnos: ${turnosSize} bytes`);
+                agregarTest('pass', `Total guardado: ${totalSize} bytes`);
+                
+                // Resumen
+                setTimeout(mostrarSummary, 100);
+            }, 1000);
+        }
+        
+        // Mensaje inicial
+        window.addEventListener('load', () => {
+            document.getElementById('resultados').innerHTML = `
+                <div class="test-suite">
+                    <div class="test-suite-header">📋 Instrucciones</div>
+                    <div class="test-suite-content">
+                        <div class="test-item info">
+                            <strong>Cómo usar esta herramienta:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Haz clic en "Ejecutar Todas las Pruebas" para un análisis completo</li>
+                                <li>Usa los botones de suite específica para pruebas focalizadas</li>
+                                <li>Los resultados se muestran en tiempo real abajo</li>
+                                <li>Verifica que Antony aparezca en las pruebas de empleados</li>
+                                <li>Verifica que los turnos se guarden y recuperen correctamente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
