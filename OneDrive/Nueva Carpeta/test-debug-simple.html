@@ -25,7 +25,8 @@
     <h1>🔍 Test Debug - Verificación de Objetos Globales</h1>
     <div id="output"></div>
 
-    <!-- Cargar todos los managers y consolidados -->
+    <!-- Cargar todos los managers y consolidados (IGUAL QUE EL HTML PRINCIPAL) -->
+    <script src="js/modules.js"></script>
     <script src="js/departamentos-manager.js"></script>
     <script src="js/consolidado-departamentos.js"></script>
     <script src="js/turnos-types-manager.js"></script>
@@ -98,26 +99,30 @@
         log('', 'info');
         log('====== INTENTAR INICIALIZAR MANAGERS ======', 'info');
 
-        if (window.LocalidadesManager && typeof LocalidadesManager.inicializar === 'function') {
-            try {
-                LocalidadesManager.inicializar();
-                log('✅ LocalidadesManager.inicializar() - OK', 'ok');
-            } catch (e) {
-                log(`❌ LocalidadesManager.inicializar() - ERROR: ${e.message}`, 'error');
-            }
-        }
+        // Esperamos a que se inicialicen automáticamente
+        setTimeout(() => {
+            log('', 'info');
+            log('====== VERIFICACIÓN POSTERIOR (después de auto-inicialización) ======', 'info');
+            
+            storageKeys.forEach(key => {
+                const data = localStorage.getItem(key);
+                const exists = data !== null;
+                const type = exists && data.length > 0 ? 'ok' : 'error';
+                let size = '0 bytes';
+                if (exists && data.length > 0) {
+                    try {
+                        const parsed = JSON.parse(data);
+                        size = `${data.length} bytes, ${Array.isArray(parsed) ? parsed.length + ' items' : 'object'}`;
+                    } catch (e) {
+                        size = `${data.length} bytes (INVÁLIDO)`;
+                    }
+                }
+                log(`${exists && data.length > 0 ? '✅' : '❌'} localStorage['${key}'] = ${size}`, type);
+            });
 
-        if (window.TurnosTypesManager && typeof TurnosTypesManager.inicializar === 'function') {
-            try {
-                TurnosTypesManager.inicializar();
-                log('✅ TurnosTypesManager.inicializar() - OK', 'ok');
-            } catch (e) {
-                log(`❌ TurnosTypesManager.inicializar() - ERROR: ${e.message}`, 'error');
-            }
-        }
-
-        log('', 'info');
-        log('====== FIN DE VERIFICACIÓN ======', 'info');
+            log('', 'info');
+            log('====== FIN DE VERIFICACIÓN ======', 'info');
+        }, 500);
     </script>
 </body>
 </html>

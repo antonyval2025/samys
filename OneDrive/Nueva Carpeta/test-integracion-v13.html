@@ -120,6 +120,16 @@
 
     <div id="summary"></div>
 
+    <!-- Cargar todos los managers en el mismo orden que la app principal -->
+    <script src="js/modules.js"></script>
+    <script src="js/departamentos-manager.js"></script>
+    <script src="js/consolidado-departamentos.js"></script>
+    <script src="js/turnos-types-manager.js"></script>
+    <script src="js/consolidado-turnos.js"></script>
+    <script src="js/localidades-manager.js"></script>
+    <script src="js/consolidado-localidades.js"></script>
+    <script src="js/sistema-reactividad.js"></script>
+
     <script>
         const results = {
             passed: 0,
@@ -263,14 +273,16 @@
             test('SistemaReactividad.on existe', typeof SistemaReactividad?.on === 'function', container);
             
             let eventFired = false;
-            const unsubscribe = SistemaReactividad?.on('test-event', () => {
+            
+            // Registrar observador
+            SistemaReactividad?.on('test-event', () => {
                 eventFired = true;
             });
             
+            // Emitir evento
             SistemaReactividad?.emit('test-event', { test: true });
-            test('Events se emiten y reciben correctamente', eventFired, container);
             
-            if (unsubscribe) unsubscribe();
+            test('Events se emiten y reciben correctamente', eventFired, container);
         }
 
         function showSummary() {
@@ -293,7 +305,19 @@
         // Ejecutar tests automáticos al cargar
         window.addEventListener('load', () => {
             testScripts();
-            showSummary();
+            
+            // Esperar a que los managers se inicialicen
+            setTimeout(() => {
+                console.log('[TEST] Iniciando tests después de inicialización de managers...');
+                testLocalidades();
+                testTurnos();
+                testConsolidadoTurnos();
+                testConsolidadoLocalidades();
+                testStorage();
+                testReactividad();
+                showSummary();
+                console.log('[TEST] Tests completados');
+            }, 800);
         });
     </script>
 </body>
