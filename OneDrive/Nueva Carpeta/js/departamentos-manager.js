@@ -277,6 +277,8 @@ const DepartamentosManager = (function() {
     };
 })();
 
+window.DepartamentosManager = DepartamentosManager;
+
 // Registrar en ModuleManager si existe
 if (typeof ModuleManager !== 'undefined') {
     ModuleManager.register('DepartamentosManager', DepartamentosManager);

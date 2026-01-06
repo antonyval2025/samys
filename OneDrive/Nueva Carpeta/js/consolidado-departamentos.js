@@ -364,5 +364,4 @@ const ConsolidadoDepartamentos = (function() {
     };
 
 })();
-
-console.log('[ConsolidadoDepartamentos] 🏢 Módulo cargado correctamente');
+window.ConsolidadoDepartamentos = ConsolidadoDepartamentos;console.log('[ConsolidadoDepartamentos] 🏢 Módulo cargado correctamente');
