@@ -2438,7 +2438,7 @@ class EmployeeManager {
         
         // Llenar select de localidades (usando new modular system)
         if (typeof ConsolidadoLocalidades !== 'undefined') {
-            ConsolidadoLocalidades.cargarListaTurnos?.();
+            ConsolidadoLocalidades.llenarSelectLocalidades?.();
         }
         
         const cerrarConESC = (e) => {
