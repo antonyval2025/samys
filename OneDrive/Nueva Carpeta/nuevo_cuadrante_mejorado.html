@@ -541,8 +541,8 @@ ex<!DOCTYPE html>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button class="action-btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); color: white; box-shadow: 0 2px 5px rgba(139, 92, 246, 0.2);" onclick="EmployeeManager.abrirModal()">👥 Empleados</button>
                 <button class="action-btn" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; box-shadow: 0 2px 5px rgba(6, 182, 212, 0.2);" onclick="ConsolidadoDepartamentos.abrirModal()">🏢 Departamentos</button>
-                <button class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2);" onclick="LocationManager.abrirModal()">📍 Localidades</button>
-                <button class="action-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.2);" onclick="TurnoTypeManager.abrirModal()">⏰ Turnos</button>
+                <button class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2);" onclick="ConsolidadoLocalidades.abrirModal()">📍 Localidades</button>
+                <button class="action-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.2);" onclick="ConsolidadoTurnos.abrirModal()">⏰ Turnos</button>
                 <button class="action-btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; box-shadow: 0 2px 5px rgba(99, 102, 241, 0.2);" onclick="ChatBot.abrirModal()">🤖 Chat</button>
                 <!-- Botón Generar Turnos - Solo visible cuando cuadrante está vacío -->
                 <button id="btnGenerarTurnos" class="action-btn" style="display: block !important; z-index: 9999; position: relative; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; padding: 12px 20px; font-weight: bold; font-size: 16px; border: 2px solid #047857;" onclick="(function() { if (typeof window.TurnoManager?.mostrarModalGeneracion === 'function') { window.TurnoManager.mostrarModalGeneracion(); } else { console.warn('⏳ Esperando a que TurnoManager cargue...'); let intentos = 0; const esperar = setInterval(() => { if (typeof window.TurnoManager?.mostrarModalGeneracion === 'function') { clearInterval(esperar); window.TurnoManager.mostrarModalGeneracion(); } else if (++intentos > 60) { clearInterval(esperar); console.error('❌ Timeout'); alert('Error: módulos no cargaron. Recarga la página'); } }, 100); } })()">📋 GENERAR TURNOS</button>
@@ -982,7 +982,7 @@ ex<!DOCTYPE html>
         </div>
 
         <!-- MODAL DE GESTIÓN DE LOCALIDADES -->
-        <div id="modalGestionLocalidades" class="modal" onclick="if(event.target.id === 'modalGestionLocalidades') LocationManager.cerrarModal()">
+        <div id="modalGestionLocalidades" class="modal" onclick="if(event.target.id === 'modalGestionLocalidades') ConsolidadoLocalidades.cerrarModal()">
             <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                 <!-- ENCABEZADO -->
                 <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); padding: 30px; border-radius: 16px 16px 0 0; color: white;">
@@ -995,10 +995,10 @@ ex<!DOCTYPE html>
 
                 <!-- BOTONES DE ACCIÓN -->
                 <div style="padding: 20px 30px; display: flex; gap: 12px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
-                    <button class="modal-btn apply" onclick="LocationManager.mostrarFormularioNuevo()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
+                    <button class="modal-btn apply" onclick="ConsolidadoLocalidades.mostrarFormularioNuevo()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
                         ➕ Nueva Localidad
                     </button>
-                    <button class="modal-btn cancel" onclick="LocationManager.cerrarModal()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
+                    <button class="modal-btn cancel" onclick="ConsolidadoLocalidades.cerrarModal()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
                         ✖️ Cerrar
                     </button>
                 </div>
@@ -1015,10 +1015,10 @@ ex<!DOCTYPE html>
                     </div>
                     
                     <div style="display: flex; gap: 12px;">
-                        <button class="modal-btn apply" onclick="LocationManager.guardarLocalidad()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 32px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
+                        <button class="modal-btn apply" onclick="ConsolidadoLocalidades.guardarLocalidad()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 32px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
                             💾 Guardar Localidad
                         </button>
-                        <button class="modal-btn cancel" onclick="LocationManager.cancelarFormulario()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; flex: 1;">
+                        <button class="modal-btn cancel" onclick="ConsolidadoLocalidades.limpiarFormulario()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; flex: 1;">
                             ❌ Cancelar
                         </button>
                     </div>
@@ -1035,7 +1035,7 @@ ex<!DOCTYPE html>
         </div>
 
         <!-- MODAL DE GESTIÓN DE TIPOS DE TURNOS -->
-        <div id="modalGestionTurnos" class="modal" onclick="if(event.target.id === 'modalGestionTurnos') TurnoTypeManager.cerrarModal()">
+        <div id="modalGestionTurnos" class="modal" onclick="if(event.target.id === 'modalGestionTurnos') ConsolidadoTurnos.cerrarModal()">
             <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
                 <!-- ENCABEZADO -->
                 <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 30px; border-radius: 16px 16px 0 0; color: white;">
@@ -1048,10 +1048,10 @@ ex<!DOCTYPE html>
 
                 <!-- BOTONES DE ACCIÓN -->
                 <div style="padding: 20px 30px; display: flex; gap: 12px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
-                    <button class="modal-btn apply" onclick="TurnoTypeManager.mostrarFormularioNuevo()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
+                    <button class="modal-btn apply" onclick="ConsolidadoTurnos.mostrarFormularioNuevo()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
                         ➕ Nuevo Tipo de Turno
                     </button>
-                    <button class="modal-btn cancel" onclick="TurnoTypeManager.cerrarModal()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
+                    <button class="modal-btn cancel" onclick="ConsolidadoTurnos.cerrarModal()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease;">
                         ✖️ Cerrar
                     </button>
                 </div>
@@ -1093,10 +1093,10 @@ ex<!DOCTYPE html>
                     </div>
                     
                     <div style="display: flex; gap: 12px;">
-                        <button class="modal-btn apply" onclick="TurnoTypeManager.guardarTurno()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 32px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
+                        <button class="modal-btn apply" onclick="ConsolidadoTurnos.guardarTurno()" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; padding: 12px 32px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 40px rgba(234, 88, 12, 0.6), 0 4px 15px rgba(249, 115, 22, 0.7); flex: 1;">
                             💾 Guardar Tipo de Turno
                         </button>
-                        <button class="modal-btn cancel" onclick="TurnoTypeManager.cancelarFormulario()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; flex: 1;">
+                        <button class="modal-btn cancel" onclick="ConsolidadoTurnos.limpiarFormulario()" style="background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; flex: 1;">
                             ❌ Cancelar
                         </button>
                     </div>
@@ -1537,7 +1537,19 @@ ex<!DOCTYPE html>
     <!-- 🏢 CONSOLIDADO: Sistema Unificado de Departamentos (Interface Modular) -->
     <script src="js/consolidado-departamentos.js"></script>
 
-    <!-- 📋 FASE 2: Generador de Turnos por Departamento -->
+    <!-- � TIPO DE TURNOS: Gestión de Tipos de Turnos (mañana, tarde, noche, etc.) -->
+    <script src="js/turnos-types-manager.js"></script>
+
+    <!-- 📅 CONSOLIDADO: Sistema Unificado de Tipos de Turnos (Interface Modular) -->
+    <script src="js/consolidado-turnos.js"></script>
+
+    <!-- 📍 LOCALIDADES: Gestión de Localidades (Getafe, Leganés, Madrid, etc.) -->
+    <script src="js/localidades-manager.js"></script>
+
+    <!-- 📍 CONSOLIDADO: Sistema Unificado de Localidades (Interface Modular) -->
+    <script src="js/consolidado-localidades.js"></script>
+
+    <!-- �📋 FASE 2: Generador de Turnos por Departamento -->
     <script src="js/generador-turnos-departamentos.js"></script>
 
     <!-- ⚖️ FASE 2: Balanceador Automático de Turnos -->
