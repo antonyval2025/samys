@@ -301,4 +301,14 @@ const TurnosTypesManager = (function() {
 })();
 
 window.TurnosTypesManager = TurnosTypesManager;
+
+// Auto-inicializar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => TurnosTypesManager.inicializar(), 300);
+    });
+} else {
+    TurnosTypesManager.inicializar();
+}
+
 console.log('[TurnosTypesManager] ✅ Capa de datos de tipos de turnos cargada');

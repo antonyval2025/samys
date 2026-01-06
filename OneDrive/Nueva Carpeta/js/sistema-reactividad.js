@@ -190,6 +190,8 @@ const SistemaReactividad = (function() {
     };
 })();
 
+window.SistemaReactividad = SistemaReactividad;
+
 // Registrar en ModuleManager
 if (typeof ModuleManager !== 'undefined') {
     ModuleManager.register('SistemaReactividad', SistemaReactividad);

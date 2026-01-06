@@ -243,4 +243,14 @@ const LocalidadesManager = (function() {
 })();
 
 window.LocalidadesManager = LocalidadesManager;
+
+// Auto-inicializar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => LocalidadesManager.inicializar(), 300);
+    });
+} else {
+    LocalidadesManager.inicializar();
+}
+
 console.log('[LocalidadesManager] ✅ Capa de datos de localidades cargada');
