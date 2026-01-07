@@ -132,7 +132,7 @@ const ConsolidadoExportacionPDF = (function() {
             const boxShadow = esGuardia ? '0 0 12px rgba(255, 107, 107, 0.6), inset 0 0 8px rgba(255, 107, 107, 0.2)' : 'inset 0 2px 8px rgba(0, 0, 0, 0.1)';
 
             celdas.push(`
-                <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:${backgroundGradient}; padding:16px; border:${borderColor}; box-shadow:${boxShadow}; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; gap:4px; transition:all 0.3s ease;">
+                <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:${backgroundGradient}; padding:12px; border:${borderColor}; box-shadow:${boxShadow}; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; gap:4px; transition:all 0.3s ease;">
                     <div style="width:100%;">
                         <span style="font-size:28px; font-weight:700; color:#0f172a;">${dia}</span>
                     </div>
@@ -149,10 +149,10 @@ const ConsolidadoExportacionPDF = (function() {
 
         return `
             <div style="margin-top:10px;">
-                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:18px; margin-bottom:16px;">
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:14px; margin-bottom:14px;">
                     ${diasSemana.map(d => `<div style="text-align:center; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8;">${d}</div>`).join('')}
                 </div>
-                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:18px;">
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:14px;">
                     ${celdas.join('')}
                 </div>
             </div>
@@ -232,7 +232,7 @@ const ConsolidadoExportacionPDF = (function() {
                     <!-- Fondo blanco de verdadero background -->
                     <div style="position:absolute; top:0; left:-48px; right:-48px; bottom:0; background:linear-gradient(135deg,rgba(241,245,249,0.95),rgba(226,232,240,0.9)); border-radius:32px; border:2px solid rgba(226,232,240,0.5); box-shadow:0 20px 60px rgba(0,0,0,0.1); z-index:0;"></div>
                     <!-- Contenido encima del fondo -->
-                    <div style="position:relative; z-index:1; padding:48px;">
+                    <div style="position:relative; z-index:1; padding:32px;">
                         <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(148,163,184,0.2);">
                             <h2 style="margin:0; font-size:18px; font-weight:700; color:#1e293b; letter-spacing:0.05em;">📅 Distribución de Turnos</h2>
                         </div>
