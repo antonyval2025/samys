@@ -227,11 +227,17 @@ const ConsolidadoExportacionPDF = (function() {
                 <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:32px;">
                     ${tarjetas}
                 </div>
-                <div style="background:linear-gradient(135deg,rgba(241,245,249,0.95),rgba(226,232,240,0.9)); border-radius:32px; padding:48px; border:2px solid rgba(226,232,240,0.5); box-shadow:0 20px 60px rgba(0,0,0,0.1);">
-                    <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(148,163,184,0.2);">
-                        <h2 style="margin:0; font-size:18px; font-weight:700; color:#1e293b; letter-spacing:0.05em;">📅 Distribución de Turnos</h2>
+                <!-- 🔧 CRÍTICO: El fondo blanco debe estar DETRÁS del calendario, no envolviendo -->
+                <div style="position:relative; margin-top:24px;">
+                    <!-- Fondo blanco de verdadero background -->
+                    <div style="position:absolute; top:0; left:-48px; right:-48px; bottom:0; background:linear-gradient(135deg,rgba(241,245,249,0.95),rgba(226,232,240,0.9)); border-radius:32px; border:2px solid rgba(226,232,240,0.5); box-shadow:0 20px 60px rgba(0,0,0,0.1); z-index:0;"></div>
+                    <!-- Contenido encima del fondo -->
+                    <div style="position:relative; z-index:1; padding:48px;">
+                        <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(148,163,184,0.2);">
+                            <h2 style="margin:0; font-size:18px; font-weight:700; color:#1e293b; letter-spacing:0.05em;">📅 Distribución de Turnos</h2>
+                        </div>
+                        ${calendarioHTML}
                     </div>
-                    ${calendarioHTML}
                 </div>
             `;
 
