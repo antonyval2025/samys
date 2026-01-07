@@ -3119,8 +3119,8 @@ ex<!DOCTYPE html>
                 const balance = totalHoras - horasContrato;
                 const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
 
-                // 📄 Generar PDF
-                const pdfBundle = await generarPDFCuadranteVisual({
+                // 📄 Generar PDF - USAR MÓDULO CONSOLIDADO
+                const pdfBundle = await ConsolidadoExportacionPDF.generarPDFCuadranteVisual({
                     empleado,
                     turnos: turnosDelMes,
                     mes: mesNombre,
