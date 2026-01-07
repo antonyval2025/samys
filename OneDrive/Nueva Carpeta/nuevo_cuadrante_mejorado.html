@@ -1548,6 +1548,7 @@ ex<!DOCTYPE html>
 
     <!-- 📍 CONSOLIDADO: Sistema Unificado de Localidades (Interface Modular) -->
     <script src="js/consolidado-localidades.js"></script>
+    <script src="js/consolidado-exportacion-pdf.js"></script>
 
     <!-- �📋 FASE 2: Generador de Turnos por Departamento -->
     <script src="js/generador-turnos-departamentos.js"></script>
@@ -3339,7 +3340,8 @@ ex<!DOCTYPE html>
                 const balance = totalHoras - horasContrato;
                 const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
 
-                const pdfBundle = await generarPDFCuadranteVisual({
+                // 🔧 USAR MÓDULO CONSOLIDADO EN LUGAR DE FUNCIÓN INLINE
+                const pdfBundle = await ConsolidadoExportacionPDF.generarPDFCuadranteVisual({
                     empleado,
                     turnos: turnosDelMes,
                     mes: mesNombre,
