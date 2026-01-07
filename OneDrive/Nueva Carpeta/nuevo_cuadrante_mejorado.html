@@ -2475,13 +2475,17 @@ ex<!DOCTYPE html>
             wrapperPDF.appendChild(contentForPDF);
             document.body.appendChild(wrapperPDF);
 
+            // 🔧 FORZAR ANCHO Y DISPLAY ANTES DE html2canvas - CRÍTICO
+            contentForPDF.style.width = '1200px !important';
+            contentForPDF.style.display = 'block';
+
             const canvas = await html2canvas(contentForPDF, {
                 backgroundColor: '#0b1220',
                 scale: 2,
                 useCORS: true,
                 logging: false,
                 windowHeight: contentForPDF.scrollHeight,
-                windowWidth: contentForPDF.scrollWidth,
+                windowWidth: 1200,
                 allowTaint: true
             });
             console.log('✅ [generarPDFCuadranteVisual] Canvas generado');
