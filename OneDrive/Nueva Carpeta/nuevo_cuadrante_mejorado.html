@@ -2397,7 +2397,8 @@ ex<!DOCTYPE html>
             wrapper.style.zIndex = '-1';
 
             const content = document.createElement('div');
-            content.style.width = '1400px';
+            content.style.width = '100%';
+            content.style.maxWidth = '1200px';
             content.style.padding = '48px';
             content.style.background = 'linear-gradient(135deg, #0b1220, #111827)';
             content.style.borderRadius = '32px';
@@ -2425,7 +2426,7 @@ ex<!DOCTYPE html>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:24px;">
                         <div>
                             <p style="margin:0; font-size:13px; letter-spacing:0.5em; color:#94a3b8; text-transform:uppercase; font-weight:600;">📋 Cuadrante Mensual</p>
-                            <h1 style="margin:12px 0 0 0; font-size:48px; font-weight:900; background:linear-gradient(135deg,#fff,#cbd5f5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">${mes} ${anio}</h1>
+                            <h1 style="margin:12px 0 0 0; font-size:48px; font-weight:900; color:#f8fafc; background:rgba(241,245,249,0.08); padding:12px 20px; border-radius:12px; display:inline-block;">${mes} ${anio}</h1>
                             <p style="margin:12px 0 0 0; color:#cbd5f5; font-size:14px;">${empleado.nombre} · ${empleado.departamento || 'Sin departamento'}</p>
                         </div>
                         <div style="text-align:right; padding:16px; background:rgba(59,130,246,0.1); border-radius:16px; border:1px solid rgba(59,130,246,0.3);">
