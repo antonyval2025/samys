@@ -1548,7 +1548,6 @@ ex<!DOCTYPE html>
 
     <!-- 📍 CONSOLIDADO: Sistema Unificado de Localidades (Interface Modular) -->
     <script src="js/consolidado-localidades.js"></script>
-    <script src="js/consolidado-exportacion-pdf.js"></script>
 
     <!-- �📋 FASE 2: Generador de Turnos por Departamento -->
     <script src="js/generador-turnos-departamentos.js"></script>
@@ -2307,7 +2306,7 @@ ex<!DOCTYPE html>
             for (let i = 0; i < totalCeldas; i++) {
                 const dia = i - offset + 1;
                 if (dia < 1 || dia > diasEnMes) {
-                    celdas.push('<div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:rgba(226,232,240,0.4);"></div>');
+                    celdas.push('<div style="min-height:140px; border-radius:18px; background:rgba(15,23,42,0.35);"></div>');
                     continue;
                 }
                 const turnoDia = mapaTurnos.get(dia);
@@ -2339,7 +2338,7 @@ ex<!DOCTYPE html>
                 const boxShadow = esGuardia ? '0 0 12px rgba(255, 107, 107, 0.6), inset 0 0 8px rgba(255, 107, 107, 0.2)' : 'inset 0 2px 8px rgba(0, 0, 0, 0.1)';
                 
                 celdas.push(`
-                    <div style="width:100%; aspect-ratio:1/1; border-radius:12px; background:${backgroundGradient}; padding:16px; border:${borderColor}; box-shadow:${boxShadow}; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; gap:4px; transition:all 0.3s ease;">
+                    <div style="min-height:140px; border-radius:20px; background:${backgroundGradient}; padding:14px; border:${borderColor}; box-shadow:${boxShadow}; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; gap:8px; transition:all 0.3s ease;">
                         <div style="width:100%;">
                             <span style="font-size:28px; font-weight:700; color:#0f172a;">${dia}</span>
                         </div>
@@ -2356,10 +2355,10 @@ ex<!DOCTYPE html>
 
             return `
                 <div style="margin-top:10px;">
-                    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:18px; margin-bottom:16px;">
+                    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:12px; margin-bottom:12px;">
                         ${diasSemana.map(d => `<div style="text-align:center; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8;">${d}</div>`).join('')}
                     </div>
-                    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:18px;">
+                    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:12px;">
                         ${celdas.join('')}
                     </div>
                 </div>
@@ -2379,6 +2378,8 @@ ex<!DOCTYPE html>
             `;
         }
 
+        // COMENTADA: Función PDF original - AHORA USAMOS IMAGEN EN SU LUGAR
+        /*
         async function generarPDFCuadranteVisual(informe) {
             try {
                 console.log('🔵 [generarPDFCuadranteVisual] Iniciando con informe:', informe);
@@ -2398,8 +2399,8 @@ ex<!DOCTYPE html>
             wrapper.style.zIndex = '-1';
 
             const content = document.createElement('div');
-            content.style.width = '1200px';
-            content.style.padding = '32px';
+            content.style.width = '1400px';
+            content.style.padding = '48px';
             content.style.background = 'linear-gradient(135deg, #0b1220, #111827)';
             content.style.borderRadius = '32px';
             content.style.boxShadow = '0 40px 80px rgba(0,0,0,0.55)';
@@ -2426,7 +2427,7 @@ ex<!DOCTYPE html>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:24px;">
                         <div>
                             <p style="margin:0; font-size:13px; letter-spacing:0.5em; color:#94a3b8; text-transform:uppercase; font-weight:600;">📋 Cuadrante Mensual</p>
-                            <h1 style="margin:8px 0 0 0; font-size:36px; font-weight:900; color:#f8fafc; background:rgba(241,245,249,0.08); padding:8px 16px; border-radius:12px; display:inline-block;">${mes} ${anio}</h1>
+                            <h1 style="margin:12px 0 0 0; font-size:48px; font-weight:900; background:linear-gradient(135deg,#fff,#cbd5f5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">${mes} ${anio}</h1>
                             <p style="margin:12px 0 0 0; color:#cbd5f5; font-size:14px;">${empleado.nombre} · ${empleado.departamento || 'Sin departamento'}</p>
                         </div>
                         <div style="text-align:right; padding:16px; background:rgba(59,130,246,0.1); border-radius:16px; border:1px solid rgba(59,130,246,0.3);">
@@ -2437,12 +2438,12 @@ ex<!DOCTYPE html>
                         </div>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:32px;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:32px;">
                     ${tarjetas}
                 </div>
-                <div style="background:linear-gradient(135deg,rgba(241,245,249,0.95),rgba(226,232,240,0.9)); border-radius:32px; padding:48px; border:2px solid rgba(226,232,240,0.5); box-shadow:0 20px 60px rgba(0,0,0,0.1);">
+                <div style="background:linear-gradient(135deg,rgba(15,23,42,0.95),rgba(15,23,42,0.8)); border-radius:32px; padding:32px; border:2px solid rgba(148,163,184,0.2); box-shadow:0 20px 60px rgba(0,0,0,0.4);">
                     <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(148,163,184,0.2);">
-                        <h2 style="margin:0; font-size:18px; font-weight:700; color:#1e293b; letter-spacing:0.05em;">📅 Distribución de Turnos</h2>
+                        <h2 style="margin:0; font-size:18px; font-weight:700; color:#fff; letter-spacing:0.05em;">📅 Distribución de Turnos</h2>
                     </div>
                     ${calendarioHTML}
                 </div>
@@ -2476,17 +2477,13 @@ ex<!DOCTYPE html>
             wrapperPDF.appendChild(contentForPDF);
             document.body.appendChild(wrapperPDF);
 
-            // 🔧 FORZAR ANCHO Y DISPLAY ANTES DE html2canvas - CRÍTICO
-            contentForPDF.style.width = '1200px !important';
-            contentForPDF.style.display = 'block';
-
             const canvas = await html2canvas(contentForPDF, {
                 backgroundColor: '#0b1220',
                 scale: 2,
                 useCORS: true,
                 logging: false,
                 windowHeight: contentForPDF.scrollHeight,
-                windowWidth: 1200,
+                windowWidth: contentForPDF.scrollWidth,
                 allowTaint: true
             });
             console.log('✅ [generarPDFCuadranteVisual] Canvas generado');
@@ -2521,6 +2518,88 @@ ex<!DOCTYPE html>
             return { blob, file, url, fileName };
             } catch (error) {
                 console.error('❌ [generarPDFCuadranteVisual] Error:', error);
+                throw error;
+            }
+        }
+        */
+
+        // NUEVA FUNCIÓN: Capturar imagen del cuadrante individual visible
+        async function generarImagenCuadranteVisual(informe) {
+            try {
+                console.log('🔵 [generarImagenCuadranteVisual] Capturando cuadrante individual visible');
+                const { empleado } = informe || {};
+                if (!empleado) throw new Error('No hay empleado');
+                
+                // Obtener el elemento visible del cuadrante individual
+                const cuadranteIndividual = document.getElementById('cuadranteIndividual');
+                if (!cuadranteIndividual || cuadranteIndividual.style.display === 'none') {
+                    throw new Error('El cuadrante individual no está visible');
+                }
+                
+                // Obtener el contenedor interno (el div con el contenido)
+                const contentElement = cuadranteIndividual.querySelector('div[style*="background"]') || cuadranteIndividual.firstChild;
+                if (!contentElement) {
+                    throw new Error('No se encontró el contenido del cuadrante');
+                }
+                
+                console.log('✅ [generarImagenCuadranteVisual] Elemento encontrado, ocultando encabezado y botones...');
+                
+                // Clonar el elemento para no afectar la vista
+                const elementoClonado = contentElement.cloneNode(true);
+                
+                // Ocultar SOLO el encabezado (título y botones superiores)
+                const encabezado = elementoClonado.querySelector('div[style*="border-bottom"]');
+                if (encabezado) {
+                    encabezado.style.display = 'none';
+                }
+                
+                // Crear un contenedor temporal en el DOM para captura
+                const tempWrapper = document.createElement('div');
+                tempWrapper.style.position = 'fixed';
+                tempWrapper.style.left = '-9999px';
+                tempWrapper.style.top = '0';
+                tempWrapper.style.zIndex = '-1';
+                tempWrapper.appendChild(elementoClonado);
+                document.body.appendChild(tempWrapper);
+                
+                // Ajustar dimensiones para que quepa todo el contenido
+                elementoClonado.style.width = '1200px';
+                elementoClonado.style.maxHeight = 'none';
+                elementoClonado.style.height = 'auto';
+                
+                // Forzar reflow para asegurar que se calcula el tamaño
+                void elementoClonado.offsetHeight;
+                
+                console.log('✅ [generarImagenCuadranteVisual] Generando canvas con altura ajustada...');
+                
+                // Generar canvas del elemento sin encabezado pero CON pie de página
+                const canvas = await html2canvas(elementoClonado, {
+                    backgroundColor: '#0b1220',
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    windowHeight: elementoClonado.scrollHeight + 100,
+                    windowWidth: 1200,
+                    allowTaint: true
+                });
+                
+                console.log('✅ [generarImagenCuadranteVisual] Canvas generado');
+                
+                // Remover el elemento temporal
+                document.body.removeChild(tempWrapper);
+                
+                // Convertir canvas a blob de imagen
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 0.95));
+                const fileName = `Cuadrante_${empleado.nombre.replace(/\s+/g, '_')}.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+                const url = URL.createObjectURL(blob);
+                const dataUrl = canvas.toDataURL('image/png');
+                
+                window.ultimoImagenCuadrante = { fileName, url, creado: Date.now(), dataUrl };
+                console.log('✅ [generarImagenCuadranteVisual] Imagen completada:', fileName);
+                return { blob, file, url, fileName, dataUrl };
+            } catch (error) {
+                console.error('❌ [generarImagenCuadranteVisual] Error:', error);
                 throw error;
             }
         }
@@ -3119,8 +3198,8 @@ ex<!DOCTYPE html>
                 const balance = totalHoras - horasContrato;
                 const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
 
-                // 📄 Generar PDF - USAR MÓDULO CONSOLIDADO
-                const pdfBundle = await ConsolidadoExportacionPDF.generarPDFCuadranteVisual({
+                // � Generar Imagen en lugar de PDF
+                const pdfBundle = await generarImagenCuadranteVisual({
                     empleado,
                     turnos: turnosDelMes,
                     mes: mesNombre,
@@ -3340,8 +3419,7 @@ ex<!DOCTYPE html>
                 const balance = totalHoras - horasContrato;
                 const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
 
-                // 🔧 USAR MÓDULO CONSOLIDADO EN LUGAR DE FUNCIÓN INLINE
-                const pdfBundle = await ConsolidadoExportacionPDF.generarPDFCuadranteVisual({
+                const pdfBundle = await generarImagenCuadranteVisual({
                     empleado,
                     turnos: turnosDelMes,
                     mes: mesNombre,
@@ -3591,6 +3669,28 @@ ex<!DOCTYPE html>
                 if (typeof AppState !== 'undefined') {
                     await AppState.loadFromStorage();
                     console.log('✓ AppState cargado - Turnos guardados:', AppState.scheduleData.size);
+                }
+                
+                // 🌐 PASO 4B: INICIALIZAR SEMANA 4 - ESCALABILIDAD (GestorMultiLocal, IntegracionCalendario, SistemaNotificaciones)
+                try {
+                    if (typeof GestorMultiLocal !== 'undefined') {
+                        GestorMultiLocal.init();
+                        console.log('✓ GestorMultiLocal inicializado');
+                    }
+                    if (typeof IntegracionCalendario !== 'undefined') {
+                        IntegracionCalendario.init();
+                        console.log('✓ IntegracionCalendario inicializado');
+                    }
+                    if (typeof SistemaNotificaciones !== 'undefined') {
+                        SistemaNotificaciones.init();
+                        console.log('✓ SistemaNotificaciones inicializado');
+                    }
+                    if (typeof ControlesSemana4 !== 'undefined') {
+                        ControlesSemana4.init();
+                        console.log('✓ ControlesSemana4 (UI Sidebar) inicializado');
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Error al inicializar Semana 4:', e.message);
                 }
                 
                 // 🔄 INICIALIZAR SISTEMA REACTIVO
@@ -7026,6 +7126,264 @@ ex<!DOCTYPE html>
         document.addEventListener('click', resumirAudioContext, { once: true });
         document.addEventListener('keydown', resumirAudioContext, { once: true });
         document.addEventListener('touchstart', resumirAudioContext, { once: true });
+
+        // ========== FUNCIONES DE SEMANA 2: REPORTES Y BACKUP ==========
+        
+        /**
+         * Abrir modal de generador de reportes
+         */
+        window.abrirReportes = function() {
+            console.log('📊 Abriendo Generador de Reportes...');
+            
+            if (typeof GeneradorReportes === 'undefined') {
+                console.error('❌ GeneradorReportes no está cargado');
+                alert('Error: El módulo de reportes no está disponible. Recarga la página.');
+                return;
+            }
+            
+            const modal = document.getElementById('modalSemana2');
+            const content = document.getElementById('modalSemana2Content');
+            
+            if (!modal || !content) {
+                console.error('❌ Modal no encontrado');
+                return;
+            }
+            
+            // Generar reporte
+            const reporte = GeneradorReportes.generarReporteMensual();
+            
+            // Construir HTML del reporte
+            let html = `
+                <div style="padding: 20px;">
+                    <h2 style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #3b82f6; padding-bottom: 12px;">
+                        📊 Reporte Mensual - ${reporte.periodo}
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
+                        <div style="padding: 16px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                            <div style="color: #0284c7; font-size: 12px; font-weight: 600; text-transform: uppercase;">Total Empleados</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #075985;">${reporte.totalEmpleados}</div>
+                        </div>
+                        <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
+                            <div style="color: #059669; font-size: 12px; font-weight: 600; text-transform: uppercase;">Empleados Activos</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #047857;">${reporte.empleadosActivos}</div>
+                        </div>
+                        <div style="padding: 16px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <div style="color: #b45309; font-size: 12px; font-weight: 600; text-transform: uppercase;">En Vacaciones</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #92400e;">${reporte.empleadosEnVacaciones}</div>
+                        </div>
+                        <div style="padding: 16px; background: #fee2e2; border-radius: 8px; border-left: 4px solid #ef4444;">
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 600; text-transform: uppercase;">En Baja</div>
+                            <div style="font-size: 28px; font-weight: 700; color: #991b1b;">${reporte.empleadosEnBaja}</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #1e293b; margin-top: 30px; border-bottom: 2px solid #8b5cf6; padding-bottom: 12px;">📈 Estadísticas del Período</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0;">
+                        <div style="padding: 12px; background: #f3f4f6; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280; font-weight: 600;">Turnos Asignados</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${reporte.estadisticas.turnosAsignados}</div>
+                        </div>
+                        <div style="padding: 12px; background: #f3f4f6; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280; font-weight: 600;">Horas Totales</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${reporte.estadisticas.horasTotales}h</div>
+                        </div>
+                        <div style="padding: 12px; background: #f3f4f6; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280; font-weight: 600;">Turnos Nocturnos</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${reporte.estadisticas.turnosNocturnos}</div>
+                        </div>
+                        <div style="padding: 12px; background: #f3f4f6; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280; font-weight: 600;">Descansos</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #1f2937;">${reporte.estadisticas.turnosDescanso}</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #1e293b; margin-top: 30px; border-bottom: 2px solid #8b5cf6; padding-bottom: 12px;">👥 Detalle por Empleado</h3>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead style="background: #f3f4f6; position: sticky; top: 0;">
+                                <tr>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #e5e7eb; font-weight: 600;">Empleado</th>
+                                    <th style="padding: 10px; text-align: center; border-bottom: 2px solid #e5e7eb; font-weight: 600;">Depto</th>
+                                    <th style="padding: 10px; text-align: center; border-bottom: 2px solid #e5e7eb; font-weight: 600;">Horas</th>
+                                    <th style="padding: 10px; text-align: center; border-bottom: 2px solid #e5e7eb; font-weight: 600;">Turnos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${reporte.empleados.map((emp, idx) => `
+                                    <tr style="border-bottom: 1px solid #e5e7eb; ${idx % 2 === 0 ? 'background: #f9fafb;' : ''}">
+                                        <td style="padding: 10px; font-weight: 600; color: #1f2937;">${emp.nombre}</td>
+                                        <td style="padding: 10px; text-align: center; color: #6b7280;">${emp.departamento}</td>
+                                        <td style="padding: 10px; text-align: center; font-weight: 600; color: #0284c7;">${emp.horasTrabajadas}h</td>
+                                        <td style="padding: 10px; text-align: center; font-weight: 600; color: #059669;">${emp.turnosTotal}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 12px; background: #f0f9ff; border-radius: 8px; font-size: 12px; color: #0c4a6e;">
+                        📅 Generado: ${reporte.fechaGeneracion}
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            document.getElementById('modalSemana2Title').textContent = '📊 Generador de Reportes';
+            modal.classList.add('active');
+        };
+        
+        /**
+         * Abrir modal de backup y restauración
+         */
+        window.abrirBackup = function() {
+            console.log('💾 Abriendo Backup y Restauración...');
+            
+            const modal = document.getElementById('modalSemana2');
+            const content = document.getElementById('modalSemana2Content');
+            
+            if (!modal || !content) {
+                console.error('❌ Modal no encontrado');
+                return;
+            }
+            
+            // Construir HTML del backup
+            let html = `
+                <div style="padding: 20px;">
+                    <h2 style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #10b981; padding-bottom: 12px;">
+                        💾 Backup y Restauración
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <!-- SECCIÓN DESCARGAR BACKUP -->
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 12px; border: 2px solid #10b981;">
+                            <h3 style="margin-top: 0; color: #047857;">📥 Descargar Backup</h3>
+                            <p style="color: #6b7280; font-size: 14px;">Guarda una copia completa de todos tus datos (empleados, turnos, configuración)</p>
+                            <button onclick="descargarBackupCompleto()" style="width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s;">
+                                ⬇️ Descargar Backup
+                            </button>
+                            <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 6px; font-size: 12px; color: #6b7280;">
+                                <strong>Incluye:</strong>
+                                <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                                    <li>✓ Empleados</li>
+                                    <li>✓ Turnos del mes</li>
+                                    <li>✓ Departamentos</li>
+                                    <li>✓ Localidades</li>
+                                    <li>✓ Tipos de turno</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- SECCIÓN RESTAURAR BACKUP -->
+                        <div style="padding: 20px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; border: 2px solid #f59e0b;">
+                            <h3 style="margin-top: 0; color: #b45309;">📤 Restaurar Backup</h3>
+                            <p style="color: #6b7280; font-size: 14px;">Carga un archivo de backup anterior para recuperar datos</p>
+                            <input type="file" id="inputBackupFile" accept=".json" style="width: 100%; padding: 8px; border: 2px dashed #f59e0b; border-radius: 6px; margin-bottom: 12px;">
+                            <button onclick="restaurarBackupCompleto()" style="width: 100%; padding: 12px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s;">
+                                ⬆️ Restaurar Backup
+                            </button>
+                            <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 6px; font-size: 11px; color: #92400e;">
+                                <strong>⚠️ Advertencia:</strong> Esto sobrescribirá los datos actuales. No se puede deshacer.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 12px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0284c7;">
+                        <strong style="color: #0c4a6e;">💡 Consejo:</strong> Haz un backup regularmente para no perder tus datos. Recomendamos hacerlo semanalmente.
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            document.getElementById('modalSemana2Title').textContent = '💾 Backup y Restauración';
+            modal.classList.add('active');
+        };
+        
+        /**
+         * Descargar backup completo
+         */
+        window.descargarBackupCompleto = function() {
+            console.log('📥 Iniciando descarga de backup...');
+            
+            try {
+                // Recopilar todos los datos
+                const backup = {
+                    fecha: new Date().toISOString(),
+                    version: '1.0',
+                    datos: {
+                        empleados: JSON.parse(localStorage.getItem('empleadosData') || '[]'),
+                        appState: JSON.parse(localStorage.getItem('turnosAppState') || '{}'),
+                        tiposTurno: JSON.parse(localStorage.getItem('tiposTurnoData') || '{}'),
+                        departamentos: JSON.parse(localStorage.getItem('departamentosData') || '{}'),
+                        localidades: JSON.parse(localStorage.getItem('localidadesData') || '{}')
+                    }
+                };
+                
+                // Crear blob y descargar
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `backup-${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                NotificationSystem.show('✅ Backup descargado correctamente', 'success');
+            } catch (error) {
+                console.error('❌ Error al descargar backup:', error);
+                NotificationSystem.show('Error al descargar backup', 'error');
+            }
+        };
+        
+        /**
+         * Restaurar backup completo
+         */
+        window.restaurarBackupCompleto = function() {
+            console.log('📤 Iniciando restauración de backup...');
+            
+            const input = document.getElementById('inputBackupFile');
+            if (!input.files[0]) {
+                alert('Por favor, selecciona un archivo de backup');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    // Validar estructura
+                    if (!backup.datos) {
+                        throw new Error('Archivo de backup inválido');
+                    }
+                    
+                    // Confirmar antes de restaurar
+                    if (!confirm('⚠️ Esto sobrescribirá todos tus datos. ¿Estás seguro?')) {
+                        return;
+                    }
+                    
+                    // Restaurar datos
+                    localStorage.setItem('empleadosData', JSON.stringify(backup.datos.empleados || []));
+                    localStorage.setItem('turnosAppState', JSON.stringify(backup.datos.appState || {}));
+                    localStorage.setItem('tiposTurnoData', JSON.stringify(backup.datos.tiposTurno || {}));
+                    localStorage.setItem('departamentosData', JSON.stringify(backup.datos.departamentos || {}));
+                    localStorage.setItem('localidadesData', JSON.stringify(backup.datos.localidades || {}));
+                    
+                    NotificationSystem.show('✅ Backup restaurado correctamente. Recargando...', 'success');
+                    
+                    // Recargar la página después de 1.5 segundos
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } catch (error) {
+                    console.error('❌ Error al restaurar backup:', error);
+                    NotificationSystem.show('Error: archivo de backup inválido', 'error');
+                }
+            };
+            reader.readAsText(input.files[0]);
+        };
     </script>
     
 </div><!-- Cierre main-content -->

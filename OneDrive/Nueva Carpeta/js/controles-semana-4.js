@@ -284,6 +284,7 @@ class ControlesSemana4 {
         if (elemento) elemento.innerHTML = html || 'Sin sedes';
 
         this.actualizarSelectSedes();
+        this.llenarSelectEmpleados();
     }
 
     static actualizarSelectSedes() {
@@ -292,6 +293,43 @@ class ControlesSemana4 {
         if (select) {
             select.innerHTML = '<option>Seleccionar sede</option>' +
                 sedes.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+        }
+    }
+
+    static llenarSelectEmpleados() {
+        // Llenar selectEmpleadoAsignar
+        const selectAsignar = document.getElementById('selectEmpleadoAsignar');
+        if (selectAsignar && typeof empleados !== 'undefined' && empleados.length > 0) {
+            selectAsignar.innerHTML = '<option>Seleccionar empleado</option>' +
+                empleados.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+        }
+
+        // Llenar selectEmpleadoEvento
+        const selectEvento = document.getElementById('selectEmpleadoEvento');
+        if (selectEvento && typeof empleados !== 'undefined' && empleados.length > 0) {
+            selectEvento.innerHTML = '<option>Seleccionar empleado</option>' +
+                empleados.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+        }
+
+        // Llenar selectEmpleadoNotif
+        const selectNotif = document.getElementById('selectEmpleadoNotif');
+        if (selectNotif && typeof empleados !== 'undefined' && empleados.length > 0) {
+            selectNotif.innerHTML = '<option>Seleccionar empleado</option>' +
+                empleados.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+        }
+
+        // Llenar selectEmpleadoEnviar
+        const selectEnviar = document.getElementById('selectEmpleadoEnviar');
+        if (selectEnviar && typeof empleados !== 'undefined' && empleados.length > 0) {
+            selectEnviar.innerHTML = '<option>Seleccionar empleado</option>' +
+                empleados.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+        }
+
+        // Llenar selectEmpleadoICAL
+        const selectICAL = document.getElementById('selectEmpleadoICAL');
+        if (selectICAL && typeof empleados !== 'undefined' && empleados.length > 0) {
+            selectICAL.innerHTML = '<option>Seleccionar empleado</option>' +
+                empleados.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
         }
     }
 
@@ -332,6 +370,24 @@ class ControlesSemana4 {
 
         const elemento = document.getElementById('listaFestivos');
         if (elemento) elemento.innerHTML = html;
+
+        // Llenar select de meses para iCal
+        this.llenarSelectMeses();
+        this.llenarSelectEmpleados();
+    }
+
+    static llenarSelectMeses() {
+        const selectMes = document.getElementById('selectMesICAL');
+        if (selectMes) {
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            selectMes.innerHTML = meses.map((m, i) => 
+                `<option value="${i + 1}">${m}</option>`
+            ).join('');
+            // Seleccionar mes actual por defecto
+            const mesActual = new Date().getMonth() + 1;
+            selectMes.value = mesActual;
+        }
     }
 
     static descargarICAL() {
@@ -379,6 +435,24 @@ class ControlesSemana4 {
 
         const elemento = document.getElementById('historialNotif');
         if (elemento) elemento.innerHTML = html || 'Sin notificaciones';
+
+        // Llenar selects de empleados y tipos de notificación
+        this.llenarSelectEmpleados();
+        this.llenarSelectTiposNotif();
+    }
+
+    static llenarSelectTiposNotif() {
+        const selectTipo = document.getElementById('selectTipoNotif');
+        if (selectTipo) {
+            const tipos = [
+                { value: 'cambio-turno', label: '📋 Cambio de Turno' },
+                { value: 'recordatorio', label: '⏰ Recordatorio' },
+                { value: 'alerta', label: '🚨 Alerta de Conflicto' }
+            ];
+            selectTipo.innerHTML = tipos.map(t => 
+                `<option value="${t.value}">${t.label}</option>`
+            ).join('');
+        }
     }
 
     static configurarPreferencias() {
