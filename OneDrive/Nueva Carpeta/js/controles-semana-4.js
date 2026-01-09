@@ -215,11 +215,11 @@ class ControlesSemana4 {
                             <!-- Configurar Preferencias -->
                             <div style="padding: 24px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(217, 119, 6, 0.08) 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
                                 <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">⚙️ Configurar Preferencias</h3>
-                                <select id="selectEmpleadoNotif" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <select id="selectEmpleadoNotif" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'" onchange="ControlesSemana4.autoRellenarDatosEmpleado()">
                                     <option>Seleccionar empleado</option>
                                 </select>
-                                <input type="email" id="inputEmailNotif" placeholder="Correo electrónico" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
-                                <input type="tel" id="inputTelfNotif" placeholder="Teléfono (WhatsApp)" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <input type="email" id="inputEmailNotif" placeholder="Correo electrónico (se auto-rellena)" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f9fafb;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'" readonly>
+                                <input type="tel" id="inputTelfNotif" placeholder="Teléfono (se auto-rellena)" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f9fafb;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'" readonly>
                                 <div style="margin: 12px 0; padding: 12px; background: white; border-radius: 8px; border: 1px solid #cbd5e1;">
                                     <label style="display: flex; align-items: center; margin: 8px 0; cursor: pointer; color: #475569;">
                                         <input type="checkbox" id="checkPush" style="margin-right: 8px; cursor: pointer;"> 
@@ -237,10 +237,13 @@ class ControlesSemana4 {
                                 <button onclick="ControlesSemana4.configurarPreferencias()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(245, 158, 11, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(245, 158, 11, 0.3)'">💾 Guardar Preferencias</button>
                             </div>
                             
-                            <!-- Historial -->
+                            <!-- Historial + Eventos Especiales -->
                             <div style="padding: 24px; background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%); border-radius: 12px; border-left: 4px solid #0ea5e9;">
-                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">📜 Historial de Notificaciones</h3>
-                                <div id="historialNotif" style="max-height: 280px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background: white; font-size: 13px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <h3 style="margin: 0; color: #1e293b; font-size: 16px; font-weight: 700;">📜 Historial & Eventos</h3>
+                                    <button onclick="ControlesSemana4.actualizarHistorialNotificaciones()" style="padding: 6px 12px; background: #0ea5e9; color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.3s;">🔄 Actualizar</button>
+                                </div>
+                                <div id="historialNotif" style="max-height: 320px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background: white; font-size: 12px;">
                                     <div style="color: #94a3b8; text-align: center; padding: 20px;">Cargando...</div>
                                 </div>
                             </div>
@@ -519,6 +522,106 @@ class ControlesSemana4 {
         }
 
         alert(resultado.exito ? '✅ Notificación enviada' : '❌ ' + resultado.mensaje);
+    }
+
+    static autoRellenarDatosEmpleado() {
+        const selectId = document.getElementById('selectEmpleadoNotif')?.value;
+        const inputEmail = document.getElementById('inputEmailNotif');
+        const inputTelf = document.getElementById('inputTelfNotif');
+
+        if (!selectId || selectId === 'Seleccionar empleado') {
+            if (inputEmail) inputEmail.value = '';
+            if (inputTelf) inputTelf.value = '';
+            return;
+        }
+
+        const empleado = empleados.find(e => e.id === parseInt(selectId));
+        if (empleado) {
+            if (inputEmail) inputEmail.value = empleado.email || '';
+            if (inputTelf) inputTelf.value = empleado.telefono || '';
+        }
+    }
+
+    static actualizarHistorialNotificaciones() {
+        const resultado = SistemaNotificaciones.obtenerHistorial(null, 10);
+        const eventosEspeciales = IntegracionCalendario.eventos ? Array.from(IntegracionCalendario.eventos.values()) : [];
+        
+        let html = '';
+
+        // Mostrar eventos especiales primero
+        if (eventosEspeciales.length > 0) {
+            html += '<div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;">';
+            html += '<strong style="color: #22c55e; font-size: 12px;">🎯 EVENTOS ESPECIALES GUARDADOS</strong>';
+            
+            eventosEspeciales.forEach(evento => {
+                const empleado = empleados.find(e => e.id === evento.empleadoId);
+                const empleadoNombre = empleado ? empleado.nombre : 'Desconocido';
+                html += `
+                    <div style="padding: 8px; background: #dcfce7; border-radius: 6px; margin: 6px 0; border-left: 3px solid #22c55e; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #15803d;">${evento.tipo.toUpperCase()}</strong><br>
+                            <small style="color: #166534;">👤 ${empleadoNombre} | 📅 ${evento.fecha}</small><br>
+                            <small style="color: #166534;">📝 ${evento.descripcion || '(sin descripción)'}</small>
+                        </div>
+                        <button onclick="ControlesSemana4.enviarEventoEspecial(${evento.empleadoId}, '${evento.fecha}', '${evento.tipo}')" style="padding: 4px 8px; background: #22c55e; color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer; white-space: nowrap;">📤 Enviar</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+
+        // Mostrar historial de notificaciones
+        if (resultado.historial && resultado.historial.length > 0) {
+            html += '<strong style="color: #0ea5e9; font-size: 12px;">📋 HISTORIAL DE NOTIFICACIONES</strong>';
+            resultado.historial.forEach(n => {
+                html += `
+                    <div style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-size: 11px;">
+                        <strong>${n.textos.asunto}</strong><br>
+                        <small style="color: #666;">${n.textos.body}</small><br>
+                        <small style="color: #999;">${new Date(n.timestamp).toLocaleString()}</small>
+                    </div>
+                `;
+            });
+        } else if (eventosEspeciales.length === 0) {
+            html = '<div style="color: #94a3b8; text-align: center; padding: 20px;">Sin notificaciones ni eventos guardados</div>';
+        }
+
+        const elemento = document.getElementById('historialNotif');
+        if (elemento) elemento.innerHTML = html;
+
+        // Llenar selects
+        this.llenarSelectEmpleados();
+        this.llenarSelectTiposNotif();
+    }
+
+    static enviarEventoEspecial(empleadoId, fecha, tipo) {
+        const empleado = empleados.find(e => e.id === empleadoId);
+        if (!empleado) {
+            alert('❌ Empleado no encontrado');
+            return;
+        }
+
+        // Construir mensaje según tipo de evento
+        const mesesNombre = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const fechaObj = new Date(fecha + 'T00:00:00');
+        const fechaFormato = `${fechaObj.getDate()} de ${mesesNombre[fechaObj.getMonth()]} de ${fechaObj.getFullYear()}`;
+        
+        let mensaje = `📧 Evento: ${tipo.toUpperCase()}\n`;
+        mensaje += `📅 Fecha: ${fechaFormato}\n`;
+        mensaje += `👤 Para: ${empleado.nombre}`;
+
+        // Pregunta al usuario si quiere enviar por WhatsApp o Email
+        if (confirm(`¿Enviar "${tipo}" a ${empleado.nombre}?\n\n${mensaje}\n\n✓ Aceptar para enviar por WhatsApp`)) {
+            if (empleado.telefono) {
+                // Enviar por WhatsApp
+                const telefonoFormateado = empleado.telefono.replace(/\D/g, '');
+                const mensajeEncodificado = encodeURIComponent(`🎯 *${tipo.toUpperCase()}*\n\n${mensaje}`);
+                window.open(`https://wa.me/${telefonoFormateado}?text=${mensajeEncodificado}`, '_blank');
+                alert('✅ WhatsApp abierto. Revisa y envía el mensaje.');
+            } else {
+                alert('⚠️ El empleado no tiene teléfono registrado.');
+            }
+        }
     }
 }
 
