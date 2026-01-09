@@ -596,17 +596,9 @@ ex<!DOCTYPE html>
                 <!-- ║    ANÁLISIS Y ESTADÍSTICAS - MISMO ANCHO Y ESTÉTICA CUADRANTE   ║ -->
                 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-                <!-- 1️⃣ LEYENDA - A lo ancho completo -->
-                <div style="margin-top: 20px; padding: 20px 24px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(11, 18, 32, 0.7) 100%); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; align-items: center;">
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #d4edda; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Mañana</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #fff3cd; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Tarde</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #f8d7da; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Noche</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #cce5ff; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Mixto</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #e2e3e5; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Descanso</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #d0ebff; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Vacaciones</span></div>
-                        <div class="legend-item" style="display: flex; align-items: center; gap: 12px;"><div class="legend-color" style="background: #ffe3e3; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div><span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">Baja</span></div>
-                    </div>
+                <!-- 1️⃣ LEYENDA - Generada dinámicamente desde JavaScript -->
+                <div id="leyendaTurnos" style="margin-top: 20px; padding: 20px 24px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(11, 18, 32, 0.7) 100%); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <!-- Se rellena con JavaScript -->
                 </div>
 
                 <!-- 2️⃣ KPIs ESTADÍSTICAS - A lo ancho completo con 4 columnas -->
@@ -623,6 +615,10 @@ ex<!DOCTYPE html>
                         <div class="stat-card">
                             <div class="stat-value" id="turnosMañanaGeneral" style="font-size: 32px; font-weight: 700;">0</div>
                             <div class="stat-label" style="font-size: 14px; margin-top: 8px;">Turnos Mañana</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="turnosTardeGeneral" style="font-size: 32px; font-weight: 700;">0</div>
+                            <div class="stat-label" style="font-size: 14px; margin-top: 8px;">Turnos Tarde</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value" id="turnosNocheGeneral" style="font-size: 32px; font-weight: 700;">0</div>
@@ -3631,6 +3627,75 @@ ex<!DOCTYPE html>
             }
         }
         
+        // 🎨 GENERAR LEYENDA DINÁMICAMENTE DESDE TIPOS DE TURNOS
+        function generarLeyendaDinamica() {
+            const contenedor = document.getElementById('leyendaTurnos');
+            if (!contenedor) return;
+            
+            // Primero, crear un objeto con los colores predeterminados
+            let tiposTurnoConfig = {};
+            
+            // Si existe tiposTurno global, usarlo como base (incluye todos los campos)
+            if (typeof tiposTurno !== 'undefined' && tiposTurno) {
+                for (const [clave, datos] of Object.entries(tiposTurno)) {
+                    tiposTurnoConfig[clave] = {
+                        color: datos.color || '#d4edda',
+                        nombre: datos.nombre || clave.charAt(0).toUpperCase() + clave.slice(1)
+                    };
+                }
+            } else {
+                // Fallback: colores predeterminados si tiposTurno no existe
+                tiposTurnoConfig = {
+                    mañana: { color: '#d4edda', nombre: 'Mañana' },
+                    tarde: { color: '#fff3cd', nombre: 'Tarde' },
+                    noche: { color: '#f8d7da', nombre: 'Noche' },
+                    mixto: { color: '#cce5ff', nombre: 'Mixto' },
+                    descanso: { color: '#e2e3e5', nombre: 'Descanso' },
+                    vacaciones: { color: '#d0ebff', nombre: 'Vacaciones' },
+                    baja: { color: '#ffe3e3', nombre: 'Baja' },
+                    libre: { color: '#e0e0e0', nombre: 'Libre' },
+                    festivo: { color: '#fff9e6', nombre: 'Festivo' }
+                };
+            }
+            
+            // Si existen tipos de turnos guardados en localStorage, actualizar los colores
+            try {
+                const tiposTurnoGuardados = localStorage.getItem('tiposTurnoData');
+                if (tiposTurnoGuardados) {
+                    const tipos = JSON.parse(tiposTurnoGuardados);
+                    for (const [clave, datos] of Object.entries(tipos)) {
+                        if (tiposTurnoConfig[clave] && datos.color) {
+                            tiposTurnoConfig[clave].color = datos.color;
+                        }
+                        // Si el turno no existe aún en config pero existe en storage, agregarlo
+                        if (!tiposTurnoConfig[clave]) {
+                            tiposTurnoConfig[clave] = {
+                                color: datos.color || '#d4edda',
+                                nombre: datos.nombre || clave
+                            };
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('No se pudieron cargar colores desde localStorage:', e);
+            }
+            
+            // Generar HTML de la leyenda en UNA SOLA FILA horizontal
+            let html = '<div style="display: flex; flex-wrap: nowrap; gap: 24px; align-items: center; overflow-x: auto; padding: 5px 0;">';
+            
+            for (const [clave, config] of Object.entries(tiposTurnoConfig)) {
+                html += `
+                    <div class="legend-item" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+                        <div style="background: ${config.color}; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span style="font-size: 15px; color: #e2e8f0; font-weight: 600; white-space: nowrap;">${config.nombre}</span>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            contenedor.innerHTML = html;
+        }
+        
         // MODAL COMPLETAMENTE ELIMINADO
         // El servidor se verifica en el launcher (Python) ANTES de abrir el navegador
         // por lo que este modal ya no es necesario
@@ -3660,6 +3725,11 @@ ex<!DOCTYPE html>
                         console.log('✓ Tipos de turnos iniciales guardados');
                     } else {
                         console.log('✓ Tipos de turnos ya existen en localStorage');
+                    }
+                    // Generar leyenda dinámica con colores actualizados
+                    if (typeof generarLeyendaDinamica === 'function') {
+                        generarLeyendaDinamica();
+                        console.log('✓ Leyenda dinámica generada');
                     }
                 }
                 
@@ -3761,6 +3831,90 @@ ex<!DOCTYPE html>
                 if (typeof UI !== 'undefined') {
                     UI.generarCuadranteGeneral();
                     UI.actualizarTitulosMes();
+                    // Actualizar KPIs con reintento si no está disponible
+                    if (typeof UI.actualizarKPIsGeneral === 'function') {
+                        UI.actualizarKPIsGeneral();
+                        console.log('✓ KPIs actualizados');
+                    } else {
+                        console.warn('⚠️ UI.actualizarKPIsGeneral no disponible aún, se ejecutará después');
+                        setTimeout(() => {
+                            // Función inline para actualizar KPIs directamente
+                            try {
+                                if (!window.AppState || !window.AppState.scheduleData) {
+                                    console.warn('⚠️ AppState no está inicializado');
+                                    return;
+                                }
+                                
+                                // DIAGNÓSTICO: Ver exactamente qué hay en scheduleData
+                                console.log('🔍 DIAGNÓSTICO AppState.scheduleData:');
+                                console.log('  Tipo:', typeof window.AppState.scheduleData);
+                                console.log('  Es Map?:', window.AppState.scheduleData instanceof Map);
+                                
+                                if (window.AppState.scheduleData instanceof Map) {
+                                    console.log('  Tamaño del Map:', window.AppState.scheduleData.size);
+                                    console.log('  Keys del Map:', Array.from(window.AppState.scheduleData.keys()));
+                                    
+                                    // Ver primer empleado
+                                    const primerKey = Array.from(window.AppState.scheduleData.keys())[0];
+                                    if (primerKey) {
+                                        const primerArray = window.AppState.scheduleData.get(primerKey);
+                                        console.log(`  Empleado ${primerKey}: ${primerArray?.length || 0} turnos`);
+                                        if (primerArray && primerArray.length > 0) {
+                                            console.log('    Primer turno:', JSON.stringify(primerArray[0]));
+                                            console.log('    Segundo turno:', JSON.stringify(primerArray[1]));
+                                        }
+                                    }
+                                }
+                                
+                                let totalEmpleados = window.empleados ? window.empleados.length : 0;
+                                let totalHoras = 0;
+                                let turnosMañana = 0;
+                                let turnosTarde = 0;
+                                let turnosNoche = 0;
+                                
+                                // Iterar sobre todos los empleados y TODOS los turnos (sin filtro de mes)
+                                if (window.empleados && window.empleados.length > 0) {
+                                    window.empleados.forEach(empleado => {
+                                        const turnos = window.AppState.scheduleData.get(empleado.id) || [];
+                                        console.log(`  📋 Empleado ${empleado.id} (${empleado.nombre}): ${turnos.length} turnos`);
+                                        
+                                        // Contar TODOS los turnos sin importar el mes
+                                        turnos.forEach((turno, idx) => {
+                                            if (turno) {
+                                                const horas = turno.horas || 0;
+                                                totalHoras += horas;
+                                                if (turno.turno === 'mañana') turnosMañana++;
+                                                if (turno.turno === 'tarde') turnosTarde++;
+                                                if (turno.turno === 'noche') turnosNoche++;
+                                                
+                                                // Log de primeros 2 turnos para debuggear
+                                                if (idx < 2) {
+                                                    console.log(`    - Día ${turno.dia}: ${turno.turno} (${horas}h)`);
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                                
+                                // Inyectar valores en HTML
+                                const totalEmpleadosEl = document.getElementById('totalEmpleadosGeneral');
+                                const totalHorasEl = document.getElementById('totalHorasGeneral');
+                                const turnosMañanaEl = document.getElementById('turnosMañanaGeneral');
+                                const turnosTardeEl = document.getElementById('turnosTardeGeneral');
+                                const turnosNocheEl = document.getElementById('turnosNocheGeneral');
+                                
+                                if (totalEmpleadosEl) totalEmpleadosEl.textContent = totalEmpleados;
+                                if (totalHorasEl) totalHorasEl.textContent = totalHoras.toFixed(1);
+                                if (turnosMañanaEl) turnosMañanaEl.textContent = turnosMañana;
+                                if (turnosTardeEl) turnosTardeEl.textContent = turnosTarde;
+                                if (turnosNocheEl) turnosNocheEl.textContent = turnosNoche;
+                                
+                                console.log(`✓ KPIs actualizados (inline): Empleados=${totalEmpleados}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Tarde=${turnosTarde}, Noche=${turnosNoche}`);
+                            } catch (e) {
+                                console.error('❌ Error actualizando KPIs:', e.message);
+                            }
+                        }, 500);
+                    }
                     console.log('✓ Cuadrante general generado');
                 }
 
@@ -3824,13 +3978,31 @@ ex<!DOCTYPE html>
                 // Llenar opciones de departamentos en el filtro
                 const selectDepartamentoIndividual = document.getElementById('selectDepartamentoIndividual');
                 if (selectDepartamentoIndividual && typeof DepartmentManager !== 'undefined') {
-                    const departamentos = [...new Set(DepartmentManager.departamentos.map(d => d.nombre))].sort();
-                    departamentos.forEach(depto => {
-                        const option = document.createElement('option');
-                        option.value = depto;
-                        option.textContent = depto;
-                        selectDepartamentoIndividual.appendChild(option);
-                    });
+                    try {
+                        let departamentosArray = [];
+                        
+                        // Manejar caso donde DepartmentManager.departamentos puede ser array u objeto
+                        if (Array.isArray(DepartmentManager.departamentos)) {
+                            departamentosArray = DepartmentManager.departamentos;
+                        } else if (typeof DepartmentManager.departamentos === 'object' && DepartmentManager.departamentos !== null) {
+                            // Si es un objeto (Map o diccionario), convertir a array
+                            departamentosArray = Object.values(DepartmentManager.departamentos);
+                        }
+                        
+                        const departamentos = [...new Set(departamentosArray
+                            .map(d => typeof d === 'string' ? d : d.nombre)
+                            .filter(Boolean)
+                        )].sort();
+                        
+                        departamentos.forEach(depto => {
+                            const option = document.createElement('option');
+                            option.value = depto;
+                            option.textContent = depto;
+                            selectDepartamentoIndividual.appendChild(option);
+                        });
+                    } catch (e) {
+                        console.warn('⚠️ Error llenando departamentos:', e.message);
+                    }
                 }
                 
                 // 🔧 Agregar event listeners para cambiar mes/año desde los selectores
@@ -4115,17 +4287,73 @@ ex<!DOCTYPE html>
                 },
                 loadFromStorage: function() {
                     try {
-                        console.log('[AppState.loadFromStorage] 🔍 INICIANDO CARGA...');
+                        console.log('[AppState.loadFromStorage] 🔍 Intentando cargar desde API...');
+                        
+                        // Guardar 'this' para usarlo en la función interna
+                        const self = this;
+                        let cargadosDesdeAPI = false;
+                        
+                        // Intentar cargar desde API primero
+                        if (window.empleados && window.empleados.length > 0) {
+                            for (let i = 0; i < window.empleados.length; i++) {
+                                const empleado = window.empleados[i];
+                                try {
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open('GET', `http://localhost:5001/api/turnos/${empleado.id}`, false); // Síncrono
+                                    xhr.send();
+                                    
+                                    if (xhr.status === 200) {
+                                        const datos = JSON.parse(xhr.responseText);
+                                        
+                                        // Estructura API: { empleadoId: 1, turnos: { "2026-1": { mes: 1, anio: 2026, turnos: [...] } } }
+                                        if (datos.turnos && typeof datos.turnos === 'object') {
+                                            const turnosArray = [];
+                                            
+                                            // Iterar sobre meses (ej: "2026-1", "2026-2")
+                                            for (const [key, mesData] of Object.entries(datos.turnos)) {
+                                                if (mesData && Array.isArray(mesData.turnos)) {
+                                                    // mesData.turnos es array: [{ dia, turno, horas, fecha, esFinSemana }, ...]
+                                                    mesData.turnos.forEach(turno => {
+                                                        turnosArray.push({
+                                                            dia: turno.dia,
+                                                            turno: turno.turno || 'descanso',
+                                                            horas: turno.horas || 0,
+                                                            horario: turno.horario || '-',
+                                                            fecha: new Date(turno.fecha), // API ya envía ISO string
+                                                            esFinSemana: turno.esFinSemana || false
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                            
+                                            if (turnosArray.length > 0) {
+                                                self.scheduleData.set(empleado.id, turnosArray);
+                                                cargadosDesdeAPI = true;
+                                                console.log(`  ✓ Empleado ${empleado.id} (${empleado.nombre}): ${turnosArray.length} turnos desde API`);
+                                            }
+                                        }
+                                    }
+                                } catch (e) {
+                                    console.warn(`[AppState] Error cargando empleado ${empleado.id} desde API:`, e.message);
+                                }
+                            }
+                        }
+                        
+                        if (cargadosDesdeAPI && self.scheduleData.size > 0) {
+                            console.log(`✅ [AppState.loadFromStorage] ${self.scheduleData.size} empleados cargados desde API`);
+                            return;
+                        }
+                        
+                        // Fallback: cargar desde localStorage si API no tiene datos
+                        console.log('[AppState.loadFromStorage] Intentando cargar desde localStorage...');
                         const data = localStorage.getItem('turnosAppState');
-                        console.log('[AppState.loadFromStorage] Datos en localStorage:', data ? `${data.length} caracteres` : 'NADA');
                         
                         if (data) {
                             try {
                                 const savedState = JSON.parse(data);
-                                console.log('[AppState.loadFromStorage] JSON parseado OK. Propiedades:', Object.keys(savedState));
                                 
                                 // Cargar scheduleData (convertir a Map)
-                                if (savedState.scheduleData && Object.keys(savedState.scheduleData).length > 0) {
+                                if (savedState.scheduleData && typeof savedState.scheduleData === 'object' && Object.keys(savedState.scheduleData).length > 0) {
                                     const scheduleMap = new Map();
                                     let totalTurnos = 0;
                                     
@@ -4137,28 +4365,26 @@ ex<!DOCTYPE html>
                                         }));
                                         scheduleMap.set(parseInt(empleadoId), turnosConFechas);
                                         totalTurnos += turnosConFechas.length;
-                                        console.log(`  ✓ Empleado ${empleadoId}: ${turnosConFechas.length} turnos cargados`);
                                     }
                                     
-                                    this.scheduleData = scheduleMap;
-                                    console.log(`✅ [AppState.loadFromStorage] ÉXITO: ${scheduleMap.size} empleados, ${totalTurnos} turnos cargados`);
+                                    self.scheduleData = scheduleMap;
+                                    console.log(`✅ [AppState.loadFromStorage] ${scheduleMap.size} empleados, ${totalTurnos} turnos desde localStorage`);
                                 } else {
-                                    console.warn('[AppState.loadFromStorage] ⚠️ No hay scheduleData en JSON o está vacío');
+                                    console.warn('[AppState.loadFromStorage] ⚠️ No hay scheduleData en localStorage');
                                 }
                                 
                                 // Cargar empleado seleccionado
                                 if (savedState.selectedEmployee) {
                                     this.selectedEmployee = savedState.selectedEmployee;
-                                    console.log('[AppState.loadFromStorage] Empleado seleccionado cargado:', this.selectedEmployee);
                                 }
                             } catch (parseError) {
-                                console.error('[AppState.loadFromStorage] ❌ ERROR PARSEANDO JSON:', parseError);
+                                console.error('[AppState.loadFromStorage] ❌ Error parseando localStorage:', parseError.message);
                             }
                         } else {
-                            console.log('[AppState.loadFromStorage] ⚠️ NO HAY DATOS GUARDADOS EN localStorage');
+                            console.log('[AppState.loadFromStorage] ℹ️ No hay datos en localStorage');
                         }
                     } catch (error) {
-                        console.error('[AppState.loadFromStorage] ❌ ERROR GENERAL:', error);
+                        console.error('[AppState.loadFromStorage] ❌ Error general:', error);
                     }
                 }
             };
@@ -5217,6 +5443,11 @@ ex<!DOCTYPE html>
                         container.innerHTML = html.join('');
                         const tiempo = (performance.now() - inicio).toFixed(1);
                         console.log(`✓ Cuadrante generado en ${tiempo}ms (${empleadosFiltrados.length} empleados)`);
+                        
+                        // 📊 Actualizar KPIs después de generar el cuadrante
+                        if (typeof UI !== 'undefined' && typeof UI.actualizarKPIsGeneral === 'function') {
+                            UI.actualizarKPIsGeneral();
+                        }
                     },
                     
                     actualizarTitulosMes: function() {
@@ -5228,6 +5459,61 @@ ex<!DOCTYPE html>
                         if (titulo) {
                             titulo.textContent = `${mesesNombre[mes]} ${año}`;
                         }
+                    },
+                    
+                    actualizarKPIsGeneral: function() {
+                        // Calcular KPIs del cuadrante general
+                        if (!window.AppState || !window.AppState.scheduleData) {
+                            console.warn('⚠️ AppState no está inicializado');
+                            return;
+                        }
+                        
+                        const mes = window.AppState.currentMonth;
+                        const año = window.AppState.currentYear;
+                        
+                        let totalEmpleados = window.empleados ? window.empleados.length : 0;
+                        let totalHoras = 0;
+                        let turnosMañana = 0;
+                        let turnosTarde = 0;
+                        let turnosNoche = 0;
+                        
+                        // Iterar sobre todos los empleados
+                        if (window.empleados && window.empleados.length > 0) {
+                            window.empleados.forEach(empleado => {
+                                const turnos = window.AppState.scheduleData.get(empleado.id) || [];
+                                
+                                // Filtrar turnos del mes actual solo
+                                turnos.forEach(turno => {
+                                    // Verificar que sea del mes/año actual
+                                    if (turno && turno.fecha) {
+                                        const fecha = turno.fecha instanceof Date ? turno.fecha : new Date(turno.fecha);
+                                        if (fecha.getMonth() === mes && fecha.getFullYear() === año) {
+                                            totalHoras += (turno.horas || 0);
+                                            if (turno.turno === 'mañana') turnosMañana++;
+                                            if (turno.turno === 'tarde') turnosTarde++;
+                                            if (turno.turno === 'noche') turnosNoche++;
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                        
+                        // Inyectar valores en HTML
+                        const totalEmpleadosEl = document.getElementById('totalEmpleadosGeneral');
+                        const totalHorasEl = document.getElementById('totalHorasGeneral');
+                        const turnosMañanaEl = document.getElementById('turnosMañanaGeneral');
+                        const turnosTardeEl = document.getElementById('turnosTardeGeneral');
+                        const turnosNocheEl = document.getElementById('turnosNocheGeneral');
+                        
+                        if (totalEmpleadosEl) totalEmpleadosEl.textContent = totalEmpleados;
+                        if (totalHorasEl) totalHorasEl.textContent = totalHoras.toFixed(1);
+                        if (turnosMañanaEl) turnosMañanaEl.textContent = turnosMañana;
+                        if (turnosTardeEl) turnosTardeEl.textContent = turnosTarde;
+                        if (turnosNocheEl) turnosNocheEl.textContent = turnosNoche;
+                        
+                        console.log(`📊 KPIs: Empleados=${totalEmpleados}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Tarde=${turnosTarde}, Noche=${turnosNoche}`);
+                        
+                        console.log(`📊 KPIs actualizados: Empleados=${totalEmpleados}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Noche=${turnosNoche}`);
                     }
                 };
             }
