@@ -146,27 +146,69 @@ END:VCALENDAR`;
                 throw new Error('Empleado sin turnos registrados');
             }
 
+            const empleado = empleados.find(e => e.id === empleadoId);
             const turnos = AppState.scheduleData.get(empleadoId);
+            
+            // Definir horarios de turnos (debe coincidir con tiposTurno global)
+            const horariosturno = {
+                mañana: { inicio: '08:00', fin: '16:00', horas: 8 },
+                tarde: { inicio: '16:00', fin: '00:00', horas: 8 },
+                noche: { inicio: '00:00', fin: '08:00', horas: 8 },
+                mixto: { inicio: '08:00', fin: '20:00', horas: 12 },
+                descanso: { inicio: '00:00', fin: '00:00', horas: 0 },
+                vacaciones: { inicio: '00:00', fin: '00:00', horas: 0 },
+                baja: { inicio: '00:00', fin: '00:00', horas: 0 },
+                libre: { inicio: '00:00', fin: '00:00', horas: 0 },
+                festivo: { inicio: '00:00', fin: '00:00', horas: 0 }
+            };
+
             let icalContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Cuadrante Turnos//ES
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:Turnos ${mes}/${año}
+X-WR-CALNAME:Turnos ${mes}/${año} - ${empleado?.nombre || 'Empleado'}
 X-WR-TIMEZONE:Europe/Madrid\n`;
 
             turnos.forEach(turno => {
                 if (turno.dia >= 1 && turno.dia <= 31) {
                     const fechaStr = `${año}${String(mes).padStart(2, '0')}${String(turno.dia).padStart(2, '0')}`;
                     const ahora = new Date().toISOString().replace(/[-:.]/g, '').split('Z')[0];
+                    
+                    // Obtener horario del turno
+                    const horarioTurno = horariosturno[turno.turno] || horariosturno.descanso;
+                    
+                    // Convertir horarios a formato iCal (YYYYMMDDTHHMMSS)
+                    let dtStart, dtEnd;
+                    if (turno.turno === 'descanso' || turno.turno === 'vacaciones' || turno.turno === 'baja' || turno.turno === 'libre' || turno.turno === 'festivo') {
+                        // Para no-laborales, usar todo el día
+                        dtStart = `${fechaStr}T000000`;
+                        dtEnd = `${fechaStr}T235900`;
+                    } else {
+                        // Para turnos laborales, usar horario específico
+                        const [inicioHora, inicioMin] = horarioTurno.inicio.split(':');
+                        const [finHora, finMin] = horarioTurno.fin.split(':');
+                        
+                        dtStart = `${fechaStr}T${inicioHora}${inicioMin}00`;
+                        
+                        // Si fin es 00:00 (noche que termina en madrugada), termina al día siguiente
+                        if (horarioTurno.fin === '00:00') {
+                            const diaSiguiente = new Date(año, mes - 1, parseInt(turno.dia) + 1);
+                            const fechaSiguiente = `${diaSiguiente.getFullYear()}${String(diaSiguiente.getMonth() + 1).padStart(2, '0')}${String(diaSiguiente.getDate()).padStart(2, '0')}`;
+                            dtEnd = `${fechaSiguiente}T000000`;
+                        } else {
+                            dtEnd = `${fechaStr}T${finHora}${finMin}00`;
+                        }
+                    }
 
                     icalContent += `BEGIN:VEVENT
-UID:turno-${empleadoId}-${fechaStr}
+UID:turno-${empleadoId}-${fechaStr}@cuadrante.local
 DTSTAMP:${ahora}Z
-DTSTART:${fechaStr}
-DTEND:${fechaStr}
-SUMMARY:${turno.turno.charAt(0).toUpperCase() + turno.turno.slice(1)}
-DESCRIPTION:Turno: ${turno.turno}
+DTSTART:${dtStart}
+DTEND:${dtEnd}
+SUMMARY:${turno.turno.charAt(0).toUpperCase() + turno.turno.slice(1)} - ${empleado?.nombre || 'Empleado'}
+DESCRIPTION:Turno: ${turno.turno}\\nHorario: ${horarioTurno.inicio} - ${horarioTurno.fin}\\nHoras: ${horarioTurno.horas}h
+LOCATION:Sede Principal
 CATEGORIES:${turno.turno}
 STATUS:CONFIRMED
 END:VEVENT\n`;
@@ -178,7 +220,7 @@ END:VEVENT\n`;
             return {
                 exito: true,
                 icalContent: icalContent,
-                nombreArchivo: `turnos_${mes}_${año}.ics`
+                nombreArchivo: `turnos_${empleado?.nombre || 'empleado'}_${mes}_${año}.ics`
             };
         } catch (error) {
             return { exito: false, mensaje: error.message };
