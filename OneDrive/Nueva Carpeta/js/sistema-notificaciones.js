@@ -267,10 +267,21 @@ class SistemaNotificaciones {
     }
 
     /**
-     * Mostrar modal con contenido del email (para desarrollo)
+     * Abrir Gmail con email preconfigurado
      */
     static mostrarModalEmail(email, asunto, cuerpo) {
-        // Crear contenedor del modal
+        // Codificar parámetros para URL
+        const urlEmail = encodeURIComponent(email);
+        const urlAsunto = encodeURIComponent(asunto);
+        const urlCuerpo = encodeURIComponent(cuerpo);
+
+        // Crear URL de Gmail (gmail.com/mail/?view=cm abre el composer)
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${urlEmail}&su=${urlAsunto}&body=${urlCuerpo}`;
+
+        // También intentar con mailto: como alternativa
+        const mailtoUrl = `mailto:${email}?subject=${urlAsunto}&body=${urlCuerpo}`;
+
+        // Mostrar modal con opciones para abrir en Gmail o cliente de email
         const modalDiv = document.createElement('div');
         modalDiv.id = 'modalEmailPreview';
         modalDiv.style.cssText = `
@@ -286,7 +297,6 @@ class SistemaNotificaciones {
             z-index: 9999;
         `;
 
-        // Crear contenido del modal
         const contenidoDiv = document.createElement('div');
         contenidoDiv.style.cssText = `
             background: white; 
@@ -299,10 +309,9 @@ class SistemaNotificaciones {
             overflow-y: auto;
         `;
 
-        // HTML del contenido (sin variables dinámicas en atributos)
         contenidoDiv.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; color: #1e293b; font-size: 18px; font-weight: 700;">📧 Previsualización de Email</h3>
+                <h3 style="margin: 0; color: #1e293b; font-size: 18px; font-weight: 700;">📧 Enviar Email</h3>
                 <button class="cerrarModalEmail" style="background: #e2e8f0; color: #475569; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px;">✕</button>
             </div>
 
@@ -321,32 +330,42 @@ class SistemaNotificaciones {
                 </div>
             </div>
 
-            <div style="display: flex; gap: 12px;">
-                <button id="btnCopiarEmail" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                    📋 Copiar Email
+            <div style="display: flex; gap: 12px; flex-direction: column;">
+                <button id="btnAbrirGmail" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    📧 Abrir en Gmail
                 </button>
-                <button class="cerrarModalEmail" style="flex: 1; padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                <button id="btnAbrirMailto" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    💌 Abrir Cliente de Email
+                </button>
+                <button class="cerrarModalEmail" style="width: 100%; padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
                     Cerrar
                 </button>
             </div>
 
-            <div style="margin-top: 16px; padding: 12px; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
-                <small style="color: #1e40af;">💡 <strong>Nota:</strong> En modo desarrollo, puedes copiar el contenido del email. En producción, se enviaría automáticamente a través de un servidor SMTP.</small>
+            <div style="margin-top: 16px; padding: 12px; background: #f0fdf4; border-left: 3px solid #22c55e; border-radius: 4px;">
+                <small style="color: #166534;">✅ <strong>El email se abrirá preconfigurado con PARA, ASUNTO y MENSAJE. Solo tienes que dar ENVIAR.</strong></small>
             </div>
         `;
 
         modalDiv.appendChild(contenidoDiv);
         document.body.appendChild(modalDiv);
 
-        // Llenar campos con valores seguros
+        // Llenar campos
         document.getElementById('emailInputModal').value = email;
         document.getElementById('asuntoInputModal').value = asunto;
         document.getElementById('cuerpoTextareaModal').value = cuerpo;
 
         // Event listeners
-        document.getElementById('btnCopiarEmail').addEventListener('click', () => {
-            this.copiarEmailAlPortapapeles(email, asunto, cuerpo);
+        document.getElementById('btnAbrirGmail').addEventListener('click', () => {
+            window.open(gmailUrl, '_blank');
+            NotificationSystem.show('✅ Gmail abierto en nueva pestaña con el email preconfigurado', 'success');
             modalDiv.remove();
+        });
+
+        document.getElementById('btnAbrirMailto').addEventListener('click', () => {
+            window.location.href = mailtoUrl;
+            NotificationSystem.show('✅ Cliente de email abierto con el correo preconfigurado', 'success');
+            setTimeout(() => modalDiv.remove(), 1000);
         });
 
         document.querySelectorAll('.cerrarModalEmail').forEach(btn => {
@@ -363,18 +382,6 @@ class SistemaNotificaciones {
             }
         };
         document.addEventListener('keydown', cerrarConEscape);
-    }
-
-    /**
-     * Copiar contenido del email al portapapeles
-     */
-    static copiarEmailAlPortapapeles(email, asunto, cuerpo) {
-        const texto = `PARA: ${email}\nASUNTO: ${asunto}\n\nMENSAJE:\n${cuerpo}`;
-        navigator.clipboard.writeText(texto).then(() => {
-            NotificationSystem.show('✅ Email copiado al portapapeles. Abre tu cliente de email (Gmail, Outlook, etc.) para enviarlo.', 'success');
-        }).catch(err => {
-            NotificationSystem.show(`❌ Error al copiar: ${err.message}`, 'error');
-        });
     }
 
     /**
