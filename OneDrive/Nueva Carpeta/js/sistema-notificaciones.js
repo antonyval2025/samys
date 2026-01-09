@@ -294,15 +294,7 @@ class SistemaNotificaciones {
                     </div>
 
                     <div style="display: flex; gap: 12px;">
-                        <button onclick="
-                            const texto = 'PARA: ${email}\\nASUNTO: ${asunto}\\n\\nMENSAJE:\\n${cuerpo}';
-                            navigator.clipboard.writeText(texto).then(() => {
-                                alert('✅ Email copiado al portapapeles');
-                                document.getElementById('modalEmailPreview').remove();
-                            }).catch(err => {
-                                alert('❌ Error al copiar: ' + err.message);
-                            });
-                        " style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                        <button onclick="SistemaNotificaciones.copiarEmailAlPortapapeles('${email}', '${asunto}', '${cuerpo.replace(/'/g, "\\'")}'); document.getElementById('modalEmailPreview').remove();" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
                             📋 Copiar Email
                         </button>
                         <button onclick="document.getElementById('modalEmailPreview').remove()" style="flex: 1; padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
@@ -318,6 +310,18 @@ class SistemaNotificaciones {
         `;
 
         document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    /**
+     * Copiar contenido del email al portapapeles
+     */
+    static copiarEmailAlPortapapeles(email, asunto, cuerpo) {
+        const texto = `PARA: ${email}\nASUNTO: ${asunto}\n\nMENSAJE:\n${cuerpo}`;
+        navigator.clipboard.writeText(texto).then(() => {
+            NotificationSystem.show('✅ Email copiado al portapapeles. Abre tu cliente de email (Gmail, Outlook, etc.) para enviarlo.', 'success');
+        }).catch(err => {
+            NotificationSystem.show(`❌ Error al copiar: ${err.message}`, 'error');
+        });
     }
 
     /**
