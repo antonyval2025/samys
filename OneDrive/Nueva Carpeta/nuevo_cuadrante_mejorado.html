@@ -3872,14 +3872,26 @@ ex<!DOCTYPE html>
                                 let turnosTarde = 0;
                                 let turnosNoche = 0;
                                 
-                                // Iterar sobre todos los empleados y TODOS los turnos (sin filtro de mes)
+                                // Iterar sobre todos los empleados y TODOS los turnos
+                                // Filtrar solo por el mes ACTUAL
+                                const mesActual = AppState.currentMonth;
+                                const anioActual = AppState.currentYear;
+                                console.log(`🔄 Filtrando turnos para mes ${mesActual}/${anioActual}...`);
+                                
                                 if (window.empleados && window.empleados.length > 0) {
                                     window.empleados.forEach(empleado => {
                                         const turnos = window.AppState.scheduleData.get(empleado.id) || [];
-                                        console.log(`  📋 Empleado ${empleado.id} (${empleado.nombre}): ${turnos.length} turnos`);
                                         
-                                        // Contar TODOS los turnos sin importar el mes
-                                        turnos.forEach((turno, idx) => {
+                                        // Filtrar solo turnos del mes actual
+                                        const turnosDelMes = turnos.filter(t => {
+                                            const fecha = new Date(t.fecha);
+                                            return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
+                                        });
+                                        
+                                        console.log(`  📋 Empleado ${empleado.id} (${empleado.nombre}): ${turnosDelMes.length}/${turnos.length} turnos (mes ${mesActual})`);
+                                        
+                                        // Contar turnos del mes actual
+                                        turnosDelMes.forEach((turno, idx) => {
                                             if (turno) {
                                                 const horas = turno.horas || 0;
                                                 totalHoras += horas;
@@ -3913,7 +3925,7 @@ ex<!DOCTYPE html>
                             } catch (e) {
                                 console.error('❌ Error actualizando KPIs:', e.message);
                             }
-                        }, 500);
+                        }, 2000);
                     }
                     console.log('✓ Cuadrante general generado');
                 }
