@@ -668,26 +668,79 @@ class ControlesSemana4 {
             return;
         }
 
+        // Obtener preferencias guardadas del empleado
+        const preferencias = SistemaNotificaciones.configuracion.preferencias.get(empleadoId);
+        
+        if (!preferencias) {
+            alert('⚠️ Configura las preferencias del empleado antes de enviar');
+            return;
+        }
+
         // Construir mensaje según tipo de evento
         const mesesNombre = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const fechaObj = new Date(fecha + 'T00:00:00');
         const fechaFormato = `${fechaObj.getDate()} de ${mesesNombre[fechaObj.getMonth()]} de ${fechaObj.getFullYear()}`;
         
-        let mensaje = `📧 Evento: ${tipo.toUpperCase()}\n`;
-        mensaje += `📅 Fecha: ${fechaFormato}\n`;
-        mensaje += `👤 Para: ${empleado.nombre}`;
+        let mensaje = `🎯 *EVENTO ESPECIAL*\n\n`;
+        mensaje += `📧 Tipo: ${tipo.toUpperCase()}\n`;
+        mensaje += `📅 Fecha: ${fechaFormato}`;
 
-        // Pregunta al usuario si quiere enviar por WhatsApp o Email
-        if (confirm(`¿Enviar "${tipo}" a ${empleado.nombre}?\n\n${mensaje}\n\n✓ Aceptar para enviar por WhatsApp`)) {
-            if (empleado.telefono) {
-                // Enviar por WhatsApp
-                const telefonoFormateado = empleado.telefono.replace(/\D/g, '');
-                const mensajeEncodificado = encodeURIComponent(`🎯 *${tipo.toUpperCase()}*\n\n${mensaje}`);
-                window.open(`https://wa.me/${telefonoFormateado}?text=${mensajeEncodificado}`, '_blank');
-                alert('✅ WhatsApp abierto. Revisa y envía el mensaje.');
-            } else {
-                alert('⚠️ El empleado no tiene teléfono registrado.');
-            }
+        // Pedir confirmación general
+        if (!confirm(`¿Enviar evento "${tipo}" a ${empleado.nombre}?\n\nEsta notificación se enviará por los canales configurados.`)) {
+            return;
+        }
+
+        // Obtener canales configurados
+        const canales = preferencias.canales || ['push'];
+        let enviolista = [];
+
+        // Enviar por Email si está configurado
+        if (canales.includes('email') && preferencias.email) {
+            const resultadoEmail = SistemaNotificaciones.encolarEmailNotificacion(
+                empleadoId,
+                {
+                    textos: {
+                        asunto: `🎯 Evento Especial: ${tipo}`,
+                        body: `Se ha registrado un evento especial para ti:\n\nTipo: ${tipo}\nFecha: ${fechaFormato}`,
+                        push: `Evento: ${tipo}`
+                    }
+                },
+                preferencias.email
+            );
+            if (resultadoEmail.exito) enviolista.push(`📧 Email`);
+        }
+
+        // Enviar por SMS/WhatsApp si está configurado
+        if (canales.includes('sms') && preferencias.telefono) {
+            const telefonoFormateado = preferencias.telefono.replace(/\D/g, '');
+            const mensajeEncodificado = encodeURIComponent(mensaje);
+            window.open(`https://wa.me/${telefonoFormateado}?text=${mensajeEncodificado}`, '_blank');
+            enviolista.push(`💬 WhatsApp`);
+        }
+
+        // Enviar Push si está configurado
+        if (canales.includes('push')) {
+            const resultadoPush = SistemaNotificaciones.enviarPushNotification(
+                empleadoId,
+                {
+                    tipo: 'evento_especial',
+                    textos: {
+                        asunto: `🎯 Evento Especial: ${tipo}`,
+                        body: `Evento: ${tipo} el ${fechaFormato}`,
+                        push: tipo
+                    }
+                }
+            );
+            if (resultadoPush.exito) enviolista.push(`📲 Push`);
+        }
+
+        if (enviolista.length > 0) {
+            NotificationSystem.show(
+                `✅ Evento enviado por: ${enviolista.join(', ')}`, 
+                'success'
+            );
+        } else {
+            alert('⚠️ No hay canales de notificación disponibles');
         }
     }
 }
