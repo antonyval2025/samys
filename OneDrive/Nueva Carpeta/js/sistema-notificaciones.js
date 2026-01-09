@@ -270,46 +270,99 @@ class SistemaNotificaciones {
      * Mostrar modal con contenido del email (para desarrollo)
      */
     static mostrarModalEmail(email, asunto, cuerpo) {
-        const modalHTML = `
-            <div id="modalEmailPreview" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-                <div style="background: white; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; color: #1e293b; font-size: 18px; font-weight: 700;">📧 Previsualización de Email</h3>
-                        <button onclick="document.getElementById('modalEmailPreview').remove()" style="background: #e2e8f0; color: #475569; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px;">✕</button>
-                    </div>
+        // Crear contenedor del modal
+        const modalDiv = document.createElement('div');
+        modalDiv.id = 'modalEmailPreview';
+        modalDiv.style.cssText = `
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.5); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999;
+        `;
 
-                    <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                        <div style="margin-bottom: 12px;">
-                            <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">PARA:</label>
-                            <input type="email" value="${email}" readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b;">
-                        </div>
-                        <div style="margin-bottom: 12px;">
-                            <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">ASUNTO:</label>
-                            <input type="text" value="${asunto}" readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b;">
-                        </div>
-                        <div>
-                            <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">MENSAJE:</label>
-                            <textarea readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b; min-height: 150px; resize: vertical; font-family: 'Courier New', monospace;">${cuerpo}</textarea>
-                        </div>
-                    </div>
+        // Crear contenido del modal
+        const contenidoDiv = document.createElement('div');
+        contenidoDiv.style.cssText = `
+            background: white; 
+            border-radius: 12px; 
+            padding: 24px; 
+            max-width: 500px; 
+            width: 90%; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+            max-height: 80vh; 
+            overflow-y: auto;
+        `;
 
-                    <div style="display: flex; gap: 12px;">
-                        <button onclick="SistemaNotificaciones.copiarEmailAlPortapapeles('${email}', '${asunto}', '${cuerpo.replace(/'/g, "\\'")}'); document.getElementById('modalEmailPreview').remove();" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                            📋 Copiar Email
-                        </button>
-                        <button onclick="document.getElementById('modalEmailPreview').remove()" style="flex: 1; padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                            Cerrar
-                        </button>
-                    </div>
+        // HTML del contenido (sin variables dinámicas en atributos)
+        contenidoDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0; color: #1e293b; font-size: 18px; font-weight: 700;">📧 Previsualización de Email</h3>
+                <button class="cerrarModalEmail" style="background: #e2e8f0; color: #475569; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px;">✕</button>
+            </div>
 
-                    <div style="margin-top: 16px; padding: 12px; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
-                        <small style="color: #1e40af;">💡 <strong>Nota:</strong> En modo desarrollo, puedes copiar el contenido del email. En producción, se enviaría automáticamente a través de un servidor SMTP.</small>
-                    </div>
+            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">PARA:</label>
+                    <input type="email" id="emailInputModal" readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b; box-sizing: border-box;">
                 </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">ASUNTO:</label>
+                    <input type="text" id="asuntoInputModal" readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="display: block; color: #64748b; font-size: 12px; font-weight: 600; margin-bottom: 4px;">MENSAJE:</label>
+                    <textarea id="cuerpoTextareaModal" readonly style="width: 100%; padding: 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; color: #1e293b; min-height: 150px; resize: vertical; font-family: 'Courier New', monospace; box-sizing: border-box;"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button id="btnCopiarEmail" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    📋 Copiar Email
+                </button>
+                <button class="cerrarModalEmail" style="flex: 1; padding: 12px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    Cerrar
+                </button>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
+                <small style="color: #1e40af;">💡 <strong>Nota:</strong> En modo desarrollo, puedes copiar el contenido del email. En producción, se enviaría automáticamente a través de un servidor SMTP.</small>
             </div>
         `;
 
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        modalDiv.appendChild(contenidoDiv);
+        document.body.appendChild(modalDiv);
+
+        // Llenar campos con valores seguros
+        document.getElementById('emailInputModal').value = email;
+        document.getElementById('asuntoInputModal').value = asunto;
+        document.getElementById('cuerpoTextareaModal').value = cuerpo;
+
+        // Event listeners
+        document.getElementById('btnCopiarEmail').addEventListener('click', () => {
+            this.copiarEmailAlPortapapeles(email, asunto, cuerpo);
+            modalDiv.remove();
+        });
+
+        document.querySelectorAll('.cerrarModalEmail').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modalDiv.remove();
+            });
+        });
+
+        // Cerrar con tecla Escape
+        const cerrarConEscape = (e) => {
+            if (e.key === 'Escape') {
+                modalDiv.remove();
+                document.removeEventListener('keydown', cerrarConEscape);
+            }
+        };
+        document.addEventListener('keydown', cerrarConEscape);
     }
 
     /**
