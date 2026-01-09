@@ -267,9 +267,13 @@ class AppState {
         }
     }
 
-    // 📡 NUEVA: Cargar datos desde API/BD - TODOS LOS TURNOS
+    // 📡 NUEVA: Cargar datos desde API/BD (con reintentos)
     static async _cargarDesdeAPI() {
         try {
+            // Capturar valores actuales ANTES de iniciar promesas
+            const mesActual = this.currentMonth;
+            const anioActual = this.currentYear;
+            
             const promesasAPI = empleados.map(empleado =>
                 fetch(`http://localhost:5001/api/turnos/${empleado.id}`)
                     .then(response => {
@@ -277,17 +281,18 @@ class AppState {
                         return response.json();
                     })
                     .then(data => {
-                        if (!data.turnos) return { empleado, turnos: [], ok: false };
+                        if (!data.turnos) return { empleado, turnos: {}, ok: false };
                         
-                        // 🔥 CAMBIO CLAVE: Cargar TODOS los turnos de TODOS los meses
-                        let todosLosTurnos = [];
+                        // Procesar datos agrupados por mes
+                        let turnosDelMesActual = [];
                         for (const [key, mesData] of Object.entries(data.turnos)) {
-                            if (mesData.turnos && Array.isArray(mesData.turnos)) {
-                                todosLosTurnos = todosLosTurnos.concat(mesData.turnos);
+                            if (mesData.mes === mesActual && mesData.anio === anioActual) {
+                                turnosDelMesActual = mesData.turnos || [];
+                                break;
                             }
                         }
                         
-                        return { empleado, turnos: todosLosTurnos, ok: true };
+                        return { empleado, turnos: turnosDelMesActual, ok: true };
                     })
                     .catch(err => {
                         console.warn(`⚠️ API error para ${empleado.nombre}:`, err.message);
@@ -313,10 +318,10 @@ class AppState {
             }
             
             if (turnosCargados > 0) {
-                console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API (TODOS LOS MESES)`);
+                console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API`);
                 this.saveToStorage(); // Respaldar en localStorage
             } else {
-                console.log('ℹ️ No hay datos en BD');
+                console.log('ℹ️ No hay datos en BD para este mes');
             }
         } catch (error) {
             console.error('❌ Error cargando desde API:', error.message);
@@ -1482,6 +1487,19 @@ class TurnoManager {
         
         // ⏳ ESPERAR UN POCO para asegurar que cargaron los datos
         await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // 🔍 DIAGNÓSTICO: Ver qué meses tienen datos
+        console.log('[TurnoManager.reiniciarDatos] 🔍 Diagnóstico de meses disponibles:');
+        const mesesDisponibles = new Set();
+        for (const [empId, turnos] of AppState.scheduleData) {
+            if (turnos && turnos.length > 0) {
+                turnos.forEach(t => {
+                    const fecha = new Date(t.fecha);
+                    mesesDisponibles.add(`${fecha.getMonth()}/${fecha.getFullYear()}`);
+                });
+            }
+        }
+        console.log(`[TurnoManager.reiniciarDatos] Meses con datos: ${Array.from(mesesDisponibles).join(', ')}`);
         
         // Verificar si hay datos para el MES ACTUAL
         let tieneEmpleadosConDatosDelMes = false;
