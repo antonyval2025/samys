@@ -93,48 +93,52 @@ class ControlesSemana4 {
         // Modal Gestor MultiLocal
         const modalMultiLocal = `
             <div id="modalGestorMultiLocal" class="modal">
-                <div class="modal-content">
-                    <h2>📍 Gestor de Múltiples Sedes <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')">✕</button></h2>
+                <div class="modal-content" style="max-width: 950px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                    <!-- ENCABEZADO -->
+                    <div style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); padding: 30px; border-radius: 16px 16px 0 0; color: white; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; font-size: 24px; font-weight: 700;">📍 Gestor de Múltiples Sedes</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')" style="background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">✕</button>
+                    </div>
                     
-                    <div class="modal-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <h4>Crear Nueva Sede</h4>
-                                <input type="text" id="inputNombreSede" placeholder="Nombre" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
-                                <input type="text" id="inputUbicacionSede" placeholder="Ubicación" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
-                                <button onclick="ControlesSemana4.crearSede()" style="width: 100%; margin-top: 10px;">Crear Sede</button>
+                    <div class="modal-body" style="padding: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                            <!-- Crear Nueva Sede -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(109, 40, 217, 0.08) 100%); border-radius: 12px; border-left: 4px solid #8b5cf6;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">➕ Crear Nueva Sede</h3>
+                                <input type="text" id="inputNombreSede" placeholder="Nombre de la sede" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <input type="text" id="inputUbicacionSede" placeholder="Ubicación geográfica" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <button onclick="ControlesSemana4.crearSede()" style="width: 100%; padding: 12px; margin-top: 16px; background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(139, 92, 246, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.3)'">Crear Sede</button>
                             </div>
                             
-                            <div>
-                                <h4>Sedes Disponibles</h4>
-                                <div id="listaSedes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
-                                    Cargando...
+                            <!-- Sedes Disponibles -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(30, 64, 175, 0.08) 100%); border-radius: 12px; border-left: 4px solid #3b82f6;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">🏢 Sedes Disponibles</h3>
+                                <div id="listaSedes" style="max-height: 240px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background: white;">
+                                    <div style="color: #94a3b8; text-align: center; padding: 20px;">Cargando...</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Asignar Empleado a Sede</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                                <select id="selectEmpleadoAsignar" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option>Empleado</option>
+                        <!-- Asignar Empleado -->
+                        <div style="padding: 24px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(22, 163, 74, 0.08) 100%); border-radius: 12px; border-left: 4px solid #22c55e;">
+                            <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">👤 Asignar Empleado a Sede</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                                <select id="selectEmpleadoAsignar" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; cursor: pointer;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                    <option>Seleccionar empleado</option>
                                 </select>
-                                <select id="selectSedeAsignar" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option>Sede</option>
+                                <select id="selectSedeAsignar" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; cursor: pointer;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                    <option>Seleccionar sede</option>
                                 </select>
-                                <input type="number" id="inputSalario" placeholder="Salario" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                <input type="number" id="inputSalario" placeholder="Salario" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
                             </div>
-                            <button onclick="ControlesSemana4.asignarEmpleado()" style="width: 100%; margin-top: 10px;">Asignar</button>
+                            <button onclick="ControlesSemana4.asignarEmpleado()" style="width: 100%; padding: 12px; margin-top: 12px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(34, 197, 94, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(34, 197, 94, 0.3)'">Asignar Empleado</button>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Reportes</h4>
-                            <button onclick="ControlesSemana4.generarReporteComparativo()" style="width: 100%; margin-top: 10px;">📊 Reporte Comparativo de Sedes</button>
+                        <!-- Reportes -->
+                        <div style="padding: 24px; margin-top: 24px; background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(225, 29, 72, 0.08) 100%); border-radius: 12px; border-left: 4px solid #f43f5e;">
+                            <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">📊 Reportes</h3>
+                            <button onclick="ControlesSemana4.generarReporteComparativo()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(244, 63, 94, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(244, 63, 94, 0.3)'">📈 Reporte Comparativo de Sedes</button>
                         </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button onclick="document.getElementById('modalGestorMultiLocal').classList.remove('active')">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -143,24 +147,30 @@ class ControlesSemana4 {
         // Modal Calendario
         const modalCalendario = `
             <div id="modalCalendario" class="modal">
-                <div class="modal-content">
-                    <h2>📅 Integración de Calendario <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')">✕</button></h2>
+                <div class="modal-content" style="max-width: 950px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                    <!-- ENCABEZADO -->
+                    <div style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); padding: 30px; border-radius: 16px 16px 0 0; color: white; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; font-size: 24px; font-weight: 700;">📅 Integración de Calendario</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')" style="background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">✕</button>
+                    </div>
                     
-                    <div class="modal-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <h4>Festivos España 2025</h4>
-                                <div id="listaFestivos" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
-                                    Cargando...
+                    <div class="modal-body" style="padding: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                            <!-- Festivos -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%); border-radius: 12px; border-left: 4px solid #0ea5e9;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">🎉 Festivos España 2025</h3>
+                                <div id="listaFestivos" style="max-height: 280px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background: white;">
+                                    <div style="color: #94a3b8; text-align: center; padding: 20px;">Cargando...</div>
                                 </div>
                             </div>
                             
-                            <div>
-                                <h4>Exportar iCal</h4>
-                                <select id="selectEmpleadoICAL" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                            <!-- Exportar iCal -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(22, 163, 74, 0.08) 100%); border-radius: 12px; border-left: 4px solid #22c55e;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">📥 Exportar Calendario iCal</h3>
+                                <select id="selectEmpleadoICAL" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
                                     <option>Seleccionar empleado</option>
                                 </select>
-                                <select id="selectMesICAL" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                                <select id="selectMesICAL" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#22c55e'; this.style.boxShadow='0 0 0 3px rgba(34, 197, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
                                     <option value="1">Enero</option>
                                     <option value="2">Febrero</option>
                                     <option value="3">Marzo</option>
@@ -168,26 +178,23 @@ class ControlesSemana4 {
                                     <option value="5">Mayo</option>
                                     <option value="6">Junio</option>
                                 </select>
-                                <button onclick="ControlesSemana4.descargarICAL()" style="width: 100%; margin-top: 10px;">📥 Descargar iCal</button>
+                                <button onclick="ControlesSemana4.descargarICAL()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(34, 197, 94, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(34, 197, 94, 0.3)'">📥 Descargar iCal</button>
                             </div>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Agregar Evento Especial</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <select id="selectEmpleadoEvento" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option>Empleado</option>
+                        <!-- Agregar Evento Especial -->
+                        <div style="padding: 24px; background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(225, 29, 72, 0.08) 100%); border-radius: 12px; border-left: 4px solid #f43f5e;">
+                            <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">➕ Agregar Evento Especial</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <select id="selectEmpleadoEvento" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f43f5e'; this.style.boxShadow='0 0 0 3px rgba(244, 63, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                    <option>Seleccionar empleado</option>
                                 </select>
-                                <input type="date" id="inputFechaEvento" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                <input type="date" id="inputFechaEvento" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f43f5e'; this.style.boxShadow='0 0 0 3px rgba(244, 63, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
                             </div>
-                            <input type="text" id="inputTipoEvento" placeholder="Tipo (reunion, capacitación, etc)" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
-                            <textarea id="inputDescEvento" placeholder="Descripción" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; min-height: 60px;"></textarea>
-                            <button onclick="ControlesSemana4.agregarEvento()" style="width: 100%; margin-top: 10px;">Agregar Evento</button>
+                            <input type="text" id="inputTipoEvento" placeholder="Tipo (reunión, capacitación, etc)" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f43f5e'; this.style.boxShadow='0 0 0 3px rgba(244, 63, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                            <textarea id="inputDescEvento" placeholder="Descripción del evento" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; min-height: 70px; transition: all 0.3s ease; resize: vertical;" onfocus="this.style.borderColor='#f43f5e'; this.style.boxShadow='0 0 0 3px rgba(244, 63, 94, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'"></textarea>
+                            <button onclick="ControlesSemana4.agregarEvento()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(244, 63, 94, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(244, 63, 94, 0.3)'">➕ Agregar Evento</button>
                         </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button onclick="document.getElementById('modalCalendario').classList.remove('active')">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -196,53 +203,65 @@ class ControlesSemana4 {
         // Modal Notificaciones
         const modalNotificaciones = `
             <div id="modalNotificaciones" class="modal">
-                <div class="modal-content">
-                    <h2>🔔 Sistema de Notificaciones <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')">✕</button></h2>
+                <div class="modal-content" style="max-width: 950px; max-height: 90vh; overflow-y: auto; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                    <!-- ENCABEZADO -->
+                    <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 30px; border-radius: 16px 16px 0 0; color: white; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; font-size: 24px; font-weight: 700;">🔔 Sistema de Notificaciones</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')" style="background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">✕</button>
+                    </div>
                     
-                    <div class="modal-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <h4>Configurar Preferencias</h4>
-                                <select id="selectEmpleadoNotif" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    <div class="modal-body" style="padding: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                            <!-- Configurar Preferencias -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(217, 119, 6, 0.08) 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">⚙️ Configurar Preferencias</h3>
+                                <select id="selectEmpleadoNotif" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
                                     <option>Seleccionar empleado</option>
                                 </select>
-                                <input type="email" id="inputEmailNotif" placeholder="Email" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
-                                <input type="tel" id="inputTelfNotif" placeholder="Teléfono" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
-                                <div style="margin: 10px 0;">
-                                    <label><input type="checkbox" id="checkPush"> Push</label>
-                                    <label><input type="checkbox" id="checkEmail"> Email</label>
-                                    <label><input type="checkbox" id="checkSMS"> SMS</label>
+                                <input type="email" id="inputEmailNotif" placeholder="Correo electrónico" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <input type="tel" id="inputTelfNotif" placeholder="Teléfono (WhatsApp)" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 0 0 3px rgba(245, 158, 11, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                <div style="margin: 12px 0; padding: 12px; background: white; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                    <label style="display: flex; align-items: center; margin: 8px 0; cursor: pointer; color: #475569;">
+                                        <input type="checkbox" id="checkPush" style="margin-right: 8px; cursor: pointer;"> 
+                                        <span>📲 Push Notifications</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin: 8px 0; cursor: pointer; color: #475569;">
+                                        <input type="checkbox" id="checkEmail" style="margin-right: 8px; cursor: pointer;"> 
+                                        <span>📧 Email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; margin: 8px 0; cursor: pointer; color: #475569;">
+                                        <input type="checkbox" id="checkSMS" style="margin-right: 8px; cursor: pointer;"> 
+                                        <span>💬 SMS/WhatsApp</span>
+                                    </label>
                                 </div>
-                                <button onclick="ControlesSemana4.configurarPreferencias()" style="width: 100%; margin-top: 10px;">Guardar Preferencias</button>
+                                <button onclick="ControlesSemana4.configurarPreferencias()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(245, 158, 11, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(245, 158, 11, 0.3)'">💾 Guardar Preferencias</button>
                             </div>
                             
-                            <div>
-                                <h4>Historial de Notificaciones</h4>
-                                <div id="historialNotif" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 12px;">
-                                    Cargando...
+                            <!-- Historial -->
+                            <div style="padding: 24px; background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%); border-radius: 12px; border-left: 4px solid #0ea5e9;">
+                                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">📜 Historial de Notificaciones</h3>
+                                <div id="historialNotif" style="max-height: 280px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background: white; font-size: 13px;">
+                                    <div style="color: #94a3b8; text-align: center; padding: 20px;">Cargando...</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Enviar Notificación Manual</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <select id="selectEmpleadoEnviar" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option>Empleado</option>
+                        <!-- Enviar Notificación Manual -->
+                        <div style="padding: 24px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(109, 40, 217, 0.08) 100%); border-radius: 12px; border-left: 4px solid #8b5cf6;">
+                            <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">📤 Enviar Notificación Manual</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <select id="selectEmpleadoEnviar" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                    <option>Seleccionar empleado</option>
                                 </select>
-                                <select id="selectTipoNotif" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <option value="cambio">Cambio de Turno</option>
-                                    <option value="recordatorio">Recordatorio</option>
-                                    <option value="alerta">Alerta</option>
+                                <select id="selectTipoNotif" style="padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                                    <option value="cambio">📋 Cambio de Turno</option>
+                                    <option value="recordatorio">⏰ Recordatorio</option>
+                                    <option value="alerta">🚨 Alerta</option>
                                 </select>
                             </div>
-                            <textarea id="inputMensajeNotif" placeholder="Mensaje" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; min-height: 60px;"></textarea>
-                            <button onclick="ControlesSemana4.enviarNotificacionManual()" style="width: 100%; margin-top: 10px;">📤 Enviar Notificación</button>
+                            <textarea id="inputMensajeNotif" placeholder="Escribe el mensaje a enviar..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; min-height: 80px; transition: all 0.3s ease; resize: vertical;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'"></textarea>
+                            <button onclick="ControlesSemana4.enviarNotificacionManual()" style="width: 100%; padding: 12px; margin-top: 12px; background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(139, 92, 246, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.3)'">📤 Enviar Notificación</button>
                         </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button onclick="document.getElementById('modalNotificaciones').classList.remove('active')">Cerrar</button>
                     </div>
                 </div>
             </div>
