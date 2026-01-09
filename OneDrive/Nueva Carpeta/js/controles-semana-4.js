@@ -418,7 +418,8 @@ class ControlesSemana4 {
             return;
         }
 
-        const resultado = IntegracionCalendario.descargarICAL(parseInt(empleadoId), parseInt(mes), 2025);
+        const año = AppState?.currentYear || new Date().getFullYear();
+        const resultado = IntegracionCalendario.descargarICAL(parseInt(empleadoId), parseInt(mes), año);
         if (resultado.exito) {
             alert('✅ iCal descargado');
         } else {
