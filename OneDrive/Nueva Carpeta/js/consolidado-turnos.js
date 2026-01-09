@@ -297,5 +297,4 @@ const ConsolidadoTurnos = (function() {
     };
 })();
 
-window.ConsolidadoTurnos = ConsolidadoTurnos;
 console.log('[ConsolidadoTurnos] ✅ Sistema unificado de tipos de turnos cargado');

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Leyenda Dinámica</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        #leyendaTurnos {
+            margin-top: 20px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(11, 18, 32, 0.7) 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-height: 100px;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        input[type="color"], input[type="text"], button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test - Leyenda Dinámica</h1>
+        
+        <div class="info">
+            <strong>Propósito:</strong> Verificar que la leyenda se genera dinámicamente desde JavaScript y que los colores se actualizan desde localStorage.
+        </div>
+        
+        <!-- Leyenda generada dinámicamente -->
+        <h2>Leyenda de Turnos (Generada Dinámicamente)</h2>
+        <div id="leyendaTurnos" style="margin-top: 20px; padding: 20px 24px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(11, 18, 32, 0.7) 100%); border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <!-- Se rellena con JavaScript -->
+        </div>
+        
+        <!-- Controles para probar actualización -->
+        <div class="controls">
+            <h3>🎨 Controles de Prueba</h3>
+            
+            <div class="control-group">
+                <label for="turnoSelect">Seleccionar turno a cambiar:</label>
+                <select id="turnoSelect" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 14px;">
+                    <option value="mañana">Mañana</option>
+                    <option value="tarde">Tarde</option>
+                    <option value="noche">Noche</option>
+                    <option value="mixto">Mixto</option>
+                    <option value="descanso">Descanso</option>
+                    <option value="vacaciones">Vacaciones</option>
+                    <option value="baja">Baja</option>
+                    <option value="libre">Libre</option>
+                    <option value="festivo">Festivo</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="colorPicker">Seleccionar nuevo color:</label>
+                <input type="color" id="colorPicker" value="#d4edda">
+            </div>
+            
+            <button onclick="cambiarColorTurno()">🔄 Actualizar Color</button>
+            <button onclick="generarLeyendaDinamica()">🔄 Regenerar Leyenda</button>
+            <button onclick="limpiarLocalStorage()">🗑️ Limpiar localStorage</button>
+            <button onclick="mostrarDatos()">📊 Mostrar Datos</button>
+        </div>
+        
+        <!-- Estado y debug -->
+        <div class="status" id="status">
+            <strong>Estado:</strong><br/>
+            Esperando acciones...
+        </div>
+    </div>
+    
+    <script>
+        // Objeto global de tipos de turnos (simula tiposTurno del HTML principal)
+        const tiposTurno = {
+            mañana: {
+                id: 1,
+                nombre: 'Mañana',
+                inicial: 'M',
+                horario: '08:00-16:00',
+                horas: 8,
+                color: '#d4edda'
+            },
+            tarde: {
+                id: 2,
+                nombre: 'Tarde',
+                inicial: 'T',
+                horario: '16:00-00:00',
+                horas: 8,
+                color: '#fff3cd'
+            },
+            noche: {
+                id: 3,
+                nombre: 'Noche',
+                inicial: 'N',
+                horario: '00:00-08:00',
+                horas: 8,
+                color: '#f8d7da'
+            },
+            mixto: {
+                id: 4,
+                nombre: 'Mixto',
+                inicial: 'X',
+                horario: '08:00-16:00 / 16:00-00:00',
+                horas: 16,
+                color: '#cce5ff'
+            },
+            descanso: {
+                id: 5,
+                nombre: 'Descanso',
+                inicial: 'D',
+                horario: '-',
+                horas: 0,
+                color: '#e2e3e5'
+            },
+            vacaciones: {
+                id: 6,
+                nombre: 'Vacaciones',
+                inicial: 'V',
+                horario: '-',
+                horas: 0,
+                color: '#d0ebff'
+            },
+            baja: {
+                id: 7,
+                nombre: 'Baja',
+                inicial: 'B',
+                horario: '-',
+                horas: 0,
+                color: '#ffe3e3'
+            },
+            libre: {
+                id: 8,
+                nombre: 'Libre',
+                inicial: 'L',
+                horario: '-',
+                horas: 0,
+                color: '#e0e0e0'
+            },
+            festivo: {
+                id: 9,
+                nombre: 'Festivo',
+                inicial: 'F',
+                horario: '-',
+                horas: 0,
+                color: '#fff9e6'
+            }
+        };
+        
+        // Función para generar la leyenda dinámicamente (COPIADA DEL ARCHIVO PRINCIPAL)
+        function generarLeyendaDinamica() {
+            const contenedor = document.getElementById('leyendaTurnos');
+            if (!contenedor) return;
+            
+            // Primero, crear un objeto con los colores predeterminados
+            let tiposTurnoConfig = {};
+            
+            // Si existe tiposTurno global, usarlo como base (incluye todos los campos)
+            if (typeof tiposTurno !== 'undefined' && tiposTurno) {
+                for (const [clave, datos] of Object.entries(tiposTurno)) {
+                    tiposTurnoConfig[clave] = {
+                        color: datos.color || '#d4edda',
+                        nombre: datos.nombre || clave.charAt(0).toUpperCase() + clave.slice(1)
+                    };
+                }
+            } else {
+                // Fallback: colores predeterminados si tiposTurno no existe
+                tiposTurnoConfig = {
+                    mañana: { color: '#d4edda', nombre: 'Mañana' },
+                    tarde: { color: '#fff3cd', nombre: 'Tarde' },
+                    noche: { color: '#f8d7da', nombre: 'Noche' },
+                    mixto: { color: '#cce5ff', nombre: 'Mixto' },
+                    descanso: { color: '#e2e3e5', nombre: 'Descanso' },
+                    vacaciones: { color: '#d0ebff', nombre: 'Vacaciones' },
+                    baja: { color: '#ffe3e3', nombre: 'Baja' },
+                    libre: { color: '#e0e0e0', nombre: 'Libre' },
+                    festivo: { color: '#fff9e6', nombre: 'Festivo' }
+                };
+            }
+            
+            // Si existen tipos de turnos guardados en localStorage, actualizar los colores
+            try {
+                const tiposTurnoGuardados = localStorage.getItem('tiposTurnoData');
+                if (tiposTurnoGuardados) {
+                    const tipos = JSON.parse(tiposTurnoGuardados);
+                    for (const [clave, datos] of Object.entries(tipos)) {
+                        if (tiposTurnoConfig[clave] && datos.color) {
+                            tiposTurnoConfig[clave].color = datos.color;
+                        }
+                        // Si el turno no existe aún en config pero existe en storage, agregarlo
+                        if (!tiposTurnoConfig[clave]) {
+                            tiposTurnoConfig[clave] = {
+                                color: datos.color || '#d4edda',
+                                nombre: datos.nombre || clave
+                            };
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('No se pudieron cargar colores desde localStorage:', e);
+            }
+            
+            // Generar HTML de la leyenda
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; align-items: center;">';
+            
+            for (const [clave, config] of Object.entries(tiposTurnoConfig)) {
+                html += `
+                    <div class="legend-item" style="display: flex; align-items: center; gap: 12px;">
+                        <div style="background: ${config.color}; width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span style="font-size: 15px; color: #e2e8f0; font-weight: 600;">${config.nombre}</span>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            contenedor.innerHTML = html;
+            
+            actualizarEstado('✅ Leyenda generada dinámicamente desde tiposTurno y localStorage');
+        }
+        
+        // Función para cambiar el color de un turno
+        function cambiarColorTurno() {
+            const turno = document.getElementById('turnoSelect').value;
+            const nuevoColor = document.getElementById('colorPicker').value;
+            
+            // Actualizar en tiposTurno global
+            if (tiposTurno[turno]) {
+                tiposTurno[turno].color = nuevoColor;
+                
+                // Guardar en localStorage
+                localStorage.setItem('tiposTurnoData', JSON.stringify(tiposTurno));
+                
+                // Regenerar leyenda
+                generarLeyendaDinamica();
+                
+                actualizarEstado(`✅ Color de '${turno}' actualizado a ${nuevoColor}`);
+            }
+        }
+        
+        // Función para limpiar localStorage
+        function limpiarLocalStorage() {
+            localStorage.clear();
+            actualizarEstado('✅ localStorage limpiado');
+        }
+        
+        // Función para mostrar los datos
+        function mostrarDatos() {
+            const datos = {
+                tiposTurnoGlobal: tiposTurno,
+                localStorage: JSON.parse(localStorage.getItem('tiposTurnoData') || '{}')
+            };
+            console.log('📊 Datos:', datos);
+            actualizarEstado(`📊 Ver consola (F12) para ver los datos. localStorage contiene ${Object.keys(datos.localStorage).length} tipos de turnos.`);
+        }
+        
+        // Función para actualizar el estado
+        function actualizarEstado(mensaje) {
+            const statusDiv = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString('es-ES');
+            statusDiv.innerHTML += `[${timestamp}] ${mensaje}<br/>`;
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        }
+        
+        // Inicializar cuando carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Test iniciado');
+            generarLeyendaDinamica();
+            actualizarEstado('🚀 Test iniciado - Leyenda generada');
+        });
+    </script>
+</body>
+</html>

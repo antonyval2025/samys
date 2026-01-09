@@ -22,7 +22,19 @@ const UIIntegracionDepartamentos = (function() {
         console.log('[UIIntegracionDepartamentos] 🔄 Sincronizando departamentos antiguos → FASE 2');
 
         // Obtener departamentos del sistema antiguo
-        const deptos = DepartmentManager.departamentos || [];
+        let deptos = DepartmentManager.departamentos || [];
+        
+        // VALIDACIÓN: Si deptos es un objeto, convertir a array
+        if (deptos && typeof deptos === 'object' && !Array.isArray(deptos)) {
+            console.warn('[UIIntegracionDepartamentos] ⚠️ departamentos es un objeto, convirtiendo a array...');
+            deptos = Object.values(deptos);
+        }
+        
+        // Asegurar que es un array
+        if (!Array.isArray(deptos)) {
+            console.error('[UIIntegracionDepartamentos] ❌ departamentos no es un array válido:', deptos);
+            deptos = [];
+        }
         
         deptos.forEach(depto => {
             // Sincronizar cada uno a través del método de FASE 2 (incluir estándares)

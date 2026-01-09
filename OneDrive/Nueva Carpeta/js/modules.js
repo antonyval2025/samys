@@ -1519,7 +1519,28 @@ class TurnoManager {
             }
         }
         
-        if (!tieneEmpleadosConDatosDelMes) {
+        // 🔥 NUEVO: Si no hay datos en el mes actual, cambiar al primer mes disponible
+        if (!tieneEmpleadosConDatosDelMes && mesesDisponibles.size > 0) {
+            const [primerMes] = Array.from(mesesDisponibles)[0].split('/');
+            const mesNumerico = parseInt(primerMes);
+            console.log(`[TurnoManager.reiniciarDatos] 🔄 Mes actual ${AppState.currentMonth} está vacío. Cambiando a mes ${mesNumerico} (primero con datos)`);
+            AppState.currentMonth = mesNumerico;
+            
+            // Actualizar selector en UI
+            const selectMonth = document.getElementById('selectMonth');
+            if (selectMonth) {
+                selectMonth.value = mesNumerico;
+                console.log(`[TurnoManager.reiniciarDatos] 📊 Selector actualizado a mes ${mesNumerico}`);
+            }
+            
+            // Regenerar tabla
+            if (typeof UI !== 'undefined' && typeof UI.generarCuadranteGeneral === 'function') {
+                UI.generarCuadranteGeneral();
+                console.log(`[TurnoManager.reiniciarDatos] 🔄 Tabla regenerada para mes ${mesNumerico}`);
+            }
+            
+            tieneEmpleadosConDatosDelMes = true;
+        } else if (!tieneEmpleadosConDatosDelMes) {
             console.log(`[TurnoManager.reiniciarDatos] ⭕ NO hay datos para ${AppState.currentMonth}/${AppState.currentYear} - Se mostrarán en ceros`);
         } else {
             console.log(`[TurnoManager.reiniciarDatos] ✅ Cuadrante tiene datos del mes actual`);

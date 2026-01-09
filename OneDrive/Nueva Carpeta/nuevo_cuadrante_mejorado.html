@@ -3845,27 +3845,6 @@ ex<!DOCTYPE html>
                                     return;
                                 }
                                 
-                                // DIAGNÓSTICO: Ver exactamente qué hay en scheduleData
-                                console.log('🔍 DIAGNÓSTICO AppState.scheduleData:');
-                                console.log('  Tipo:', typeof window.AppState.scheduleData);
-                                console.log('  Es Map?:', window.AppState.scheduleData instanceof Map);
-                                
-                                if (window.AppState.scheduleData instanceof Map) {
-                                    console.log('  Tamaño del Map:', window.AppState.scheduleData.size);
-                                    console.log('  Keys del Map:', Array.from(window.AppState.scheduleData.keys()));
-                                    
-                                    // Ver primer empleado
-                                    const primerKey = Array.from(window.AppState.scheduleData.keys())[0];
-                                    if (primerKey) {
-                                        const primerArray = window.AppState.scheduleData.get(primerKey);
-                                        console.log(`  Empleado ${primerKey}: ${primerArray?.length || 0} turnos`);
-                                        if (primerArray && primerArray.length > 0) {
-                                            console.log('    Primer turno:', JSON.stringify(primerArray[0]));
-                                            console.log('    Segundo turno:', JSON.stringify(primerArray[1]));
-                                        }
-                                    }
-                                }
-                                
                                 let totalEmpleados = window.empleados ? window.empleados.length : 0;
                                 let totalHoras = 0;
                                 let turnosMañana = 0;
@@ -3876,7 +3855,7 @@ ex<!DOCTYPE html>
                                 // Filtrar solo por el mes ACTUAL
                                 const mesActual = AppState.currentMonth;
                                 const anioActual = AppState.currentYear;
-                                console.log(`🔄 Filtrando turnos para mes ${mesActual}/${anioActual}...`);
+                                console.log(`🔄 KPIs: Filtrando turnos para mes ${mesActual}/${anioActual} (Map size: ${AppState.scheduleData.size})`);
                                 
                                 if (window.empleados && window.empleados.length > 0) {
                                     window.empleados.forEach(empleado => {
@@ -3888,8 +3867,6 @@ ex<!DOCTYPE html>
                                             return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
                                         });
                                         
-                                        console.log(`  📋 Empleado ${empleado.id} (${empleado.nombre}): ${turnosDelMes.length}/${turnos.length} turnos (mes ${mesActual})`);
-                                        
                                         // Contar turnos del mes actual
                                         turnosDelMes.forEach((turno, idx) => {
                                             if (turno) {
@@ -3898,11 +3875,6 @@ ex<!DOCTYPE html>
                                                 if (turno.turno === 'mañana') turnosMañana++;
                                                 if (turno.turno === 'tarde') turnosTarde++;
                                                 if (turno.turno === 'noche') turnosNoche++;
-                                                
-                                                // Log de primeros 2 turnos para debuggear
-                                                if (idx < 2) {
-                                                    console.log(`    - Día ${turno.dia}: ${turno.turno} (${horas}h)`);
-                                                }
                                             }
                                         });
                                     });
@@ -3925,7 +3897,7 @@ ex<!DOCTYPE html>
                             } catch (e) {
                                 console.error('❌ Error actualizando KPIs:', e.message);
                             }
-                        }, 2000);
+                        }, 3500);
                     }
                     console.log('✓ Cuadrante general generado');
                 }

@@ -291,5 +291,4 @@ const ConsolidadoLocalidades = (function() {
     };
 })();
 
-window.ConsolidadoLocalidades = ConsolidadoLocalidades;
 console.log('[ConsolidadoLocalidades] ✅ Sistema unificado de localidades cargado');
