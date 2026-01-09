@@ -507,21 +507,88 @@ class ControlesSemana4 {
         const tipo = document.getElementById('selectTipoNotif')?.value;
         const mensaje = document.getElementById('inputMensajeNotif')?.value;
 
-        if (!empleadoId || !mensaje) {
+        if (!empleadoId || empleadoId === 'Seleccionar empleado' || !mensaje) {
             alert('Rellena todos los campos');
             return;
         }
 
-        let resultado;
-        if (tipo === 'cambio') {
-            resultado = SistemaNotificaciones.notificarCambioTurno(parseInt(empleadoId), '2025-01-15', 'mañana', 'tarde', 'Manual');
-        } else if (tipo === 'recordatorio') {
-            resultado = SistemaNotificaciones.enviarRecordatorioTurno(parseInt(empleadoId), '2025-01-15', 'noche', 1440);
-        } else {
-            resultado = SistemaNotificaciones.alertarConflicto(parseInt(empleadoId), 'Alerta Manual', mensaje);
+        const empleado = empleados.find(e => e.id === parseInt(empleadoId));
+        if (!empleado) {
+            alert('❌ Empleado no encontrado');
+            return;
         }
 
-        alert(resultado.exito ? '✅ Notificación enviada' : '❌ ' + resultado.mensaje);
+        // Obtener preferencias guardadas del empleado
+        const preferencias = SistemaNotificaciones.configuracion.preferencias.get(parseInt(empleadoId));
+        
+        if (!preferencias) {
+            alert('⚠️ Configura las preferencias del empleado antes de enviar');
+            return;
+        }
+
+        // Construir mensaje con información del tipo
+        let mensajeCompleto = `📧 Notificación: ${tipo.toUpperCase()}\n\n${mensaje}`;
+
+        // Enviar según los canales configurados
+        const canales = preferencias.canales || ['push'];
+        
+        if (canales.includes('email') && preferencias.email) {
+            // Enviar por Email (simulado - mostrar confirmación)
+            const resultado = SistemaNotificaciones.encolarEmailNotificacion(
+                parseInt(empleadoId),
+                {
+                    textos: {
+                        asunto: `Notificación: ${tipo}`,
+                        body: mensaje,
+                        push: tipo
+                    }
+                },
+                preferencias.email
+            );
+            
+            if (resultado.exito) {
+                NotificationSystem.show(
+                    `✅ Email encolado para ${empleado.nombre}\n📧 ${preferencias.email}`, 
+                    'success'
+                );
+            }
+        }
+
+        if (canales.includes('sms') && preferencias.telefono) {
+            // Enviar por WhatsApp
+            const telefonoFormateado = preferencias.telefono.replace(/\D/g, '');
+            const mensajeEncodificado = encodeURIComponent(mensajeCompleto);
+            window.open(`https://wa.me/${telefonoFormateado}?text=${mensajeEncodificado}`, '_blank');
+            
+            NotificationSystem.show(
+                `✅ WhatsApp abierto para ${empleado.nombre}\n💬 ${preferencias.telefono}`, 
+                'success'
+            );
+        }
+
+        if (canales.includes('push')) {
+            // Notificación push en navegador
+            const resultado = SistemaNotificaciones.enviarPushNotification(
+                parseInt(empleadoId),
+                {
+                    tipo: tipo,
+                    textos: {
+                        asunto: `Notificación: ${tipo}`,
+                        body: mensaje,
+                        push: tipo
+                    }
+                }
+            );
+            
+            if (resultado.exito) {
+                NotificationSystem.show(`✅ Push notification enviada`, 'success');
+            }
+        }
+
+        // Limpiar formulario
+        document.getElementById('selectEmpleadoEnviar').value = '';
+        document.getElementById('selectTipoNotif').value = 'cambio';
+        document.getElementById('inputMensajeNotif').value = '';
     }
 
     static autoRellenarDatosEmpleado() {
