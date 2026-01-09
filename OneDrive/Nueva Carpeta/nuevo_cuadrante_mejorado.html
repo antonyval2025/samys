@@ -544,6 +544,7 @@ ex<!DOCTYPE html>
                 <button class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2);" onclick="ConsolidadoLocalidades.abrirModal()">📍 Localidades</button>
                 <button class="action-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.2);" onclick="ConsolidadoTurnos.abrirModal()">⏰ Turnos</button>
                 <button class="action-btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; box-shadow: 0 2px 5px rgba(99, 102, 241, 0.2);" onclick="ChatBot.abrirModal()">🤖 Chat</button>
+                <button id="btnRecargarDatos" class="action-btn" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; box-shadow: 0 2px 5px rgba(20, 184, 166, 0.3); transition: all 0.3s ease;" onclick="(function() { const btn = document.getElementById('btnRecargarDatos'); btn.style.opacity = '0.6'; btn.disabled = true; NotificationSystem.show('🔄 Recargando datos...', 'info'); AppState.loadFromStorage().then(() => { UI.generarCuadranteGeneral(); NotificationSystem.show('✅ Datos recargados', 'success'); btn.style.opacity = '1'; btn.disabled = false; }).catch(e => { NotificationSystem.show('❌ Error recargando', 'error'); btn.style.opacity = '1'; btn.disabled = false; }); })()">🔄 Recargar</button>
                 <!-- Botón Generar Turnos - Solo visible cuando cuadrante está vacío -->
                 <button id="btnGenerarTurnos" class="action-btn" style="display: block !important; z-index: 9999; position: relative; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; padding: 12px 20px; font-weight: bold; font-size: 16px; border: 2px solid #047857;" onclick="(function() { if (typeof window.TurnoManager?.mostrarModalGeneracion === 'function') { window.TurnoManager.mostrarModalGeneracion(); } else { console.warn('⏳ Esperando a que TurnoManager cargue...'); let intentos = 0; const esperar = setInterval(() => { if (typeof window.TurnoManager?.mostrarModalGeneracion === 'function') { clearInterval(esperar); window.TurnoManager.mostrarModalGeneracion(); } else if (++intentos > 60) { clearInterval(esperar); console.error('❌ Timeout'); alert('Error: módulos no cargaron. Recarga la página'); } }, 100); } })()">📋 GENERAR TURNOS</button>
             </div>
@@ -625,6 +626,13 @@ ex<!DOCTYPE html>
                             <div class="stat-label" style="font-size: 14px; margin-top: 8px;">Turnos Noche</div>
                         </div>
                     </div>
+                </div>
+
+                <!-- 🔄 BOTÓN RECARGAR DATOS -->
+                <div style="margin-top: 16px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button id="btnRecargarDatos" onclick="recargarDatos()" style="padding: 10px 20px; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                        🔄 Recargar Datos
+                    </button>
                 </div>
 
                 <!-- 3️⃣ ANÁLISIS VISUAL - A lo ancho completo -->
@@ -4109,6 +4117,93 @@ ex<!DOCTYPE html>
                 console.error('Error en inicialización:', error);
             }
         });
+
+        // 🔄 FUNCIÓN PARA RECARGAR DATOS
+        async function recargarDatos() {
+            console.log('🔄 Recargando datos...');
+            const btnRecargar = document.getElementById('btnRecargarDatos');
+            if (btnRecargar) {
+                btnRecargar.disabled = true;
+                btnRecargar.style.opacity = '0.6';
+                btnRecargar.textContent = '⏳ Recargando...';
+            }
+            
+            try {
+                // Limpiar datos actuales
+                if (window.AppState && window.AppState.scheduleData) {
+                    window.AppState.scheduleData.clear();
+                    console.log('✓ Datos anteriores limpiados');
+                }
+                
+                // Recargar desde API/BD
+                if (window.AppState && typeof window.AppState.loadFromStorage === 'function') {
+                    await window.AppState.loadFromStorage();
+                    console.log('✓ Datos recargados desde BD');
+                }
+                
+                // Regenerar tabla
+                if (window.UI && typeof window.UI.generarCuadranteGeneral === 'function') {
+                    window.UI.generarCuadranteGeneral();
+                    console.log('✓ Tabla regenerada');
+                }
+                
+                // Actualizar KPIs después de 1 segundo
+                setTimeout(() => {
+                    const mesActual = AppState.currentMonth;
+                    const anioActual = AppState.currentYear;
+                    let totalEmpleados = window.empleados ? window.empleados.length : 0;
+                    let totalHoras = 0;
+                    let turnosMañana = 0;
+                    let turnosTarde = 0;
+                    let turnosNoche = 0;
+                    
+                    if (window.empleados && window.empleados.length > 0) {
+                        window.empleados.forEach(empleado => {
+                            const turnos = window.AppState.scheduleData.get(empleado.id) || [];
+                            const turnosDelMes = turnos.filter(t => {
+                                const fecha = new Date(t.fecha);
+                                return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
+                            });
+                            
+                            turnosDelMes.forEach((turno, idx) => {
+                                if (turno) {
+                                    const horas = turno.horas || 0;
+                                    totalHoras += horas;
+                                    if (turno.turno === 'mañana') turnosMañana++;
+                                    if (turno.turno === 'tarde') turnosTarde++;
+                                    if (turno.turno === 'noche') turnosNoche++;
+                                }
+                            });
+                        });
+                    }
+                    
+                    const totalEmpleadosEl = document.getElementById('totalEmpleadosGeneral');
+                    const totalHorasEl = document.getElementById('totalHorasGeneral');
+                    const turnosMañanaEl = document.getElementById('turnosMañanaGeneral');
+                    const turnosTardeEl = document.getElementById('turnosTardeGeneral');
+                    const turnosNocheEl = document.getElementById('turnosNocheGeneral');
+                    
+                    if (totalEmpleadosEl) totalEmpleadosEl.textContent = totalEmpleados;
+                    if (totalHorasEl) totalHorasEl.textContent = totalHoras.toFixed(1);
+                    if (turnosMañanaEl) turnosMañanaEl.textContent = turnosMañana;
+                    if (turnosTardeEl) turnosTardeEl.textContent = turnosTarde;
+                    if (turnosNocheEl) turnosNocheEl.textContent = turnosNoche;
+                    
+                    console.log('✓ KPIs actualizados');
+                }, 1000);
+                
+                NotificationSystem.show('✅ Datos recargados correctamente', 'success', 3000);
+            } catch (error) {
+                console.error('❌ Error recargando datos:', error);
+                NotificationSystem.show('❌ Error al recargar datos', 'error', 3000);
+            } finally {
+                if (btnRecargar) {
+                    btnRecargar.disabled = false;
+                    btnRecargar.style.opacity = '1';
+                    btnRecargar.textContent = '🔄 Recargar Datos';
+                }
+            }
+        }
     </script>
 
     <!-- Fallback INMEDIATO: Crear objetos base antes que todo para evitar undefined -->
