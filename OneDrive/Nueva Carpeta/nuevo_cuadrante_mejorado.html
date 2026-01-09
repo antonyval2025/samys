@@ -593,120 +593,92 @@ ex<!DOCTYPE html>
                 <div id="cuadranteGeneral"></div>
                 
                 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-                <!-- ║              SECCIÓN DE ANÁLISIS Y ESTADÍSTICAS                  ║ -->
+                <!-- ║         ANÁLISIS Y ESTADÍSTICAS - COHERENTE CON CUADRANTE       ║ -->
                 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-                <!-- 1️⃣ LEYENDA DE TURNOS - Código de colores en horizontal -->
-                <div style="margin-top: 24px; padding: 16px 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(11, 18, 32, 0.8) 100%); border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                    <h3 style="color: #e2e8f0; margin: 0 0 14px 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                        <span>🎨</span> Leyenda
-                    </h3>
-                    <div class="legend" style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
-                        <div class="legend-item"><div class="legend-color" style="background: #d4edda; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Mañana</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #fff3cd; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Tarde</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #f8d7da; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Noche</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #cce5ff; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Mixto</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #e2e3e5; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Descanso</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #d0ebff; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Vacaciones</span></div>
-                        <div class="legend-item"><div class="legend-color" style="background: #ffe3e3; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px;">Baja</span></div>
+                <!-- 1️⃣ LEYENDA - Coherente con tabla principal -->
+                <div style="margin-top: 15px; padding: 12px 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(11, 18, 32, 0.6) 100%); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                        <div class="legend-item"><div class="legend-color" style="background: #d4edda; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Mañana</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #fff3cd; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Tarde</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #f8d7da; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Noche</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #cce5ff; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Mixto</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #e2e3e5; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Descanso</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #d0ebff; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Vacaciones</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: #ffe3e3; width: 12px; height: 12px; border-radius: 2px;"></div><span style="font-size: 12px; color: #e2e8f0;">Baja</span></div>
                     </div>
                 </div>
 
-                <!-- 2️⃣ KPIs RESUMEN + ANÁLISIS VISUAL en una fila -->
-                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;">
-                    <!-- Lado izquierdo: Stats -->
-                    <div>
-                        <h3 style="color: #e2e8f0; margin: 0 0 14px 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            <span>📊</span> Estadísticas
-                        </h3>
-                        <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
-                            <div class="stat-card">
-                                <div class="stat-value" id="totalEmpleadosGeneral" style="font-size: 28px;">0</div>
-                                <div class="stat-label" style="font-size: 11px;">Empleados</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="totalHorasGeneral" style="font-size: 28px;">0</div>
-                                <div class="stat-label" style="font-size: 11px;">Horas</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="turnosMañanaGeneral" style="font-size: 28px;">0</div>
-                                <div class="stat-label" style="font-size: 11px;">Mañana</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="turnosNocheGeneral" style="font-size: 28px;">0</div>
-                                <div class="stat-label" style="font-size: 11px;">Noche</div>
-                            </div>
+                <!-- 2️⃣ KPIs ESTADÍSTICAS - A lo ancho completo, misma estructura que tabla -->
+                <div style="margin-top: 15px;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalEmpleadosGeneral">0</div>
+                            <div class="stat-label">Total Empleados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalHorasGeneral">0</div>
+                            <div class="stat-label">Horas Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="turnosMañanaGeneral">0</div>
+                            <div class="stat-label">Turnos Mañana</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="turnosNocheGeneral">0</div>
+                            <div class="stat-label">Turnos Noche</div>
                         </div>
                     </div>
-
-                    <!-- Lado derecho: Análisis Visual -->
-                    <div style="padding: 16px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%); border-radius: 12px; border: 2px solid rgba(139, 92, 246, 0.3); box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);">
-                        <h3 style="color: #e2e8f0; margin: 0 0 12px 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            <span>📈</span> Carga
-                        </h3>
-                        <div id="calendarioVisual" style="min-height: 150px;"></div>
-                    </div>
                 </div>
 
-                <!-- 3️⃣ FILTROS Y CONTROLES en horizontal -->
-                <div style="margin-top: 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(11, 18, 32, 0.8) 100%); padding: 16px 20px; border-radius: 12px; border: 1px solid rgba(14, 165, 233, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                    
-                    <h3 style="color: #e2e8f0; margin: 0 0 14px 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                        <span>🔍</span> Filtros
-                    </h3>
+                <!-- 3️⃣ ANÁLISIS VISUAL - Ancho completo, misma presentación -->
+                <div style="margin-top: 15px; padding: 20px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.08) 100%); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    <div id="calendarioVisual" style="min-height: 180px;"></div>
+                </div>
 
-                    <!-- Grid de 3 columnas para filtros -->
-                    <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 16px; margin-bottom: 14px;">
+                <!-- 4️⃣ FILTROS Y CONTROLES - Ancho completo, horizontal, estilo cuadrante -->
+                <div style="margin-top: 15px; padding: 15px 20px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(11, 18, 32, 0.6) 100%); border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    
+                    <!-- Grid de filtros 3 columnas -->
+                    <div style="display: grid; grid-template-columns: 1fr 1.2fr 0.8fr; gap: 16px; margin-bottom: 12px;">
                         <!-- Filtro por Empleado -->
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; font-size: 12px;">👤 Empleado</label>
-                            <select id="filtroEmpleadoCalendario" style="width: 100%; padding: 8px 10px; border: 2px solid rgba(14, 165, 233, 0.3); border-radius: 6px; font-size: 13px; background: #0f172a; color: #e2e8f0; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onchange="if(this.value) FiltroCalendario.filtrarPorEmpleado(parseInt(this.value)); else FiltroCalendario.resetearFiltros();">
+                            <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #cbd5e1; font-size: 12px;">Empleado</label>
+                            <select id="filtroEmpleadoCalendario" style="width: 100%; padding: 8px 10px; border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 6px; font-size: 12px; background: #0f172a; color: #e2e8f0; transition: all 0.2s ease;" onchange="if(this.value) FiltroCalendario.filtrarPorEmpleado(parseInt(this.value)); else FiltroCalendario.resetearFiltros();">
                                 <option value="">Todos</option>
                             </select>
                         </div>
 
                         <!-- Filtro por Carga -->
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; font-size: 12px;">⚖️ Carga</label>
-                            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
-                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 12px; white-space: nowrap;">
-                                    <input type="radio" name="filtro-carga" value="todos" checked onchange="if(this.checked) FiltroCalendario.resetearFiltros();" style="width: 16px; height: 16px;">
-                                    Todos
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 12px; white-space: nowrap;">
-                                    <input type="radio" name="filtro-carga" value="baja" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('baja');" style="width: 16px; height: 16px;">
-                                    🟢 Baja
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 12px; white-space: nowrap;">
-                                    <input type="radio" name="filtro-carga" value="media" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('media');" style="width: 16px; height: 16px;">
-                                    🟡 Media
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 12px; white-space: nowrap;">
-                                    <input type="radio" name="filtro-carga" value="alta" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('alta');" style="width: 16px; height: 16px;">
-                                    🔴 Alta
-                                </label>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #cbd5e1; font-size: 12px;">Carga de Trabajo</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 400; font-size: 12px;"><input type="radio" name="filtro-carga" value="todos" checked onchange="if(this.checked) FiltroCalendario.resetearFiltros();" style="width: 14px; height: 14px;"> Todos</label>
+                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 400; font-size: 12px;"><input type="radio" name="filtro-carga" value="baja" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('baja');" style="width: 14px; height: 14px;"> 🟢 Baja</label>
+                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 400; font-size: 12px;"><input type="radio" name="filtro-carga" value="media" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('media');" style="width: 14px; height: 14px;"> 🟡 Media</label>
+                                <label style="display: flex; align-items: center; gap: 4px; color: #e2e8f0; cursor: pointer; font-weight: 400; font-size: 12px;"><input type="radio" name="filtro-carga" value="alta" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('alta');" style="width: 14px; height: 14px;"> 🔴 Alta</label>
                             </div>
                         </div>
 
-                        <!-- Mostrar Conflictos + Botones en una fila -->
+                        <!-- Mostrar Conflictos -->
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; font-size: 12px;">⚠️ Validación</label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; color: #e2e8f0; padding: 6px 10px; background: rgba(14, 165, 233, 0.1); border-radius: 6px; border: 1px solid rgba(14, 165, 233, 0.2); transition: all 0.3s ease; height: fit-content; white-space: nowrap;" onmouseover="this.style.background='rgba(14, 165, 233, 0.15)'; this.style.borderColor='rgba(14, 165, 233, 0.4)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.1)'; this.style.borderColor='rgba(14, 165, 233, 0.2)'">
-                                <input type="checkbox" id="mostrarConflictosCalendario" onchange="FiltroCalendario.toggleConflictos();" style="width: 16px; height: 16px; cursor: pointer;">
-                                <span style="font-size: 12px;">Conflictos</span>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 500; color: #cbd5e1; font-size: 12px;">Conflictos</label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 400; color: #e2e8f0; padding: 6px 10px; background: rgba(14, 165, 233, 0.08); border-radius: 6px; border: 1px solid rgba(14, 165, 233, 0.15); height: fit-content;" onmouseover="this.style.background='rgba(14, 165, 233, 0.12)'; this.style.borderColor='rgba(14, 165, 233, 0.3)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.08)'; this.style.borderColor='rgba(14, 165, 233, 0.15)'">
+                                <input type="checkbox" id="mostrarConflictosCalendario" onchange="FiltroCalendario.toggleConflictos();" style="width: 14px; height: 14px; cursor: pointer;">
+                                <span style="font-size: 12px;">Mostrar</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- Botones de acción en una línea -->
                     <div style="display: flex; gap: 10px; flex-wrap: nowrap;">
-                        <button class="action-btn" onclick="ExportadorCalendario.exportarEstadisticas()" style="flex: 1; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); white-space: nowrap;" onmouseover="this.style.boxShadow='0 4px 16px rgba(59, 130, 246, 0.5)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)'">
+                        <button class="action-btn" onclick="ExportadorCalendario.exportarEstadisticas()" style="flex: 1; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 12px; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(59, 130, 246, 0.15);" onmouseover="this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)'" onmouseout="this.style.boxShadow='0 2px 5px rgba(59, 130, 246, 0.15)'">
                             📊 Estadísticas
                         </button>
-                        <button class="action-btn" onclick="ExportadorCalendario.exportarAPDF()" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); white-space: nowrap;" onmouseover="this.style.boxShadow='0 4px 16px rgba(16, 185, 129, 0.5)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">
-                            📄 Exportar
+                        <button class="action-btn" onclick="ExportadorCalendario.exportarAPDF()" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 12px; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.15);" onmouseover="this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'" onmouseout="this.style.boxShadow='0 2px 5px rgba(16, 185, 129, 0.15)'">
+                            📄 Exportar PDF
                         </button>
-                        <button class="action-btn" onclick="FiltroCalendario.resetearFiltros()" style="flex: 0.8; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); white-space: nowrap;" onmouseover="this.style.boxShadow='0 4px 16px rgba(245, 158, 11, 0.5)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(245, 158, 11, 0.3)'">
+                        <button class="action-btn" onclick="FiltroCalendario.resetearFiltros()" style="flex: 0.8; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 12px; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.15);" onmouseover="this.style.boxShadow='0 2px 8px rgba(245, 158, 11, 0.3)'" onmouseout="this.style.boxShadow='0 2px 5px rgba(245, 158, 11, 0.15)'">
                             🔄 Reset
                         </button>
                     </div>
