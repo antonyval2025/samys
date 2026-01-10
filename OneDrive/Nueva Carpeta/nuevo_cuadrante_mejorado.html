@@ -3945,14 +3945,18 @@ ex<!DOCTYPE html>
                 if (selectYear) {
                     selectYear.addEventListener('change', async () => {
                         const nuevoAño = parseInt(selectYear.value);
+                        console.log(`🔄 [selectYear.change] Cambio detectado: ${AppState.currentYear} → ${nuevoAño}`);
                         if (nuevoAño !== AppState.currentYear) {
                             AppState.setYear(nuevoAño);
                             await TurnoManager.reiniciarDatos();
                             // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
                             
+                            console.log(`📊 [selectYear.change] Ejecutando actualizarKPIs de forma asíncrona...`);
                             // Actualizar KPIs en background (no espera)
                             if (typeof window.actualizarKPIs === 'function') {
-                                window.actualizarKPIs().catch(e => console.error('Error en actualizarKPIs:', e));
+                                window.actualizarKPIs().catch(e => console.error('❌ Error en actualizarKPIs:', e));
+                            } else {
+                                console.warn('⚠️ [selectYear.change] window.actualizarKPIs no está definida');
                             }
                         }
                     });
@@ -3961,14 +3965,18 @@ ex<!DOCTYPE html>
                 if (selectMonth) {
                     selectMonth.addEventListener('change', async () => {
                         const nuevoMes = parseInt(selectMonth.value);
+                        console.log(`🔄 [selectMonth.change] Cambio detectado: ${AppState.currentMonth} → ${nuevoMes}`);
                         if (nuevoMes !== AppState.currentMonth) {
                             AppState.setMonth(nuevoMes);
                             await TurnoManager.reiniciarDatos();
                             // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
                             
+                            console.log(`📊 [selectMonth.change] Ejecutando actualizarKPIs de forma asíncrona...`);
                             // Actualizar KPIs en background (no espera)
                             if (typeof window.actualizarKPIs === 'function') {
-                                window.actualizarKPIs().catch(e => console.error('Error en actualizarKPIs:', e));
+                                window.actualizarKPIs().catch(e => console.error('❌ Error en actualizarKPIs:', e));
+                            } else {
+                                console.warn('⚠️ [selectMonth.change] window.actualizarKPIs no está definida');
                             }
                         }
                     });
