@@ -3945,19 +3945,9 @@ ex<!DOCTYPE html>
                 if (selectYear) {
                     selectYear.addEventListener('change', async () => {
                         const nuevoAño = parseInt(selectYear.value);
-                        console.log(`🔄 [selectYear.change] Cambio detectado: ${AppState.currentYear} → ${nuevoAño}`);
                         if (nuevoAño !== AppState.currentYear) {
                             AppState.setYear(nuevoAño);
                             await TurnoManager.reiniciarDatos();
-                            // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
-                            
-                            console.log(`📊 [selectYear.change] Ejecutando actualizarKPIs de forma asíncrona...`);
-                            // Actualizar KPIs en background (no espera)
-                            if (typeof window.actualizarKPIs === 'function') {
-                                window.actualizarKPIs().catch(e => console.error('❌ Error en actualizarKPIs:', e));
-                            } else {
-                                console.warn('⚠️ [selectYear.change] window.actualizarKPIs no está definida');
-                            }
                         }
                     });
                 }
@@ -3965,19 +3955,9 @@ ex<!DOCTYPE html>
                 if (selectMonth) {
                     selectMonth.addEventListener('change', async () => {
                         const nuevoMes = parseInt(selectMonth.value);
-                        console.log(`🔄 [selectMonth.change] Cambio detectado: ${AppState.currentMonth} → ${nuevoMes}`);
                         if (nuevoMes !== AppState.currentMonth) {
                             AppState.setMonth(nuevoMes);
                             await TurnoManager.reiniciarDatos();
-                            // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
-                            
-                            console.log(`📊 [selectMonth.change] Ejecutando actualizarKPIs de forma asíncrona...`);
-                            // Actualizar KPIs en background (no espera)
-                            if (typeof window.actualizarKPIs === 'function') {
-                                window.actualizarKPIs().catch(e => console.error('❌ Error en actualizarKPIs:', e));
-                            } else {
-                                console.warn('⚠️ [selectMonth.change] window.actualizarKPIs no está definida');
-                            }
                         }
                     });
                 }
@@ -4103,22 +4083,15 @@ ex<!DOCTYPE html>
                 }
                 
                 const mesKeyBuscado = `${yearActual}-${mesActual}`;
-                console.log(`📅 Cargando KPIs para: ${mesKeyBuscado} (AppState: ${AppState.currentYear}-${AppState.currentMonth})`);
                 
                 // Cargar datos directamente desde la BD para cada empleado
                 for (const empleado of (window.empleados || [])) {
                     try {
                         const response = await fetch(`http://localhost:5001/api/turnos/${empleado.id}`, { timeout: 5000 });
-                        if (!response.ok) {
-                            console.warn(`⚠️ Error HTTP ${response.status} para empleado ${empleado.id}`);
-                            continue;
-                        }
+                        if (!response.ok) continue;
                         
                         const data = await response.json();
-                        if (!data.turnos) {
-                            console.warn(`⚠️ Sin datos de turnos para empleado ${empleado.id}`);
-                            continue;
-                        }
+                        if (!data.turnos) continue;
                         
                         // Contar turnos SOLO del mes seleccionado
                         const mesData = data.turnos[mesKeyBuscado];
@@ -4133,7 +4106,7 @@ ex<!DOCTYPE html>
                             });
                         }
                     } catch (e) {
-                        console.warn(`⚠️ Error cargando turnos de empleado ${empleado.id}: ${e.message}`);
+                        // Error silencioso
                     }
                 }
                 
@@ -4150,9 +4123,9 @@ ex<!DOCTYPE html>
                 if (turnosTardeEl) turnosTardeEl.textContent = turnosTarde;
                 if (turnosNocheEl) turnosNocheEl.textContent = turnosNoche;
                 
-                console.log(`✓ KPIs actualizados desde BD [${mesKeyBuscado}]: Empleados=${totalEmpleados}, Total Turnos=${totalTurnos}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Tarde=${turnosTarde}, Noche=${turnosNoche}`);
+                console.log(`✓ KPIs actualizados [${mesKeyBuscado}]: ${totalEmpleados} empleados, ${totalTurnos} turnos`);
             } catch (e) {
-                console.error('❌ Error actualizando KPIs:', e.message, e.stack);
+                console.error('❌ Error actualizando KPIs:', e.message);
             }
         };
 
