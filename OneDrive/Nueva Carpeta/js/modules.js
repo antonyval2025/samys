@@ -168,6 +168,10 @@ class AppState {
     static currentMonth = new Date().getMonth();
     static selectedEmployee = null;
     static scheduleData = new Map();
+    
+    // 🚀 CACHÉ: Almacenar datos por mes para evitar refetch innecesarios
+    static _apiCacheByMonth = new Map(); // { "2026-1": { empleadoId: [...turnos] } }
+    static _apiCacheTimestamp = new Map(); // { "2026-1": timestamp }
     static filters = {
         department: '',
         status: '',
@@ -277,6 +281,19 @@ class AppState {
             
             console.log(`[_cargarDesdeAPI] 📡 Cargando datos para ${mesKeyBuscado}...`);
             
+            // 🚀 VERIFICAR CACHÉ: Si ya tenemos datos cacheados para este mes, usarlos
+            if (this._apiCacheByMonth.has(mesKeyBuscado)) {
+                const datosEnCache = this._apiCacheByMonth.get(mesKeyBuscado);
+                console.log(`[_cargarDesdeAPI] ⚡ Usando caché para ${mesKeyBuscado}`);
+                
+                // Restaurar datos desde caché
+                this.scheduleData.clear();
+                for (const [empId, turnos] of Object.entries(datosEnCache)) {
+                    this.scheduleData.set(parseInt(empId), turnos);
+                }
+                return; // No hacer fetch, usar caché
+            }
+            
             const promesasAPI = empleados.map(empleado =>
                 fetch(`http://localhost:5001/api/turnos/${empleado.id}`)
                     .then(response => {
@@ -307,6 +324,9 @@ class AppState {
             // Limpiar datos anteriores del mes
             this.scheduleData.clear();
             
+            // 🚀 ALMACENAR EN CACHÉ mientras guardamos en memoria
+            const cacheParaEsteMes = {};
+            
             for (const { empleado, turnos, ok } of resultados) {
                 if (ok && turnos && Array.isArray(turnos) && turnos.length > 0) {
                     // Convertir fechas de string a Date
@@ -316,12 +336,16 @@ class AppState {
                     }));
                     
                     this.scheduleData.set(empleado.id, turnosConFechas);
+                    cacheParaEsteMes[empleado.id] = turnosConFechas; // Guardar en caché
                     turnosCargados += turnosConFechas.length;
                     console.log(`✅ BD: ${turnosConFechas.length} turnos cargados para ${empleado.nombre}`);
                 }
             }
             
             if (turnosCargados > 0) {
+                // 🚀 GUARDAR EN CACHÉ
+                this._apiCacheByMonth.set(mesKeyBuscado, cacheParaEsteMes);
+                this._apiCacheTimestamp.set(mesKeyBuscado, Date.now());
                 console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API para ${mesKeyBuscado}`);
                 this.saveToStorage(); // Respaldar en localStorage
             } else {
