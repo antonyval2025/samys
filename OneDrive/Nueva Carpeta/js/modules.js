@@ -1519,31 +1519,12 @@ class TurnoManager {
             }
         }
         
-        // 🔥 NUEVO: Si no hay datos en el mes actual, cambiar al primer mes disponible
-        if (!tieneEmpleadosConDatosDelMes && mesesDisponibles.size > 0) {
-            const [primerMes] = Array.from(mesesDisponibles)[0].split('/');
-            const mesNumerico = parseInt(primerMes);
-            console.log(`[TurnoManager.reiniciarDatos] 🔄 Mes actual ${AppState.currentMonth} está vacío. Cambiando a mes ${mesNumerico} (primero con datos)`);
-            AppState.currentMonth = mesNumerico;
-            
-            // Actualizar selector en UI
-            const selectMonth = document.getElementById('selectMonth');
-            if (selectMonth) {
-                selectMonth.value = mesNumerico;
-                console.log(`[TurnoManager.reiniciarDatos] 📊 Selector actualizado a mes ${mesNumerico}`);
-            }
-            
-            // Regenerar tabla
-            if (typeof UI !== 'undefined' && typeof UI.generarCuadranteGeneral === 'function') {
-                UI.generarCuadranteGeneral();
-                console.log(`[TurnoManager.reiniciarDatos] 🔄 Tabla regenerada para mes ${mesNumerico}`);
-            }
-            
-            tieneEmpleadosConDatosDelMes = true;
-        } else if (!tieneEmpleadosConDatosDelMes) {
-            console.log(`[TurnoManager.reiniciarDatos] ⭕ NO hay datos para ${AppState.currentMonth}/${AppState.currentYear} - Se mostrarán en ceros`);
+        // ✅ NO cambiar automáticamente de mes - Dejar que el usuario seleccione libremente
+        // Los KPIs cargarán directamente desde la BD sin dependencia de AppState.scheduleData
+        if (!tieneEmpleadosConDatosDelMes) {
+            console.log(`[TurnoManager.reiniciarDatos] ⚠️ NO hay datos en AppState para ${AppState.currentMonth}/${AppState.currentYear} (pero KPIs cargarán desde BD)`);
         } else {
-            console.log(`[TurnoManager.reiniciarDatos] ✅ Cuadrante tiene datos del mes actual`);
+            console.log(`[TurnoManager.reiniciarDatos] ✅ Cuadrante tiene datos en AppState del mes actual`);
         }
         
         // ✅ ACTUALIZAR BOTÓN
