@@ -3948,8 +3948,7 @@ ex<!DOCTYPE html>
                         if (nuevoAño !== AppState.currentYear) {
                             AppState.setYear(nuevoAño);
                             await TurnoManager.reiniciarDatos();
-                            UI.generarCuadranteGeneral();
-                            UI.actualizarTitulosMes();
+                            // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
                             
                             // Actualizar KPIs en background (no espera)
                             if (typeof window.actualizarKPIs === 'function') {
@@ -3965,8 +3964,7 @@ ex<!DOCTYPE html>
                         if (nuevoMes !== AppState.currentMonth) {
                             AppState.setMonth(nuevoMes);
                             await TurnoManager.reiniciarDatos();
-                            UI.generarCuadranteGeneral();
-                            UI.actualizarTitulosMes();
+                            // ✅ reiniciarDatos() ya regenera la tabla, no duplicar llamadas
                             
                             // Actualizar KPIs en background (no espera)
                             if (typeof window.actualizarKPIs === 'function') {

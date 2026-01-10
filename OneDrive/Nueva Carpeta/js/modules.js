@@ -270,9 +270,11 @@ class AppState {
     // 📡 NUEVA: Cargar datos desde API/BD (con reintentos)
     static async _cargarDesdeAPI() {
         try {
-            // Capturar valores actuales ANTES de iniciar promesas
+            // Usar los meses ACTUALES (actualizados después de cambiar selector)
             const mesActual = this.currentMonth;
             const anioActual = this.currentYear;
+            
+            console.log(`[_cargarDesdeAPI] 📡 Cargando datos para ${mesActual}/${anioActual}...`);
             
             const promesasAPI = empleados.map(empleado =>
                 fetch(`http://localhost:5001/api/turnos/${empleado.id}`)
@@ -283,13 +285,12 @@ class AppState {
                     .then(data => {
                         if (!data.turnos) return { empleado, turnos: {}, ok: false };
                         
-                        // Procesar datos agrupados por mes
+                        // Procesar datos agrupados por mes - usar la clave correcta
+                        const mesKeyBuscado = `${anioActual}-${mesActual}`;
                         let turnosDelMesActual = [];
-                        for (const [key, mesData] of Object.entries(data.turnos)) {
-                            if (mesData.mes === mesActual && mesData.anio === anioActual) {
-                                turnosDelMesActual = mesData.turnos || [];
-                                break;
-                            }
+                        
+                        if (data.turnos[mesKeyBuscado] && data.turnos[mesKeyBuscado].turnos) {
+                            turnosDelMesActual = data.turnos[mesKeyBuscado].turnos;
                         }
                         
                         return { empleado, turnos: turnosDelMesActual, ok: true };
@@ -302,6 +303,9 @@ class AppState {
             
             const resultados = await Promise.all(promesasAPI);
             let turnosCargados = 0;
+            
+            // Limpiar datos anteriores del mes
+            this.scheduleData.clear();
             
             for (const { empleado, turnos, ok } of resultados) {
                 if (ok && turnos && turnos.length > 0) {
@@ -318,10 +322,10 @@ class AppState {
             }
             
             if (turnosCargados > 0) {
-                console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API`);
+                console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API para ${mesKeyBuscado}`);
                 this.saveToStorage(); // Respaldar en localStorage
             } else {
-                console.log('ℹ️ No hay datos en BD para este mes');
+                console.log(`ℹ️ No hay datos en BD para ${mesKeyBuscado}`);
             }
         } catch (error) {
             console.error('❌ Error cargando desde API:', error.message);
