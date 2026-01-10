@@ -3951,12 +3951,10 @@ ex<!DOCTYPE html>
                             UI.generarCuadranteGeneral();
                             UI.actualizarTitulosMes();
                             
-                            // Actualizar KPIs
-                            setTimeout(() => {
-                                if (typeof window.actualizarKPIs === 'function') {
-                                    window.actualizarKPIs();
-                                }
-                            }, 500);
+                            // Actualizar KPIs en background (no espera)
+                            if (typeof window.actualizarKPIs === 'function') {
+                                window.actualizarKPIs().catch(e => console.error('Error en actualizarKPIs:', e));
+                            }
                         }
                     });
                 }
@@ -3970,12 +3968,10 @@ ex<!DOCTYPE html>
                             UI.generarCuadranteGeneral();
                             UI.actualizarTitulosMes();
                             
-                            // Actualizar KPIs
-                            setTimeout(() => {
-                                if (typeof window.actualizarKPIs === 'function') {
-                                    window.actualizarKPIs();
-                                }
-                            }, 500);
+                            // Actualizar KPIs en background (no espera)
+                            if (typeof window.actualizarKPIs === 'function') {
+                                window.actualizarKPIs().catch(e => console.error('Error en actualizarKPIs:', e));
+                            }
                         }
                     });
                 }
@@ -4076,45 +4072,63 @@ ex<!DOCTYPE html>
             }
         });
 
-        // 🔄 FUNCIÓN GLOBAL PARA ACTUALIZAR KPIs
-        window.actualizarKPIs = function() {
+        // 🔄 FUNCIÓN GLOBAL PARA ACTUALIZAR KPIs - CARGANDO DIRECTAMENTE DE LA BD DEL MES ACTUAL
+        window.actualizarKPIs = async function() {
             try {
-                if (!window.AppState || !window.AppState.scheduleData) {
-                    console.warn('⚠️ AppState no está inicializado');
-                    return;
-                }
-                
-                const mesActual = AppState.currentMonth;
-                const anioActual = AppState.currentYear;
                 let totalEmpleados = window.empleados ? window.empleados.length : 0;
                 let totalHoras = 0;
                 let turnosMañana = 0;
                 let turnosTarde = 0;
                 let turnosNoche = 0;
+                let totalTurnos = 0;
                 
-                console.log(`🔄 Actualizando KPIs para mes ${mesActual}/${anioActual} (Map size: ${AppState.scheduleData.size})`);
+                // Obtener mes/año seleccionado actualmente - FALLBACK a AppState
+                let yearActual = AppState.currentYear;
+                let mesActual = AppState.currentMonth;
                 
-                if (window.empleados && window.empleados.length > 0) {
-                    window.empleados.forEach(empleado => {
-                        const turnos = window.AppState.scheduleData.get(empleado.id) || [];
+                const selectYear = document.getElementById('selectYear');
+                const selectMonth = document.getElementById('selectMonth');
+                
+                if (selectYear && selectYear.value) {
+                    yearActual = parseInt(selectYear.value);
+                }
+                if (selectMonth && selectMonth.value !== undefined) {
+                    mesActual = parseInt(selectMonth.value);
+                }
+                
+                const mesKeyBuscado = `${yearActual}-${mesActual}`;
+                console.log(`📅 Cargando KPIs para: ${mesKeyBuscado} (AppState: ${AppState.currentYear}-${AppState.currentMonth})`);
+                
+                // Cargar datos directamente desde la BD para cada empleado
+                for (const empleado of (window.empleados || [])) {
+                    try {
+                        const response = await fetch(`http://localhost:5001/api/turnos/${empleado.id}`, { timeout: 5000 });
+                        if (!response.ok) {
+                            console.warn(`⚠️ Error HTTP ${response.status} para empleado ${empleado.id}`);
+                            continue;
+                        }
                         
-                        // Filtrar solo turnos del mes actual
-                        const turnosDelMes = turnos.filter(t => {
-                            const fecha = new Date(t.fecha);
-                            return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
-                        });
+                        const data = await response.json();
+                        if (!data.turnos) {
+                            console.warn(`⚠️ Sin datos de turnos para empleado ${empleado.id}`);
+                            continue;
+                        }
                         
-                        // Contar turnos del mes actual
-                        turnosDelMes.forEach((turno) => {
-                            if (turno) {
+                        // Contar turnos SOLO del mes seleccionado
+                        const mesData = data.turnos[mesKeyBuscado];
+                        if (mesData && mesData.turnos && Array.isArray(mesData.turnos)) {
+                            mesData.turnos.forEach(turno => {
+                                totalTurnos++;
                                 const horas = turno.horas || 0;
                                 totalHoras += horas;
                                 if (turno.turno === 'mañana') turnosMañana++;
                                 if (turno.turno === 'tarde') turnosTarde++;
                                 if (turno.turno === 'noche') turnosNoche++;
-                            }
-                        });
-                    });
+                            });
+                        }
+                    } catch (e) {
+                        console.warn(`⚠️ Error cargando turnos de empleado ${empleado.id}: ${e.message}`);
+                    }
                 }
                 
                 // Inyectar valores en HTML
@@ -4130,9 +4144,9 @@ ex<!DOCTYPE html>
                 if (turnosTardeEl) turnosTardeEl.textContent = turnosTarde;
                 if (turnosNocheEl) turnosNocheEl.textContent = turnosNoche;
                 
-                console.log(`✓ KPIs actualizados: Empleados=${totalEmpleados}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Tarde=${turnosTarde}, Noche=${turnosNoche}`);
+                console.log(`✓ KPIs actualizados desde BD [${mesKeyBuscado}]: Empleados=${totalEmpleados}, Total Turnos=${totalTurnos}, Horas=${totalHoras.toFixed(1)}, Mañana=${turnosMañana}, Tarde=${turnosTarde}, Noche=${turnosNoche}`);
             } catch (e) {
-                console.error('❌ Error actualizando KPIs:', e.message);
+                console.error('❌ Error actualizando KPIs:', e.message, e.stack);
             }
         };
 
