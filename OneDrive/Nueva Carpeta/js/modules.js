@@ -273,8 +273,9 @@ class AppState {
             // Usar los meses ACTUALES (actualizados después de cambiar selector)
             const mesActual = this.currentMonth;
             const anioActual = this.currentYear;
+            const mesKeyBuscado = `${anioActual}-${mesActual}`;
             
-            console.log(`[_cargarDesdeAPI] 📡 Cargando datos para ${mesActual}/${anioActual}...`);
+            console.log(`[_cargarDesdeAPI] 📡 Cargando datos para ${mesKeyBuscado}...`);
             
             const promesasAPI = empleados.map(empleado =>
                 fetch(`http://localhost:5001/api/turnos/${empleado.id}`)
@@ -283,10 +284,9 @@ class AppState {
                         return response.json();
                     })
                     .then(data => {
-                        if (!data.turnos) return { empleado, turnos: {}, ok: false };
+                        if (!data.turnos) return { empleado, turnos: [], ok: false };
                         
                         // Procesar datos agrupados por mes - usar la clave correcta
-                        const mesKeyBuscado = `${anioActual}-${mesActual}`;
                         let turnosDelMesActual = [];
                         
                         if (data.turnos[mesKeyBuscado] && data.turnos[mesKeyBuscado].turnos) {
@@ -308,7 +308,7 @@ class AppState {
             this.scheduleData.clear();
             
             for (const { empleado, turnos, ok } of resultados) {
-                if (ok && turnos && turnos.length > 0) {
+                if (ok && turnos && Array.isArray(turnos) && turnos.length > 0) {
                     // Convertir fechas de string a Date
                     const turnosConFechas = turnos.map(turno => ({
                         ...turno,
