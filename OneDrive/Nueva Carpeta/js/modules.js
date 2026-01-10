@@ -1544,6 +1544,12 @@ class TurnoManager {
             UI.actualizarEstadisticasIndividual();
         }
         
+        // ✅ Actualizar KPIs automáticamente después de cambiar mes
+        if (typeof window.actualizarKPIs === 'function') {
+            console.log('[TurnoManager.reiniciarDatos] 📊 Actualizando KPIs...');
+            window.actualizarKPIs().catch(e => console.error('[TurnoManager.reiniciarDatos] ❌ Error en actualizarKPIs:', e));
+        }
+        
         NotificationSystem.show('✅ Mes cargado correctamente', 'success');
     }
 
