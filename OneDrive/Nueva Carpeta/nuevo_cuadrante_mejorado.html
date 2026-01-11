@@ -1655,6 +1655,17 @@ ex<!DOCTYPE html>
                     if (selectedTab) {
                         selectedTab.classList.add('active');
                         console.log('✓ Tab cambiado a:', tabId);
+                        
+                        // Reinicializar filtros cuando se abre el Informe
+                        if (tabId === 'tab-individual') {
+                            console.log('🔄 Reinicializando filtros del Informe...');
+                            if (typeof llenarCentrosDeTrabajo !== 'undefined') {
+                                llenarCentrosDeTrabajo();
+                            }
+                            if (typeof llenarDepartamentosInforme !== 'undefined') {
+                                llenarDepartamentosInforme();
+                            }
+                        }
                     }
                 });
             });
@@ -1737,6 +1748,11 @@ ex<!DOCTYPE html>
             const selectCentro = document.getElementById('selectCentroTrabajo');
             if (!selectCentro) return;
             
+            // Limpiar opciones anteriores excepto la primera
+            while (selectCentro.options.length > 1) {
+                selectCentro.remove(1);
+            }
+            
             // Usar localidades del LocationManager si está disponible
             const localidades = (typeof LocationManager !== 'undefined' && LocationManager.localidades) 
                 ? LocationManager.localidades.map(l => l.nombre).sort()
@@ -1747,6 +1763,26 @@ ex<!DOCTYPE html>
                 option.value = localidad;
                 option.textContent = localidad;
                 selectCentro.appendChild(option);
+            });
+        }
+
+        function llenarDepartamentosInforme() {
+            const selectDepartamento = document.getElementById('selectDepartamentoIndividual');
+            if (!selectDepartamento) return;
+            
+            // Limpiar opciones anteriores excepto la primera
+            while (selectDepartamento.options.length > 1) {
+                selectDepartamento.remove(1);
+            }
+            
+            // Obtener departamentos únicos de los empleados
+            const departamentos = [...new Set(empleados.map(e => e.departamento).filter(d => d))].sort();
+            
+            departamentos.forEach(departamento => {
+                const option = document.createElement('option');
+                option.value = departamento;
+                option.textContent = departamento;
+                selectDepartamento.appendChild(option);
             });
         }
 
