@@ -2143,7 +2143,6 @@ ex<!DOCTYPE html>
                         <td>
                             <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
                                 <button onclick="exportarEmpleado(${empleado.id}, '${meses[mes]}', ${anio}, 'pdf')" title="PDF" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(239, 68, 68, 0.3)'">📄</button>
-                                <button onclick="exportarEmpleado(${empleado.id}, '${meses[mes]}', ${anio}, 'csv')" title="Excel" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(14, 165, 233, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(14, 165, 233, 0.3)'">📊</button>
                                 <button onclick="exportarEmpleado(${empleado.id}, '${meses[mes]}', ${anio}, 'ical')" title="Calendario iCalendar" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(139, 92, 246, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.3)'">🗓️</button>
                                 <button onclick="exportarEmpleado(${empleado.id}, '${meses[mes]}', ${anio}, 'copy')" title="Copiar" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%); color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(100, 116, 139, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(100, 116, 139, 0.3)'">📋</button>
                             </div>
@@ -2645,8 +2644,6 @@ ex<!DOCTYPE html>
                         console.error('❌ Error en enviarWhatsAppIndividual:', error);
                         alert('Error: ' + error.message);
                     });
-                } else if (tipo === 'csv') {
-                    descargarInformeIndividualCSV();
                 } else if (tipo === 'copy') {
                     copiarAlPortapapelesInforme();
                 } else if (tipo === 'ical') {
@@ -2722,42 +2719,6 @@ ex<!DOCTYPE html>
         }
 
         // Descargar CSV del informe individual
-        function descargarInformeIndividualCSV() {
-            try {
-                if (!window.informeActual) {
-                    alert('No hay datos para exportar');
-                    return;
-                }
-                const { empleado, turnos, mes, anio, mesNum, totalHoras } = window.informeActual;
-                
-                let csv = 'data:text/csv;charset=utf-8,';
-                csv += `Empleado,${empleado.nombre}\n`;
-                csv += `Departamento,${empleado.departamento}\n`;
-                csv += `Turno Principal,${empleado.turnoPrincipal}\n`;
-                csv += `Mes,${mes}\n`;
-                csv += `Año,${anio}\n`;
-                csv += `Total Horas,${totalHoras}\n\n`;
-                csv += `Día,Turno,Horas,Fecha\n`;
-                
-                turnos.forEach(turno => {
-                    const fecha = turno.fecha.toLocaleDateString('es-ES');
-                    csv += `${turno.dia},${turno.turno},${turno.horas},${fecha}\n`;
-                });
-                
-                const enlace = document.createElement('a');
-                enlace.href = encodeURI(csv);
-                enlace.download = `informe_${empleado.nombre}_${mesNum + 1}_${anio}.csv`;
-                enlace.click();
-                
-                if (typeof NotificationSystem !== 'undefined') {
-                    NotificationSystem.show('CSV descargado correctamente', 'success');
-                }
-            } catch (error) {
-                console.error('Error CSV:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
         // 🗓️ EXPORTAR A ICALENDAR (.ics) PARA INTEGRACIÓN CON GOOGLE CALENDAR, OUTLOOK, ETC
         function generarContenidoiCalendar(informe) {
             try {
