@@ -42,17 +42,36 @@ class ControlesSemana5 {
         const style = document.createElement('style');
         style.textContent = `
             .sidebar-section.semana5 {
-                border-bottom: 2px solid rgba(155, 89, 182, 0.3);
+                border-top: 2px solid rgba(139, 92, 246, 0.3);
+                margin-top: 20px;
+                padding-top: 16px;
             }
 
             .sidebar-btn.semana5 {
-                border-left: 3px solid #e74c3c;
-                background: rgba(231, 76, 60, 0.08);
+                border-left: 3px solid #a78bfa;
+                background: rgba(139, 92, 246, 0.08);
+                transition: all 0.3s ease;
+                font-weight: 500;
             }
 
             .sidebar-btn.semana5:hover {
-                background: rgba(231, 76, 60, 0.15);
-                border-left-color: #ec7063;
+                background: rgba(139, 92, 246, 0.15);
+                border-left-color: #c084fc;
+                transform: translateX(4px);
+                box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+            }
+
+            .sidebar-btn.semana5:active {
+                transform: translateX(2px);
+            }
+
+            .sidebar-section.semana5 .sidebar-section-title {
+                color: #a78bfa;
+                font-weight: 700;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 12px;
             }
         `;
         document.head.appendChild(style);
