@@ -640,62 +640,14 @@ ex<!DOCTYPE html>
                     <div id="calendarioVisual" style="min-height: 220px;"></div>
                 </div>
 
-                <!-- 4️⃣ FILTROS Y CONTROLES - A lo ancho completo en horizontal -->
-                <div style="margin-top: 20px; padding: 20px 24px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(11, 18, 32, 0.7) 100%); border-radius: 10px; border: 1px solid rgba(14, 165, 233, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                    
-                    <!-- Grid de filtros en 4 columnas amplias -->
-                    <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.2fr 1fr; gap: 24px; margin-bottom: 16px;">
-                        <!-- Filtro por Empleado -->
-                        <div>
-                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #cbd5e1; font-size: 13px;">👤 Empleado</label>
-                            <select id="filtroEmpleadoCalendario" style="width: 100%; padding: 10px 14px; border: 1px solid rgba(14, 165, 233, 0.3); border-radius: 8px; font-size: 14px; background: #0f172a; color: #e2e8f0; transition: all 0.3s ease;" onchange="if(this.value) FiltroCalendario.filtrarPorEmpleado(parseInt(this.value)); else FiltroCalendario.resetearFiltros();">
-                                <option value="">📌 Todos los empleados</option>
-                            </select>
-                        </div>
-
-                        <!-- Filtro por Carga -->
-                        <div>
-                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #cbd5e1; font-size: 13px;">⚖️ Carga de Trabajo</label>
-                            <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
-                                <label style="display: flex; align-items: center; gap: 6px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 13px;"><input type="radio" name="filtro-carga" value="todos" checked onchange="if(this.checked) FiltroCalendario.resetearFiltros();" style="width: 16px; height: 16px; cursor: pointer;"> Todos</label>
-                                <label style="display: flex; align-items: center; gap: 6px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 13px;"><input type="radio" name="filtro-carga" value="baja" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('baja');" style="width: 16px; height: 16px; cursor: pointer;"> 🟢 Baja</label>
-                                <label style="display: flex; align-items: center; gap: 6px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 13px;"><input type="radio" name="filtro-carga" value="media" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('media');" style="width: 16px; height: 16px; cursor: pointer;"> 🟡 Media</label>
-                                <label style="display: flex; align-items: center; gap: 6px; color: #e2e8f0; cursor: pointer; font-weight: 500; font-size: 13px;"><input type="radio" name="filtro-carga" value="alta" onchange="if(this.checked) FiltroCalendario.filtrarPorCarga('alta');" style="width: 16px; height: 16px; cursor: pointer;"> 🔴 Alta</label>
-                            </div>
-                        </div>
-
-                        <!-- Mostrar Conflictos -->
-                        <div>
-                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #cbd5e1; font-size: 13px;">⚠️ Validación</label>
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; color: #e2e8f0; padding: 9px 14px; background: rgba(14, 165, 233, 0.1); border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.2); transition: all 0.3s ease; height: fit-content;" onmouseover="this.style.background='rgba(14, 165, 233, 0.15)'; this.style.borderColor='rgba(14, 165, 233, 0.4)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.1)'; this.style.borderColor='rgba(14, 165, 233, 0.2)'">
-                                <input type="checkbox" id="mostrarConflictosCalendario" onchange="FiltroCalendario.toggleConflictos();" style="width: 16px; height: 16px; cursor: pointer;">
-                                <span style="font-size: 13px;">Mostrar Conflictos</span>
-                            </label>
-                        </div>
-
-                        <!-- Selector vacío para balancear el grid -->
-                        <div></div>
-                    </div>
-
-                    <!-- Botones de acción en una línea a lo ancho -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 16px;">
-                        <button class="action-btn" onclick="ExportadorCalendario.exportarEstadisticas()" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);" onmouseover="this.style.boxShadow='0 6px 20px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.2)'">
-                            📊 Generar Estadísticas
-                        </button>
-                        <button class="action-btn" onclick="ExportadorCalendario.exportarAPDF()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onmouseover="this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.2)'">
-                            📄 Exportar PDF
-                        </button>
-                        <button class="action-btn" onclick="FiltroCalendario.resetearFiltros()" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);" onmouseover="this.style.boxShadow='0 6px 20px rgba(245, 158, 11, 0.4)'" onmouseout="this.style.boxShadow='0 4px 12px rgba(245, 158, 11, 0.2)'">
-                            🔄 Resetear Filtros
-                        </button>
-                    </div>
-                </div>
+                <!-- 4️⃣ PANEL DE FILTROS Y ACCIONES - MÓDULO MODULAR -->
+                <div id="panelFiltrosContainer" style="margin-top: 20px;"></div>
 
                 <!-- Vista Previa del Empleado Seleccionado -->
-                <div id="vistaPrevia" style="display: none; margin-top: 30px; padding: 20px; background: rgba(17, 24, 39, 0.9); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 2px solid rgba(168, 85, 247, 0.3);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: #f1f5f9; margin: 0; font-size: 24px; background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">📋 Cuadrante del Empleado</h3>
-                        <button onclick="document.getElementById('vistaPrevia').style.display = 'none'; AppState.selectedEmployee = null;" style="background: linear-gradient(135deg, #f3d4d9 0%, #fce4ec 100%); color: #c2185b; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(193, 24, 91, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">✕ Cerrar</button>
+                <div id="vistaPrevia" style="display: none; margin-top: 30px; padding: 36px; background: rgba(17, 24, 39, 0.9); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 2px solid rgba(168, 85, 247, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h3 style="color: #f1f5f9; margin: 0; font-size: 22px; background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">📋 Cuadrante del Empleado</h3>
+                        <button onclick="document.getElementById('vistaPrevia').style.display = 'none'; AppState.selectedEmployee = null;" style="background: linear-gradient(135deg, #f3d4d9 0%, #fce4ec 100%); color: #c2185b; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(193, 24, 91, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">✕ Cerrar</button>
                     </div>
 
                     <div class="vista-previa-grid">
@@ -1615,8 +1567,16 @@ ex<!DOCTYPE html>
     <!-- 5. Calendario visual interactivo -->
     <script src="js/calendario-visual.js"></script>
 
+    <!-- 6. Análisis de Equidad y Carga de Trabajo - MÓDULO MODULAR -->
+    <link rel="stylesheet" href="css/analisis-equidad.css">
+    <script src="js/analisis-equidad.js"></script>
+
+    <!-- 7. Panel de Filtros y Acciones - MÓDULO MODULAR -->
+    <link rel="stylesheet" href="css/panel-filtros.css">
+    <script src="js/panel-filtros.js"></script>
+
     <!-- ✅ SEMANA 1: NUEVOS MÓDULOS DE MEJORA -->
-    <!-- 6. Validador centralizado de datos -->
+    <!-- 7. Validador centralizado de datos -->
     <script src="js/validador-datos.js"></script>
 
     <!-- 7. Autoguardado automático -->
@@ -3780,10 +3740,8 @@ ex<!DOCTYPE html>
                         SistemaNotificaciones.init();
                         console.log('✓ SistemaNotificaciones inicializado');
                     }
-                    if (typeof ControlesSemana4 !== 'undefined') {
-                        ControlesSemana4.init();
-                        console.log('✓ ControlesSemana4 (UI Sidebar) inicializado');
-                    }
+                    // ✅ ControlesSemana4 ya se inicializa automáticamente en controles-semana-4.js
+                    // Eliminado duplicado: ControlesSemana4.init() se llama desde el JS
                 } catch (e) {
                     console.warn('⚠️ Error al inicializar Semana 4:', e.message);
                 }
@@ -4129,7 +4087,7 @@ ex<!DOCTYPE html>
             }
         };
 
-        // 🔄 FUNCIÓN PARA RECARGAR DATOS
+        //  FUNCIÓN PARA RECARGAR DATOS
         async function recargarDatos() {
             console.log('🔄 Recargando datos...');
             const btnRecargar = document.getElementById('btnRecargarDatos');
@@ -4164,6 +4122,18 @@ ex<!DOCTYPE html>
                         window.actualizarKPIs();
                     }
                 }, 1000);
+
+                // Actualizar Panel de Filtros
+                setTimeout(() => {
+                    if (typeof PanelFiltros !== 'undefined') {
+                        PanelFiltros.renderizar().then(html => {
+                            const container = document.getElementById('panelFiltrosContainer');
+                            if (container) {
+                                container.innerHTML = html;
+                            }
+                        });
+                    }
+                }, 2000);
                 
                 NotificationSystem.show('✅ Datos recargados correctamente', 'success', 3000);
             } catch (error) {
@@ -7739,6 +7709,27 @@ ex<!DOCTYPE html>
             };
             reader.readAsText(input.files[0]);
         };
+    </script>
+
+    <!-- INICIALIZACIÓN: Panel de Filtros y Análisis de Equidad -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(async () => {
+                // Inicializar Panel de Filtros
+                if (typeof PanelFiltros !== 'undefined') {
+                    try {
+                        const html = await PanelFiltros.renderizar();
+                        const container = document.getElementById('panelFiltrosContainer');
+                        if (container) {
+                            container.innerHTML = html;
+                            console.log('✓ Panel de Filtros inicializado');
+                        }
+                    } catch (e) {
+                        console.error('⚠️ Error inicializando Panel de Filtros:', e);
+                    }
+                }
+            }, 2000);
+        });
     </script>
     
 </div><!-- Cierre main-content -->
