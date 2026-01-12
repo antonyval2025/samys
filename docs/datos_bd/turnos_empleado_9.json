@@ -7,7 +7,7 @@
         "dia": 1,
         "turno": "descanso",
         "horas": 6.5,
-        "fecha": "2025-12-31T23:00:00.000Z",
+        "fecha": "2026-12-31T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -221,11 +221,11 @@
         "esFinSemana": true
       }
     ],
-    "fechaActualizacion": "2026-01-12T22:48:53.318Z"
+    "fechaActualizacion": "2026-01-12T23:17:37.280Z"
   },
-  "2025-0": {
+  "2026-0": {
     "mes": 0,
-    "anio": 2025,
+    "anio": 2026,
     "turnos": [
       {
         "dia": 1,
@@ -240,7 +240,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-01T23:00:00.000Z",
+        "fecha": "2026-01-01T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -248,7 +248,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-02T23:00:00.000Z",
+        "fecha": "2026-01-02T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -256,7 +256,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-03T23:00:00.000Z",
+        "fecha": "2026-01-03T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -264,7 +264,7 @@
         "turno": "descanso",
         "horas": 6.5,
         "horario": "-",
-        "fecha": "2025-01-04T23:00:00.000Z",
+        "fecha": "2026-01-04T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -272,7 +272,7 @@
         "turno": "descanso",
         "horas": 6.5,
         "horario": "-",
-        "fecha": "2025-01-05T23:00:00.000Z",
+        "fecha": "2026-01-05T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -280,7 +280,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-06T23:00:00.000Z",
+        "fecha": "2026-01-06T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -288,7 +288,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-07T23:00:00.000Z",
+        "fecha": "2026-01-07T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -296,7 +296,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-08T23:00:00.000Z",
+        "fecha": "2026-01-08T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -304,7 +304,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-09T23:00:00.000Z",
+        "fecha": "2026-01-09T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -312,7 +312,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-10T23:00:00.000Z",
+        "fecha": "2026-01-10T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -320,7 +320,7 @@
         "turno": "descanso",
         "horas": 6.5,
         "horario": "-",
-        "fecha": "2025-01-11T23:00:00.000Z",
+        "fecha": "2026-01-11T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -328,7 +328,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-12T23:00:00.000Z",
+        "fecha": "2026-01-12T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -336,7 +336,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-13T23:00:00.000Z",
+        "fecha": "2026-01-13T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -344,7 +344,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-14T23:00:00.000Z",
+        "fecha": "2026-01-14T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -352,7 +352,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-15T23:00:00.000Z",
+        "fecha": "2026-01-15T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -360,7 +360,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-16T23:00:00.000Z",
+        "fecha": "2026-01-16T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -368,7 +368,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-17T23:00:00.000Z",
+        "fecha": "2026-01-17T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -376,7 +376,7 @@
         "turno": "descanso",
         "horas": 6.5,
         "horario": "-",
-        "fecha": "2025-01-18T23:00:00.000Z",
+        "fecha": "2026-01-18T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -384,7 +384,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-19T23:00:00.000Z",
+        "fecha": "2026-01-19T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -392,7 +392,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-20T23:00:00.000Z",
+        "fecha": "2026-01-20T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -400,7 +400,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-21T23:00:00.000Z",
+        "fecha": "2026-01-21T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -408,7 +408,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-22T23:00:00.000Z",
+        "fecha": "2026-01-22T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -416,7 +416,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-23T23:00:00.000Z",
+        "fecha": "2026-01-23T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -424,7 +424,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-24T23:00:00.000Z",
+        "fecha": "2026-01-24T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -432,7 +432,7 @@
         "turno": "descanso",
         "horas": 6.5,
         "horario": "-",
-        "fecha": "2025-01-25T23:00:00.000Z",
+        "fecha": "2026-01-25T23:00:00.000Z",
         "esFinSemana": true
       },
       {
@@ -440,7 +440,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-26T23:00:00.000Z",
+        "fecha": "2026-01-26T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -448,7 +448,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-27T23:00:00.000Z",
+        "fecha": "2026-01-27T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -456,7 +456,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-28T23:00:00.000Z",
+        "fecha": "2026-01-28T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -464,7 +464,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-29T23:00:00.000Z",
+        "fecha": "2026-01-29T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -472,7 +472,7 @@
         "turno": "tarde",
         "horas": 6.5,
         "horario": "14:30-21:00",
-        "fecha": "2025-01-30T23:00:00.000Z",
+        "fecha": "2026-01-30T23:00:00.000Z",
         "esFinSemana": false
       }
     ],
@@ -679,7 +679,7 @@
         "esFinSemana": true
       }
     ],
-    "fechaActualizacion": "2026-01-12T21:36:59.660Z"
+    "fechaActualizacion": "2026-01-12T23:17:38.285Z"
   },
   "2026-2": {
     "mes": 2,
@@ -934,6 +934,223 @@
         "esFinSemana": false
       }
     ],
-    "fechaActualizacion": "2026-01-12T11:54:04.072Z"
+    "fechaActualizacion": "2026-01-12T23:17:43.781Z"
+  },
+  "2026-3": {
+    "mes": 3,
+    "anio": 2026,
+    "turnos": [
+      {
+        "dia": 1,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-03-31T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 2,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-01T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 3,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-02T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 4,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-03T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 5,
+        "turno": "descanso",
+        "horas": 6.5,
+        "fecha": "2026-04-04T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 6,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-05T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 7,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-06T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 8,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-07T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 9,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-08T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 10,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-09T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 11,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-10T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 12,
+        "turno": "descanso",
+        "horas": 6.5,
+        "fecha": "2026-04-11T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 13,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-12T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 14,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-13T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 15,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-14T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 16,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-15T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 17,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-16T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 18,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-17T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 19,
+        "turno": "descanso",
+        "horas": 6.5,
+        "fecha": "2026-04-18T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 20,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-19T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 21,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-20T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 22,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-21T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 23,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-22T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 24,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-23T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 25,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-24T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 26,
+        "turno": "descanso",
+        "horas": 6.5,
+        "fecha": "2026-04-25T22:00:00.000Z",
+        "esFinSemana": true
+      },
+      {
+        "dia": 27,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-26T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 28,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-27T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 29,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-28T22:00:00.000Z",
+        "esFinSemana": false
+      },
+      {
+        "dia": 30,
+        "turno": "tarde",
+        "horas": 6.5,
+        "fecha": "2026-04-29T22:00:00.000Z",
+        "esFinSemana": false
+      }
+    ],
+    "fechaActualizacion": "2026-01-12T23:23:30.313Z"
   }
 }
