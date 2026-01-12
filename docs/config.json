@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "aplicacion": "Gestor de Turnos - Sistema de Gestión de Cuadrantes",
+  "puerto": 5001,
+  "url_acceso": "http://localhost:5001",
+  "requisitos": {
+    "python": "3.9+",
+    "flask": "2.3.0+",
+    "base_datos": "SQLite3 (incluido en Python)"
+  },
+  "opciones_inicio": [
+    {
+      "nombre": "START.bat",
+      "descripcion": "La opción más simple. Solo 2 líneas.",
+      "tipo": "Batch",
+      "recomendado": true,
+      "caracteristicas": [
+        "Más simple posible",
+        "Ver servidor en terminal",
+        "Control total con CTRL+C"
+      ]
+    },
+    {
+      "nombre": "diagnostico.bat",
+      "descripcion": "Verifica que todo esté bien antes de iniciar.",
+      "tipo": "Batch",
+      "recomendado": true,
+      "caracteristicas": [
+        "Revisar Python",
+        "Verificar Flask",
+        "Comprobar archivos",
+        "Revisar puertos"
+      ]
+    },
+    {
+      "nombre": "iniciar_seguro.bat",
+      "descripcion": "Con validaciones previas de seguridad.",
+      "tipo": "Batch",
+      "caracteristicas": [
+        "Verificaciones automáticas",
+        "Mensajes de diagnóstico",
+        "Manejo de errores mejorado"
+      ]
+    },
+    {
+      "nombre": "iniciar_con_navegador.bat",
+      "descripcion": "Lanza servidor en background y abre navegador.",
+      "tipo": "Batch",
+      "caracteristicas": [
+        "Servidor en ventana separada",
+        "Navegador abre automáticamente",
+        "Mantiene terminal libre"
+      ]
+    },
+    {
+      "nombre": "iniciar_servidor.ps1",
+      "descripcion": "Versión PowerShell moderna.",
+      "tipo": "PowerShell",
+      "caracteristicas": [
+        "Interfaz mejorada con colores",
+        "Mejor manejo de errores",
+        "Formatos más legibles"
+      ]
+    }
+  ],
+  "pasos_rapidos": [
+    "1. Instala Python desde https://www.python.org",
+    "2. Marca 'Add Python to PATH' en instalación",
+    "3. Abre terminal y ejecuta: pip install flask",
+    "4. Navega a la carpeta del proyecto",
+    "5. Haz doble-clic en START.bat",
+    "6. Abre navegador en http://localhost:5001"
+  ],
+  "solucion_problemas": {
+    "Python no encontrado": "Instala Python desde https://www.python.org y reinicia tu PC",
+    "Flask no instalado": "Ejecuta: pip install flask",
+    "Puerto 5001 en uso": "Cierra otras instancias o modifica el puerto en servidor_turnos.py",
+    "Navegador no se abre": "Abre manualmente http://localhost:5001"
+  },
+  "datos": {
+    "ubicacion": "turnos_database.db",
+    "tipo": "SQLite",
+    "persistencia": "Automática",
+    "ubicacion_guardado": "Misma carpeta que los scripts"
+  },
+  "archivos_necesarios": {
+    "backend": "servidor_turnos.py",
+    "frontend": "nuevo_cuadrante_mejorado.html",
+    "base_datos": "turnos_database.db (se crea automáticamente)"
+  },
+  "hotkeys": {
+    "detener_servidor": "CTRL + C en la terminal",
+    "recargar_app": "F5 en el navegador",
+    "consola_desarrollador": "F12 en el navegador"
+  },
+  "recursos": {
+    "documentacion_completa": "README_INICIAR.md",
+    "guia_visual": "INICIO_RAPIDO.txt",
+    "resumen_cambios": "NUEVAS_HERRAMIENTAS.txt"
+  },
+  "soporte": {
+    "verificar_python": "python --version",
+    "verificar_flask": "pip list | findstr flask",
+    "ver_puerto": "netstat -ano | findstr :5001",
+    "resetear_datos": "Elimina turnos_database.db y reinicia"
+  }
+}
