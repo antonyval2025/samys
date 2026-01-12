@@ -1573,6 +1573,12 @@ class TurnoManager {
             console.log('[TurnoManager.reiniciarDatos] 📊 Actualizando KPIs...');
             window.actualizarKPIs().catch(e => console.error('[TurnoManager.reiniciarDatos] ❌ Error en actualizarKPIs:', e));
         }
+
+        // ✅ Actualizar Calendario Visual (análisis de equidad horizontal)
+        if (typeof CalendarioVisual !== 'undefined' && typeof CalendarioVisual.renderizarCalendario === 'function') {
+            console.log('[TurnoManager.reiniciarDatos] 📅 Actualizando calendario visual...');
+            CalendarioVisual.renderizarCalendario();
+        }
         
         NotificationSystem.show('✅ Mes cargado correctamente', 'success');
     }
@@ -4793,4 +4799,6 @@ Características: Gestión de turnos, empleados, reportes, exportación PDF/What
     }
 }
 
-
+// =============================================
+// FIN DE MÓDULOS PRINCIPALES
+// =============================================

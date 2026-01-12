@@ -30,121 +30,15 @@ class CalendarioVisual {
 
     /**
      * Renderizar calendario mensual
+     * Ahora maneja Promise de AnalisisEquidad.renderizar()
      */
-    static renderizarCalendario() {
+    static async renderizarCalendario() {
         const container = document.getElementById('calendarioVisual');
         if (!container) return;
 
-        // Generar análisis de equidad y carga
-        let html = this.generarAnalisisEquidad();
+        // Generar análisis de equidad usando el módulo separado
+        let html = await AnalisisEquidad.renderizar();
         container.innerHTML = html;
-    }
-
-    static generarAnalisisEquidad() {
-        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        // Calcular estadísticas por empleado
-        const estadisticas = {};
-        empleados.forEach(emp => {
-            const turnos = AppState.scheduleData.get(emp.id) || [];
-            const totalDias = turnos.length;
-            const diasTrabajados = turnos.filter(t => t.turno && !['descanso', 'libre', 'baja', 'vacaciones'].includes(t.turno)).length;
-            const diasNoche = turnos.filter(t => t.turno === 'noche' || t.turno === 'mixto').length;
-            const totalHoras = turnos.reduce((sum, t) => sum + (t.horas || 0), 0);
-
-            estadisticas[emp.id] = {
-                nombre: emp.nombre,
-                diasTrabajados,
-                diasNoche,
-                totalHoras,
-                promedioPorDia: totalDias > 0 ? (totalHoras / diasTrabajados).toFixed(1) : 0
-            };
-        });
-
-        // Encontrar extremos
-        const empleadosMasTurno = Object.entries(estadisticas)
-            .sort((a, b) => b[1].diasTrabajados - a[1].diasTrabajados)
-            .slice(0, 3);
-        const empleadosMenosTurno = Object.entries(estadisticas)
-            .sort((a, b) => a[1].diasTrabajados - b[1].diasTrabajados)
-            .slice(0, 3);
-        const empleadosMasNoche = Object.entries(estadisticas)
-            .sort((a, b) => b[1].diasNoche - a[1].diasNoche)
-            .slice(0, 3);
-
-        const promedioDiasTrabajados = Object.values(estadisticas).reduce((sum, e) => sum + e.diasTrabajados, 0) / Object.keys(estadisticas).length;
-        const promedioHoras = Object.values(estadisticas).reduce((sum, e) => sum + e.totalHoras, 0) / Object.keys(estadisticas).length;
-        const promedioNoche = Object.values(estadisticas).reduce((sum, e) => sum + e.diasNoche, 0) / Object.keys(estadisticas).length;
-
-        // Detectar desequilibrios
-        const alertas = [];
-        Object.entries(estadisticas).forEach(([id, stats]) => {
-            if (stats.diasTrabajados > promedioDiasTrabajados * 1.3) {
-                alertas.push(`⚠️ ${stats.nombre} tiene 30% más turnos de lo normal`);
-            }
-            if (stats.diasTrabajados < promedioDiasTrabajados * 0.7) {
-                alertas.push(`⚠️ ${stats.nombre} tiene 30% menos turnos de lo normal`);
-            }
-            if (stats.diasNoche > promedioNoche * 1.5 && stats.diasNoche > 5) {
-                alertas.push(`⚠️ ${stats.nombre} tiene muchos turnos nocturnos (${stats.diasNoche})`);
-            }
-        });
-
-        let html = `
-            <div style="background: white; border-radius: 12px; padding: 20px;">
-                <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 18px; font-weight: 700;">📊 Análisis de Equidad y Carga de Trabajo - ${meses[CalendarioVisual.month]} ${CalendarioVisual.year}</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                    <div style="background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%); padding: 16px; border-radius: 10px; border: 1px solid #bfdbfe;">
-                        <div style="color: #1e40af; font-weight: 600; font-size: 12px; margin-bottom: 8px;">📅 Promedio Días Trabajados</div>
-                        <div style="color: #1e40af; font-size: 24px; font-weight: 700;">${promedioDiasTrabajados.toFixed(1)}</div>
-                    </div>
-                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fef08a 100%); padding: 16px; border-radius: 10px; border: 1px solid #fcd34d;">
-                        <div style="color: #a16207; font-weight: 600; font-size: 12px; margin-bottom: 8px;">⏰ Promedio Horas Mensuales</div>
-                        <div style="color: #a16207; font-size: 24px; font-weight: 700;">${promedioHoras.toFixed(0)}</div>
-                    </div>
-                    <div style="background: linear-gradient(135deg, #ddd6fe 0%, #e9d5ff 100%); padding: 16px; border-radius: 10px; border: 1px solid #d8b4fe;">
-                        <div style="color: #6b21a8; font-weight: 600; font-size: 12px; margin-bottom: 8px;">🌙 Promedio Turnos Noche</div>
-                        <div style="color: #6b21a8; font-size: 24px; font-weight: 700;">${promedioNoche.toFixed(1)}</div>
-                    </div>
-                </div>
-
-                ${alertas.length > 0 ? `
-                    <div style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 10px; padding: 12px; margin-bottom: 20px;">
-                        <div style="color: #a16207; font-weight: 700; margin-bottom: 8px;">⚠️ Alertas de Desequilibrio:</div>
-                        ${alertas.map(a => `<div style="color: #854d0e; font-size: 13px; margin: 4px 0;">• ${a}</div>`).join('')}
-                    </div>
-                ` : `
-                    <div style="background: #d1fae5; border: 1px solid #6ee7b7; border-radius: 10px; padding: 12px; margin-bottom: 20px;">
-                        <div style="color: #065f46; font-weight: 700;">✅ Carga de trabajo equilibrada</div>
-                    </div>
-                `}
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px;">
-                        <div style="color: #1e293b; font-weight: 700; margin-bottom: 10px; font-size: 13px;">👥 Más Turnos Asignados</div>
-                        ${empleadosMasTurno.map((e, i) => `<div style="color: #475569; font-size: 12px; padding: 4px 0; border-top: 1px solid #e2e8f0; padding-top: 4px;">
-                            ${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${e[1].nombre}: ${e[1].diasTrabajados} días
-                        </div>`).join('')}
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px;">
-                        <div style="color: #1e293b; font-weight: 700; margin-bottom: 10px; font-size: 13px;">🌙 Más Turnos Nocturnos</div>
-                        ${empleadosMasNoche.map((e, i) => `<div style="color: #475569; font-size: 12px; padding: 4px 0; border-top: 1px solid #e2e8f0; padding-top: 4px;">
-                            ${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${e[1].nombre}: ${e[1].diasNoche} noches
-                        </div>`).join('')}
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px;">
-                        <div style="color: #1e293b; font-weight: 700; margin-bottom: 10px; font-size: 13px;">📉 Menos Turnos Asignados</div>
-                        ${empleadosMenosTurno.map((e, i) => `<div style="color: #475569; font-size: 12px; padding: 4px 0; border-top: 1px solid #e2e8f0; padding-top: 4px;">
-                            ${i === 0 ? '⬇️' : '▼'} ${e[1].nombre}: ${e[1].diasTrabajados} días
-                        </div>`).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        return html;
     }
 
     /**
@@ -157,7 +51,7 @@ class CalendarioVisual {
         } else {
             this.month--;
         }
-        this.renderizarCalendario();
+        this.renderizarCalendario().catch(e => console.error('Error renderizando calendario:', e));
     }
 
     /**
@@ -170,7 +64,7 @@ class CalendarioVisual {
         } else {
             this.month++;
         }
-        this.renderizarCalendario();
+        this.renderizarCalendario().catch(e => console.error('Error renderizando calendario:', e));
     }
 
     /**

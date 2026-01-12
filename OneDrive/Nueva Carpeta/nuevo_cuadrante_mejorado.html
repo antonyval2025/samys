@@ -2544,13 +2544,16 @@ ex<!DOCTYPE html>
                 // Obtener el elemento visible del cuadrante individual
                 const cuadranteIndividual = document.getElementById('cuadranteIndividual');
                 if (!cuadranteIndividual || cuadranteIndividual.style.display === 'none') {
-                    throw new Error('El cuadrante individual no está visible');
+                    console.warn('⚠️ El cuadrante individual no está visible, generando PDF alternativo...');
+                    // No lanzar error, retornar null para usar método alternativo
+                    return null;
                 }
                 
                 // Obtener el contenedor interno (el div con el contenido)
                 const contentElement = cuadranteIndividual.querySelector('div[style*="background"]') || cuadranteIndividual.firstChild;
                 if (!contentElement) {
-                    throw new Error('No se encontró el contenido del cuadrante');
+                    console.warn('⚠️ No se encontró el contenido del cuadrante, usando método alternativo...');
+                    return null;
                 }
                 
                 console.log('✅ [generarImagenCuadranteVisual] Elemento encontrado, ocultando encabezado y botones...');
@@ -2993,11 +2996,11 @@ ex<!DOCTYPE html>
                         <div id="seccionInstrucciones" style="display: none; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; padding: 16px; border-radius: 8px; text-align: left; margin-top: 24px;">
                             <h3 style="margin: 0 0 12px 0; color: #60a5fa; font-size: 14px; font-weight: 600;">📌 Instrucciones para adjuntar archivos:</h3>
                             <ol style="margin: 0; padding-left: 20px; color: #cbd5f5; font-size: 13px; line-height: 1.6;">
-                                <li>Se descargarán 2 archivos por cada empleado en tu carpeta <strong>Descargas</strong></li>
-                                <li>Abre tu aplicación WhatsApp (App de Escritorio)</li>
+                                <li>Se descargará un archivo iCalendar (<strong>.ics</strong>) en tu carpeta <strong>Descargas</strong></li>
+                                <li>Abre tu aplicación WhatsApp (App de Escritorio o Web)</li>
                                 <li>Selecciona el chat del empleado</li>
-                                <li>Adjunta el PDF (<strong>.pdf</strong>) y el calendario (<strong>.ics</strong>)</li>
-                                <li>¡Listo! Los archivos se enviarán automáticamente</li>
+                                <li>Adjunta el archivo iCalendar (<strong>.ics</strong>)</li>
+                                <li>¡Listo! El archivo se enviará automáticamente</li>
                             </ol>
                         </div>
                     </div>
@@ -3014,7 +3017,7 @@ ex<!DOCTYPE html>
                 const downloadPath = `C:\\Users\\${this.getUsername?.() || 'Usuario'}\\Downloads`;
                 
                 // Mostrar instrucción inicial
-                NotificationSystem.show('📥 Los archivos se descargarán en tu carpeta Descargas. Ten tu WhatsApp App abierto.', 'info', 4000);
+                NotificationSystem.show('📥 Los archivos iCalendar se descargarán en tu carpeta Descargas. Ten tu WhatsApp abierto.', 'info', 4000);
                 
                 // Enviar a cada empleado con delay para no sobrecargar
                 for (let i = 0; i < empleadosConTelefono.length; i++) {
@@ -3052,9 +3055,9 @@ ex<!DOCTYPE html>
                     if (modalProgreso) modalProgreso.remove();
                     
                     let mensajeCompletacion = `✅ Se procesaron ${enviados}/${empleadosConTelefono.length} cuadrantes.\n\n`;
-                    mensajeCompletacion += '📥 Archivos descargados en Descargas\n';
-                    mensajeCompletacion += '📱 Abre tu WhatsApp App\n';
-                    mensajeCompletacion += '📎 Adjunta PDF + iCalendar';
+                    mensajeCompletacion += '📥 Archivos iCalendar descargados en Descargas\n';
+                    mensajeCompletacion += '📱 Abre tu WhatsApp\n';
+                    mensajeCompletacion += '📎 Adjunta los calendarios';
                     
                     NotificationSystem.show(mensajeCompletacion, 'success', 6000);
                 }, 2000);
@@ -3172,17 +3175,8 @@ ex<!DOCTYPE html>
                 const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
 
                 // � Generar Imagen en lugar de PDF
-                const pdfBundle = await generarImagenCuadranteVisual({
-                    empleado,
-                    turnos: turnosDelMes,
-                    mes: mesNombre,
-                    anio: anioSeleccionado,
-                    mesNum,
-                    totalHoras
-                });
-                console.log('✅ [enviarWhatsAppEmpleadoDirecto] PDF generado correctamente:', pdfBundle.fileName);
 
-                // 🗓️ Generar iCalendar
+                const pdfBundle = null;  // No generar PDF
                 const informe = {
                     empleado,
                     turnos: turnosDelMes,
@@ -3202,46 +3196,31 @@ ex<!DOCTYPE html>
                 mensaje += `• Balance: ${balance >= 0 ? '+' : ''}${balance.toFixed(2)}h\n`;
                 mensaje += `• Cumplimiento: ${cumplimiento}%\n`;
                 mensaje += `• Contrato: ${horasContrato}h mensuales\n\n`;
-                mensaje += `📎 Te adjunto:\n• PDF con el calendario detallado\n• Archivo iCalendar para importar a tu calendario (Google, Outlook, etc)`;
+                mensaje += `📎 Te adjunto el calendario en formato iCalendar para importar a tu calendario (Google, Outlook, Apple Calendar, etc)`;
 
                 const numeroWhatsApp = empleado.telefono ? empleado.telefono.replace(/\D/g, '') : '';
                 if (!numeroWhatsApp) {
-                    URL.revokeObjectURL(pdfBundle.url);
                     alert('❌ El empleado no tiene número de teléfono registrado');
                     return;
                 }
 
-                console.log('📥 Descargando archivos...');
+                console.log('📥 Descargando iCalendar...');
                 
-                // Obtener la carpeta de descargas
-                const userDownloadsPath = 'Carpeta Descargas de Windows';
-                
-                // Descargar PDF
-                const linkPdf = document.createElement('a');
-                linkPdf.href = pdfBundle.url;
-                linkPdf.download = pdfBundle.fileName;
-                document.body.appendChild(linkPdf);
-                linkPdf.click();
-                document.body.removeChild(linkPdf);
-                console.log('✅ PDF descargado:', pdfBundle.fileName);
-
-                // Descargar iCalendar (con delay para evitar conflictos)
-                setTimeout(() => {
-                    const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icalContent);
-                    const linkIcal = document.createElement('a');
-                    linkIcal.href = dataUri;
-                    linkIcal.download = icalFileName;
-                    document.body.appendChild(linkIcal);
-                    linkIcal.click();
-                    document.body.removeChild(linkIcal);
-                    console.log('✅ iCalendar descargado:', icalFileName);
-                }, 300);
+                // Descargar SOLO iCalendar (sin PDF)
+                const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icalContent);
+                const linkIcal = document.createElement('a');
+                linkIcal.href = dataUri;
+                linkIcal.download = icalFileName;
+                document.body.appendChild(linkIcal);
+                linkIcal.click();
+                document.body.removeChild(linkIcal);
+                console.log('✅ iCalendar descargado:', icalFileName);
 
                 if (typeof NotificationSystem !== 'undefined') {
                     let notifMasivo = document.getElementById('modalProgresoWhatsApp');
                     if (!notifMasivo) {
                         // Solo mostrar notificación si no estamos en modo masivo
-                        NotificationSystem.show('📥 Descargados:\n' + pdfBundle.fileName + '\n' + icalFileName, 'info', 4000);
+                        NotificationSystem.show('📥 Descargado:\n' + icalFileName, 'info', 4000);
                     }
                 }
 
@@ -3277,17 +3256,11 @@ ex<!DOCTYPE html>
                         }
                     }, 2000);
                     
-                    console.log('✅ WhatsApp abierto (App o Web), PDF e iCalendar descargados');
+                    console.log('✅ WhatsApp abierto (App o Web), iCalendar descargado');
                     if (typeof NotificationSystem !== 'undefined') {
-                        NotificationSystem.show('✅ WhatsApp abierto • 📄 PDF + 🗓️ iCalendar descargados', 'success', 3000);
+                        NotificationSystem.show('✅ WhatsApp abierto • 🗓️ iCalendar descargado', 'success', 3000);
                     }
                 }, 1300);
-
-                // Limpiar URL del blob después de un tiempo
-                setTimeout(() => {
-                    URL.revokeObjectURL(pdfBundle.url);
-                    console.log('🧹 URLs limpiadas');
-                }, 30000);
 
             } catch (error) {
                 console.error('❌ Error en enviarWhatsAppEmpleadoDirecto:', error);

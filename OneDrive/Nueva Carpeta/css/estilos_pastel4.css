@@ -583,20 +583,38 @@ h1 {
 
 .vista-previa-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
     border-bottom: 2px solid #a855f7;
+}
+
+/* Responsive: En tablets 2 columnas */
+@media (max-width: 1200px) {
+    .vista-previa-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Responsive: En móviles 1 columna */
+@media (max-width: 768px) {
+    .vista-previa-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .empleado-info-card {
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
-    padding: 16px;
+    padding: 28px;
     border-radius: 10px;
     border: 2px solid #a855f7;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .empleado-info-card:hover {
@@ -607,18 +625,19 @@ h1 {
 
 .empleado-info-label {
     color: #94a3b8;
-    font-size: 11px;
+    font-size: 13px;
     text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
 }
 
 .empleado-info-value {
     color: #f1f5f9;
-    font-size: 16px;
+    font-size: 26px;
     font-weight: 700;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    line-height: 1.3;
 }
 
 /* Estilos para tabla del cuadrante individual */

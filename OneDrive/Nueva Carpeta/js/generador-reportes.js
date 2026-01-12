@@ -26,6 +26,9 @@ class GeneradorReportes {
         const mes = AppState.currentMonth;
         const año = AppState.currentYear;
         
+        // ✅ DEBUG: Verificar si hay turnos cargados
+        console.log(`[GeneradorReportes] Mes: ${mes}, Año: ${año}, Empleados: ${AppState.scheduleData.size}`);
+        
         let reporte = {
             periodo: `${this.getNombreMes(mes)}/${año}`,
             fechaGeneracion: new Date().toISOString(),
@@ -47,14 +50,38 @@ class GeneradorReportes {
 
         // ✅ CALCULAR ESTADÍSTICAS POR EMPLEADO
         empleados.forEach(empleado => {
-            const turnos = AppState.scheduleData.get(empleado.id) || [];
+            let turnos = AppState.scheduleData.get(empleado.id);
+            
+            // ✅ Si no hay turnos, intentar generar
+            if (!turnos || turnos.length === 0) {
+                console.log(`[GeneradorReportes] ⚠️ Sin turnos para ${empleado.nombre}, intentando generar...`);
+                if (typeof TurnoManager !== 'undefined' && TurnoManager.generarTurnosEmpleado) {
+                    const diasEnMes = new Date(año, mes, 0).getDate();
+                    turnos = TurnoManager.generarTurnosEmpleado(empleado, diasEnMes);
+                    AppState.scheduleData.set(empleado.id, turnos);
+                    console.log(`[GeneradorReportes] ✅ Generados ${turnos.length} turnos para ${empleado.nombre}`);
+                } else {
+                    turnos = [];
+                }
+            }
+            
             let horasEmpleado = 0;
             let turnosNocturnos = 0;
             let turnosDescanso = 0;
             const detallesTurnos = [];
 
             turnos.forEach(turno => {
-                if (turno.mes === mes && turno.anio === año) {
+                // ✅ FILTRAR POR MES/AÑO USANDO LA PROPIEDAD FECHA
+                if (!turno.fecha) return; // Saltar si no hay fecha
+                
+                const turnoDate = typeof turno.fecha === 'string' ? new Date(turno.fecha) : turno.fecha;
+                if (!turnoDate || isNaN(turnoDate.getTime())) return; // Validar fecha válida
+                
+                // ✅ IMPORTANTE: AppState.currentMonth usa 0-11 (como getMonth())
+                const turnoMes = turnoDate.getMonth();      // 0-11 (enero=0)
+                const turnoAño = turnoDate.getFullYear();   // 2026, etc
+                
+                if (turnoMes === mes && turnoAño === año) {
                     const tiposTurno = {
                         'mañana': 8, 'tarde': 8, 'noche': 8, 'mixto': 10,
                         'descanso': 0, 'vacaciones': 0, 'baja': 0, 'libre': 0, 'festivo': 0
@@ -101,6 +128,11 @@ class GeneradorReportes {
         // ✅ CALCULAR PROMEDIOS
         if (reporte.empleadosActivos > 0) {
             reporte.estadisticas.horaPromedio = (reporte.estadisticas.horasTotales / reporte.empleadosActivos).toFixed(1);
+        }
+
+        // ✅ GUARDAR CAMBIOS EN STORAGE SI SE GENERARON TURNOS
+        if (typeof AppState !== 'undefined') {
+            AppState.saveToStorage();
         }
 
         // ✅ DETECTAR CONFLICTOS Y WARNINGS
@@ -180,7 +212,20 @@ class GeneradorReportes {
 
         const mes = AppState.currentMonth;
         const año = AppState.currentYear;
-        const turnos = AppState.scheduleData.get(empleadoId) || [];
+        let turnos = AppState.scheduleData.get(empleadoId);
+        
+        // ✅ Si no hay turnos, intentar generar
+        if (!turnos || turnos.length === 0) {
+            console.log(`[GeneradorReportes] ⚠️ Sin turnos para ${empleado.nombre}, intentando generar...`);
+            if (typeof TurnoManager !== 'undefined' && TurnoManager.generarTurnosEmpleado) {
+                const diasEnMes = new Date(año, mes, 0).getDate();
+                turnos = TurnoManager.generarTurnosEmpleado(empleado, diasEnMes);
+                AppState.scheduleData.set(empleadoId, turnos);
+                console.log(`[GeneradorReportes] ✅ Generados ${turnos.length} turnos para ${empleado.nombre}`);
+            } else {
+                turnos = [];
+            }
+        }
         
         const reporteEmpleado = {
             empleado: {
@@ -213,7 +258,17 @@ class GeneradorReportes {
 
         // ✅ PROCESAR TURNOS DEL MES
         turnos.forEach(turno => {
-            if (turno.mes === mes && turno.anio === año) {
+            // ✅ FILTRAR POR MES/AÑO USANDO LA PROPIEDAD FECHA
+            if (!turno.fecha) return; // Saltar si no hay fecha
+            
+            const turnoDate = typeof turno.fecha === 'string' ? new Date(turno.fecha) : turno.fecha;
+            if (!turnoDate || isNaN(turnoDate.getTime())) return; // Validar fecha válida
+            
+            // ✅ IMPORTANTE: AppState.currentMonth usa 0-11 (como getMonth())
+            const turnoMes = turnoDate.getMonth();      // 0-11 (enero=0)
+            const turnoAño = turnoDate.getFullYear();   // 2026, etc
+            
+            if (turnoMes === mes && turnoAño === año) {
                 const tiposTurno = {
                     'mañana': { horas: 8, icono: '🌅' },
                     'tarde': { horas: 8, icono: '☀️' },
