@@ -170,39 +170,65 @@ class ControlesSemana5 {
         // Modal Auditoría
         const modalAuditoria = `
             <div id="modalAuditoria" class="modal">
-                <div class="modal-content">
-                    <h2>🔒 Sistema de Auditoría <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')">✕</button></h2>
+                <div class="modal-content" style="max-width: 1100px; background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);">
+                    <div style="background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%); padding: 20px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; color: white; font-size: 24px; font-weight: 700;">🔒 Sistema de Auditoría</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').classList.remove('active')" style="background: rgba(255,255,255,0.3); border: none; color: white; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">✕</button>
+                    </div>
                     
-                    <div class="modal-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                            <select id="selectFiltroEntidad" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                <option value="">Todas las entidades</option>
-                                <option value="turno">Turno</option>
-                                <option value="empleado">Empleado</option>
-                                <option value="backup">Backup</option>
-                            </select>
-                            <button onclick="ControlesSemana5.cargarHistorialAuditoria()" style="width: 100%;">🔄 Refrescar</button>
+                    <div class="modal-body" style="padding: 24px; color: #f1f5f9;">
+                        <!-- Filtros -->
+                        <div style="display: grid; grid-template-columns: 1fr 120px; gap: 12px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; color: #cbd5e1; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Filtrar por tipo:</label>
+                                <select id="selectFiltroEntidad" style="width: 100%; padding: 10px; background: #1e293b; color: #f1f5f9; border: 1px solid #475569; border-radius: 6px; font-size: 13px;">
+                                    <option value="">📋 Todas las entidades</option>
+                                    <option value="turno">🕐 Turno</option>
+                                    <option value="empleado">👤 Empleado</option>
+                                    <option value="backup">💾 Backup</option>
+                                </select>
+                            </div>
+                            <button onclick="ControlesSemana5.cargarHistorialAuditoria()" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; height: fit-content; align-self: flex-end;">🔄</button>
                         </div>
 
-                        <div id="historialAuditoria" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 12px; background: #f9f9f9;">
-                            Cargando...
+                        <!-- Historial con cards -->
+                        <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 20px; border: 1px solid #475569;">
+                            <h4 style="margin: 0 0 12px 0; color: #e2e8f0; font-size: 14px;">📜 Historial de Cambios</h4>
+                            <div id="historialAuditoria" style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                                Cargando...
+                            </div>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Detectar Actividades Sospechosas</h4>
-                            <button onclick="ControlesSemana5.detectarSospechosas()" style="width: 100%; margin-top: 10px;">⚠️ Analizar Ahora</button>
+                        <!-- Análisis de Seguridad -->
+                        <div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 8px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(249, 115, 22, 0.3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin: 0 0 4px 0; color: white; font-size: 14px;">⚠️ Detectar Actividades Sospechosas</h4>
+                                    <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 12px;">Analiza cambios anormales o potencialmente fraudulentos</p>
+                                </div>
+                                <button onclick="ControlesSemana5.detectarSospechosas()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap;">Analizar Ahora</button>
+                            </div>
                         </div>
 
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                            <h4>Exportar Reporte</h4>
-                            <input type="date" id="inputFechaInicio" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px;">
-                            <input type="date" id="inputFechaFin" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            <button onclick="ControlesSemana5.generarReporteAuditoria()" style="width: 100%; margin-top: 10px;">📋 Generar Reporte</button>
+                        <!-- Exportar Reporte -->
+                        <div style="background: #1e293b; border-radius: 8px; padding: 16px; border: 1px solid #475569;">
+                            <h4 style="margin: 0 0 12px 0; color: #e2e8f0; font-size: 14px;">📊 Exportar Reporte</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px;">
+                                <div>
+                                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 4px;">Desde:</label>
+                                    <input type="date" id="inputFechaInicio" style="width: 100%; padding: 8px; background: #0f172a; color: #f1f5f9; border: 1px solid #475569; border-radius: 6px; font-size: 12px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 4px;">Hasta:</label>
+                                    <input type="date" id="inputFechaFin" style="width: 100%; padding: 8px; background: #0f172a; color: #f1f5f9; border: 1px solid #475569; border-radius: 6px; font-size: 12px;">
+                                </div>
+                                <button onclick="ControlesSemana5.generarReporteAuditoria()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; height: fit-content; align-self: flex-end;">📋</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="modal-footer">
-                        <button onclick="document.getElementById('modalAuditoria').classList.remove('active')">Cerrar</button>
+                    <div class="modal-footer" style="padding: 16px 24px; border-top: 1px solid #475569; background: #0f172a; border-radius: 0 0 12px 12px;">
+                        <button onclick="document.getElementById('modalAuditoria').classList.remove('active')" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%); color: white; padding: 10px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -325,23 +351,90 @@ class ControlesSemana5 {
         const entidad = document.getElementById('selectFiltroEntidad')?.value;
         const resultado = SistemaAuditoriaAvanzado.obtenerHistorial({entidad: entidad || undefined});
 
-        let html = '<table style="width: 100%; font-size: 11px;"><tr><th>Usuario</th><th>Operación</th><th>Timestamp</th></tr>';
-        
-        resultado.registros.forEach(r => {
-            html += `<tr><td>${r.usuario}</td><td>${r.operacion}</td><td>${r.timestamp.substring(0, 10)}</td></tr>`;
+        if (!resultado.registros || resultado.registros.length === 0) {
+            document.getElementById('historialAuditoria').innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">📭</div>
+                    <p>Sin registros de auditoría</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        resultado.registros.slice(0, 50).forEach((r, idx) => {
+            const iconoOp = {
+                'crear': '✨',
+                'editar': '✏️',
+                'eliminar': '🗑️',
+                'exportar': '📤',
+                'guardar': '💾'
+            }[r.operacion] || '📌';
+
+            const iconoEntidad = {
+                'turno': '🕐',
+                'empleado': '👤',
+                'backup': '💾',
+                'sede': '🏢',
+                'departamento': '🏭'
+            }[r.entidad] || '📋';
+
+            const horaLocal = new Date(r.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const fechaLocal = new Date(r.timestamp).toLocaleDateString('es-ES');
+
+            html += `
+                <div style="background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.3s ease;" 
+                     onmouseover="this.style.borderColor='#a78bfa'; this.style.background='#1a1f35';" 
+                     onmouseout="this.style.borderColor='#475569'; this.style.background='#0f172a';">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span style="font-size: 18px;">${iconoEntidad}</span>
+                            <div>
+                                <div style="color: #f1f5f9; font-weight: 600; font-size: 13px;">
+                                    ${iconoOp} ${r.operacion.charAt(0).toUpperCase() + r.operacion.slice(1)} - ${r.entidad}
+                                </div>
+                                <div style="color: #cbd5e1; font-size: 11px; margin-top: 2px;">👤 ${r.usuario || 'Sistema'}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right; font-size: 11px; color: #94a3b8;">
+                            <div>${horaLocal}</div>
+                            <div>${fechaLocal}</div>
+                        </div>
+                    </div>
+                    ${r.detalles ? `<div style="color: #cbd5e1; font-size: 11px; padding-top: 8px; border-top: 1px solid #475569; margin-top: 8px;">📝 ${r.detalles}</div>` : ''}
+                </div>
+            `;
         });
 
-        html += '</table>';
-        document.getElementById('historialAuditoria').innerHTML = html || 'Sin registros';
+        document.getElementById('historialAuditoria').innerHTML = html;
     }
 
     static detectarSospechosas() {
         const resultado = SistemaAuditoriaAvanzado.detectarActividadesSospechosas();
+        
         if (resultado.sospechosas.length === 0) {
-            alert('✅ No se detectaron actividades sospechosas');
+            NotificationSystem.show('✅ No se detectaron actividades sospechosas', 'success');
         } else {
-            alert(`⚠️ ${resultado.sospechosas.length} alertas detectadas:\n` + 
-                resultado.sospechosas.map(s => `- ${s.tipo}: ${s.mensaje}`).join('\n'));
+            let html = '<div style="padding: 20px; background: #7c2d12; border-radius: 8px; border: 2px solid #ea580c;">';
+            html += `<h3 style="margin: 0 0 12px 0; color: #fca5a5; font-size: 16px;">⚠️ ${resultado.sospechosas.length} Alertas Detectadas</h3>`;
+            html += '<div style="display: flex; flex-direction: column; gap: 8px;">';
+            
+            resultado.sospechosas.forEach(s => {
+                html += `
+                    <div style="background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 4px; border-left: 3px solid #fca5a5;">
+                        <div style="color: #fca5a5; font-weight: 600; font-size: 12px;">${s.tipo}</div>
+                        <div style="color: #e7d5c8; font-size: 11px; margin-top: 2px;">${s.mensaje}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div></div>';
+            
+            // Mostrar en una notificación visual extendida
+            const container = document.createElement('div');
+            container.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: #0f172a; border: 2px solid #ea580c; border-radius: 12px; padding: 24px; max-width: 500px; max-height: 400px; overflow-y: auto; box-shadow: 0 20px 60px rgba(234, 88, 12, 0.5);';
+            container.innerHTML = html + `<button onclick="this.parentElement.remove()" style="margin-top: 16px; width: 100%; padding: 10px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cerrar</button>`;
+            document.body.appendChild(container);
         }
     }
 
