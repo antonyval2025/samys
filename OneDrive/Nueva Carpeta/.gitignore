@@ -1,0 +1,19 @@
+# Ignorar carpetas de sistema
+OneDrive/
+AppData/
+.vscode/
+.DS_Store
+.env
+node_modules/
+*.log
+
+# Ignorar archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
+.idea/
+
+# Ignorar base de datos local durante desarrollo
+*.db
+*.sqlite
