@@ -8,6 +8,21 @@ import sys
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'datos_bd')
 
+DEFAULT_EMPLOYEES = [
+    { 'id': 1, 'nombre': 'Juan García', 'email': 'juan@mail.com', 'telefono': '612345678', 'departamento': 'Limpieza', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'mañana', 'estado': 'activo' },
+    { 'id': 2, 'nombre': 'María López', 'email': 'maria@mail.com', 'telefono': '612345679', 'departamento': 'Limpieza', 'localidad': 'Madrid', 'horasContrato': 169, 'turnoPrincipal': 'tarde', 'estado': 'activo' },
+    { 'id': 3, 'nombre': 'Carlos Martínez', 'email': 'carlos@mail.com', 'telefono': '612345680', 'departamento': 'Mantenimiento', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'noche', 'estado': 'activo' },
+    { 'id': 4, 'nombre': 'Ana Rodríguez', 'email': 'ana@mail.com', 'telefono': '612345681', 'departamento': 'Limpieza', 'localidad': 'Leganés', 'horasContrato': 169, 'turnoPrincipal': 'mañana', 'estado': 'activo' },
+    { 'id': 5, 'nombre': 'Pedro Sánchez', 'email': 'pedro@mail.com', 'telefono': '612345682', 'departamento': 'Seguridad', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'noche', 'estado': 'activo' },
+    { 'id': 6, 'nombre': 'Laura Fernández', 'email': 'laura@mail.com', 'telefono': '612345683', 'departamento': 'Administración', 'localidad': 'Alcalá', 'horasContrato': 169, 'turnoPrincipal': 'mañana', 'estado': 'activo' },
+    { 'id': 7, 'nombre': 'Roberto Gómez', 'email': 'roberto@mail.com', 'telefono': '612345684', 'departamento': 'Operaciones', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'tarde', 'estado': 'activo' },
+    { 'id': 8, 'nombre': 'Sofía Herrera', 'email': 'sofia@mail.com', 'telefono': '612345685', 'departamento': 'Limpieza', 'localidad': 'Fuenlabrada', 'horasContrato': 169, 'turnoPrincipal': 'noche', 'estado': 'activo' },
+    { 'id': 9, 'nombre': 'Miguel Iglesias', 'email': 'miguel@mail.com', 'telefono': '612345686', 'departamento': 'Mantenimiento', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'mañana', 'estado': 'activo' },
+    { 'id': 10, 'nombre': 'Elena Jiménez', 'email': 'elena@mail.com', 'telefono': '612345687', 'departamento': 'Seguridad', 'localidad': 'Madrid', 'horasContrato': 169, 'turnoPrincipal': 'tarde', 'estado': 'activo' },
+    { 'id': 11, 'nombre': 'Francisco Moreno', 'email': 'francisco@mail.com', 'telefono': '612345688', 'departamento': 'Limpieza', 'localidad': 'Leganés', 'horasContrato': 169, 'turnoPrincipal': 'noche', 'estado': 'activo' },
+    { 'id': 12, 'nombre': 'Gabriela Núñez', 'email': 'gabriela@mail.com', 'telefono': '612345689', 'departamento': 'Administración', 'localidad': 'Getafe', 'horasContrato': 169, 'turnoPrincipal': 'mañana', 'estado': 'activo' }
+]
+
 class APIHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
@@ -38,6 +53,38 @@ class APIHandler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({'empleadoId': empleado_id, 'turnos': datos}).encode())
             else:
                 self.wfile.write(json.dumps({'empleadoId': empleado_id, 'turnos': {}}).encode())
+        
+        # GET /api/empleados - Listar todos los empleados desde los archivos JSON
+        elif path == '/api/empleados':
+            empleados_lista = []
+            if os.path.exists(DATA_DIR):
+                for filename in os.listdir(DATA_DIR):
+                    if filename.startswith("turnos_empleado_") and filename.endswith(".json"):
+                        filepath = os.path.join(DATA_DIR, filename)
+                        try:
+                            with open(filepath, 'r', encoding='utf-8') as f:
+                                data = json.load(f)
+                                if '_empleado' in data:
+                                    empleados_lista.append(data['_empleado'])
+                                elif 'empleado' in data: # Fallback por si la clave es diferente
+                                    empleados_lista.append(data['empleado'])
+                        except Exception as e:
+                            print(f"[API] Error leyendo {filename}: {e}")
+            
+            # Ordenar por ID si es posible
+            try:
+                empleados_lista.sort(key=lambda x: int(x.get('id', 0)))
+            except:
+                pass
+                
+            # Si no hay empleados con metadatos, usar la lista por defecto
+            if not empleados_lista:
+                print("[API] No se encontraron metadatos de empleados, usando lista por defecto")
+                empleados_lista = DEFAULT_EMPLOYEES
+                
+            print(f"[API] Retornando {len(empleados_lista)} empleados")
+            self.wfile.write(json.dumps(empleados_lista).encode())
+            
         else:
             self.wfile.write(json.dumps({'error': 'Not found'}).encode())
     

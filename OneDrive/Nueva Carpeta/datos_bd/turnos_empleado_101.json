@@ -1,4 +1,4 @@
-{
+﻿{
   "2026-0": {
     "mes": 0,
     "anio": 2026,
@@ -8,7 +8,7 @@
         "turno": "descanso",
         "horas": 0,
         "horario": "-",
-        "fecha": "2025-12-31T23:00:00.000Z",
+        "fecha": "2026-12-31T23:00:00.000Z",
         "esFinSemana": false
       },
       {
@@ -510,3 +510,4 @@
     "fechaActualizacion": "2026-01-03T17:13:40.096Z"
   }
 }
+

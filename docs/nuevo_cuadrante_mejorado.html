@@ -1792,30 +1792,6 @@ ex<!DOCTYPE html>
             const empleado = empleadosActuales.find(e => e.id === empleadoId) || empleados.find(e => e.id === empleadoId);
             if (!empleado) return;
 
-            // ✅ ACTUALIZAR VISTA PREVIA CON DATOS CORRECTOS
-            const vistaPrevia = document.getElementById('vistaPrevia');
-            if (vistaPrevia) {
-                const turnos = AppState.scheduleData.get(empleadoId) || [];
-                const mes = AppState.currentMonth;
-                const anio = AppState.currentYear;
-                const diasEnMes = new Date(anio, mes + 1, 0).getDate();
-                const turnosDelMes = turnos.filter(t => {
-                    if (!t.fecha) return t.dia >= 1 && t.dia <= diasEnMes;
-                    const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
-                    return fecha.getMonth() === mes && fecha.getFullYear() === anio;
-                });
-                const diasTrabajados = turnosDelMes.filter(t => t.turno && !['descanso', 'libre', 'baja', 'vacaciones'].includes(t.turno)).length;
-                
-                document.getElementById('nombreEmpleado').textContent = empleado.nombre;
-                document.getElementById('deptoEmpleado').textContent = empleado.departamento || 'N/A';
-                document.getElementById('horasEmpleado').textContent = (empleado.horasContrato || 0) + 'h';
-                document.getElementById('turnoEmpleado').textContent = empleado.turnoPrincipal || 'N/A';
-                document.getElementById('diasEmpleado').textContent = diasTrabajados;
-                vistaPrevia.style.display = 'block';
-                
-                AppState.selectedEmployee = empleado;
-            }
-
             const turnos = AppState.scheduleData.get(empleadoId) || [];
             const mes = AppState.currentMonth;
             const anio = AppState.currentYear;
@@ -1883,7 +1859,7 @@ ex<!DOCTYPE html>
                         <button class="btn-whatsapp-modal" onclick="exportarEmpleado(${empleadoId}, '${meses[mes] || 'Mes'}', ${anio}, 'whatsapp')" title="Enviar informe por WhatsApp" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(34, 197, 94, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(34, 197, 94, 0.3)'">
                             📱 WhatsApp
                         </button>
-                        <button onclick="document.getElementById('cuadranteIndividual').style.display = 'none'; document.getElementById('cuadranteIndividual').innerHTML = ''; document.getElementById('vistaPrevia').style.display = 'none'; AppState.selectedEmployee = null;" style="background: rgba(255,255,255,0.3); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 16px;">✖ Cerrar</button>
+                        <button onclick="document.getElementById('cuadranteIndividual').style.display = 'none'; document.getElementById('cuadranteIndividual').innerHTML = '';" style="background: rgba(255,255,255,0.3); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 16px;">✖ Cerrar</button>
                     </div>
 
                     <!-- Contenido -->
@@ -4518,7 +4494,7 @@ ex<!DOCTYPE html>
                     }
 
                     try {
-                        const response = await fetch('/api/empleados', {
+                        const response = await fetch('http://localhost:5001/api/empleados', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
@@ -4637,7 +4613,7 @@ ex<!DOCTYPE html>
                 eliminarEmpleado: async function(empleadoId) {
                     if (confirm('¿Eliminar este empleado?')) {
                         try {
-                            const response = await fetch(`/api/empleados/${empleadoId}`, {
+                            const response = await fetch(`http://localhost:5001/api/empleados/${empleadoId}`, {
                                 method: 'DELETE'
                             });
 
@@ -4671,7 +4647,7 @@ ex<!DOCTYPE html>
                         
                         // Intentar cargar desde API
                         try {
-                            const response = await fetch('/api/empleados');
+                            const response = await fetch('http://localhost:5001/api/empleados');
                             if (response.ok) {
                                 empleados = await response.json();
                                 console.log('[EmployeeManager] Cargados', empleados.length, 'empleados de la API');
@@ -4682,7 +4658,7 @@ ex<!DOCTYPE html>
                             console.warn('[EmployeeManager] API no disponible, usando empleados por defecto');
                         }
                         
-                        // Usar empleados por defecto
+                        // Usar empleados por defecto (lista completa de 12)
                         empleados = [
                             { id: 1, nombre: 'Juan García', email: 'juan@mail.com', telefono: '612345678', departamento: 'Limpieza', localidad: 'Getafe', horasContrato: 169, turnoPrincipal: 'mañana', estado: 'activo' },
                             { id: 2, nombre: 'María López', email: 'maria@mail.com', telefono: '612345679', departamento: 'Limpieza', localidad: 'Madrid', horasContrato: 169, turnoPrincipal: 'tarde', estado: 'activo' },
@@ -5442,7 +5418,7 @@ ex<!DOCTYPE html>
                             html.push(`<tr><td colspan="${diasEnMes + 1}" style="padding: 20px; text-align: center; color: #94a3b8;">No hay empleados que cumplan los criterios de filtro</td></tr>`);
                         } else {
                             empleadosFiltrados.forEach(empleado => {
-                                html.push(`<tr><td style="padding: 10px; background: #1a1f35; color: white; font-weight: bold; cursor: pointer;" onclick="mostrarCuadranteEmpleado(${empleado.id}); AppState.selectedEmployee = empleado;" title="Clic para ver cuadrante completo">${empleado.nombre}</td>`);
+                                html.push(`<tr><td style="padding: 10px; background: #1a1f35; color: white; font-weight: bold;">${empleado.nombre}</td>`);
                                 
                                 const turnos = AppState.scheduleData.get(empleado.id) || [];
                                 for (let dia = 1; dia <= diasEnMes; dia++) {
