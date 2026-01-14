@@ -25,6 +25,40 @@
         window.__initialMonth = new Date().getMonth();
         window.__initialYear = new Date().getFullYear();
         
+        // ⭐ INICIALIZAR VARIABLES GLOBALES
+        if (!window.empleados) {
+            window.empleados = [];
+        }
+        
+        // ⭐ CREAR 12 EMPLEADOS POR DEFECTO SI NO EXISTEN EN LOCALSTORAGE
+        try {
+            const empleadosGuardados = localStorage.getItem('empleadosData');
+            
+            if (!empleadosGuardados || empleadosGuardados === '[]') {
+                // No hay empleados guardados - crear los 12 por defecto
+                const empleadosPorDefecto = [
+                    { id: 1, nombre: 'Juan García', email: 'juan.garcia@empresa.com', telefono: '600123456', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
+                    { id: 2, nombre: 'María López', email: 'maria.lopez@empresa.com', telefono: '600123457', estado: 'activo', departamento: 'producción', turnoPrincipal: 'tarde', horas: 8, foto: '' },
+                    { id: 3, nombre: 'Carlos Martínez', email: 'carlos.martinez@empresa.com', telefono: '600123458', estado: 'activo', departamento: 'logística', turnoPrincipal: 'noche', horas: 8, foto: '' },
+                    { id: 4, nombre: 'Ana Rodríguez', email: 'ana.rodriguez@empresa.com', telefono: '600123459', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
+                    { id: 5, nombre: 'Luis Fernández', email: 'luis.fernandez@empresa.com', telefono: '600123460', estado: 'activo', departamento: 'logística', turnoPrincipal: 'tarde', horas: 8, foto: '' },
+                    { id: 6, nombre: 'Elena Sánchez', email: 'elena.sanchez@empresa.com', telefono: '600123461', estado: 'activo', departamento: 'calidad', turnoPrincipal: 'mañana', horas: 8, foto: '' },
+                    { id: 7, nombre: 'Diego Pérez', email: 'diego.perez@empresa.com', telefono: '600123462', estado: 'activo', departamento: 'producción', turnoPrincipal: 'noche', horas: 8, foto: '' },
+                    { id: 8, nombre: 'Isabel Torres', email: 'isabel.torres@empresa.com', telefono: '600123463', estado: 'activo', departamento: 'mantenimiento', turnoPrincipal: 'mañana', horas: 8, foto: '' },
+                    { id: 9, nombre: 'Roberto Díaz', email: 'roberto.diaz@empresa.com', telefono: '600123464', estado: 'activo', departamento: 'logística', turnoPrincipal: 'tarde', horas: 8, foto: '' },
+                    { id: 10, nombre: 'Patricia Moreno', email: 'patricia.moreno@empresa.com', telefono: '600123465', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
+                    { id: 11, nombre: 'Francisco Ruiz', email: 'francisco.ruiz@empresa.com', telefono: '600123466', estado: 'activo', departamento: 'calidad', turnoPrincipal: 'tarde', horas: 8, foto: '' },
+                    { id: 12, nombre: 'Gabriela Vargas', email: 'gabriela.vargas@empresa.com', telefono: '600123467', estado: 'activo', departamento: 'mantenimiento', turnoPrincipal: 'noche', horas: 8, foto: '' }
+                ];
+                
+                localStorage.setItem('empleadosData', JSON.stringify(empleadosPorDefecto));
+                window.empleados = empleadosPorDefecto;
+                console.log('✅ 12 empleados creados por defecto');
+            }
+        } catch (err) {
+            console.error('❌ Error inicializando empleados:', err);
+        }
+        
         // ⭐ VALIDAR DATOS EN LOCALSTORAGE - SOLO LIMPIAR SI ESTÁN CORRUPTOS
         try {
             const dataGuardada = localStorage.getItem('turnosAppState');
@@ -43,11 +77,6 @@
             }
         } catch (err) {
             console.error('❌ Error validando localStorage:', err);
-        }
-        
-        // ⭐ INICIALIZAR VARIABLES GLOBALES
-        if (!window.empleados) {
-            window.empleados = [];
         }
     </script>
     <!-- Librerías Externas -->
@@ -2941,7 +2970,7 @@
                         <div style="display: flex; gap: 10px; margin-top: 20px;">
                             <button id="btnIniciarWhatsApp" class="modal-btn" style="background: #22c55e; color: white; flex: 1; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">🚀 INICIAR ENVÍO</button>
                             <button onclick="document.getElementById('modalSemana1').classList.remove('active')" class="modal-btn" style="flex: 1; background: #e2e8f0; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">CANCELAR</button>
-                            
+
                         </div>
                     </div>
                 `;

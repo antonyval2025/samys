@@ -281,6 +281,12 @@ var empleados = [
             
             if (!saved) {
                 console.log('ℹ️ No hay datos previos. Usando configuración por defecto (12 empleados).');
+                // Intentar cargar empleados del localStorage como fallback
+                const empleadosGuardados = localStorage.getItem('empleadosData');
+                if (empleadosGuardados) {
+                    window.empleados = JSON.parse(empleadosGuardados);
+                    console.log(`👥 Cargados ${window.empleados.length} empleados desde empleadosData`);
+                }
                 return false;
             }
 
@@ -292,10 +298,17 @@ var empleados = [
             this.filters = data.filters || this.filters;
             this.userRole = data.userRole || 'admin';
 
-            // Restaurar Empleados
+            // Restaurar Empleados - Primero intenta desde el saved state, luego desde localStorage
             if (data.empleados && data.empleados.length > 0) {
                 window.empleados = data.empleados;
-                console.log(`👥 Restaurados ${window.empleados.length} empleados desde local.`);
+                console.log(`👥 Restaurados ${window.empleados.length} empleados desde turnosAppState.`);
+            } else {
+                // Fallback: cargar desde empleadosData si no están en turnosAppState
+                const empleadosGuardados = localStorage.getItem('empleadosData');
+                if (empleadosGuardados) {
+                    window.empleados = JSON.parse(empleadosGuardados);
+                    console.log(`👥 Cargados ${window.empleados.length} empleados desde empleadosData (fallback).`);
+                }
             }
 
             // ⭐ RESTAURAR TODOS LOS DATOS DE TODOS LOS MESES (NO SOLO EL MES ACTUAL)
