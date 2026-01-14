@@ -292,23 +292,27 @@ var empleados = [
 
             const data = JSON.parse(saved);
             
-            // Restaurar configuración básica
-            this.currentYear = data.year || 2026;
-            this.currentMonth = data.month || 0;
+            // Restaurar configuración básica - FORZAR MÍNIMO 2026
+            const savedYear = data.year || 2026;
+            if (savedYear < 2026) {
+                console.warn(`📅 Año detectado ${savedYear} es antiguo. Forzando 2026.`);
+                this.currentYear = 2026;
+                this.currentMonth = 0; // Reset a Enero si venimos de un año viejo
+            } else {
+                this.currentYear = savedYear;
+                this.currentMonth = data.month !== undefined ? data.month : 0;
+            }
+
             this.filters = data.filters || this.filters;
             this.userRole = data.userRole || 'admin';
 
-            // Restaurar Empleados - Primero intenta desde el saved state, luego desde localStorage
-            if (data.empleados && data.empleados.length > 0) {
+            // Restaurar Empleados - Solo si hay 12 o más, de lo contrario priorizar los del HTML
+            if (data.empleados && data.empleados.length >= 12) {
                 window.empleados = data.empleados;
-                console.log(`👥 Restaurados ${window.empleados.length} empleados desde turnosAppState.`);
+                console.log(`👥 Restaurados ${window.empleados.length} empleados desde almacenamiento.`);
             } else {
-                // Fallback: cargar desde empleadosData si no están en turnosAppState
-                const empleadosGuardados = localStorage.getItem('empleadosData');
-                if (empleadosGuardados) {
-                    window.empleados = JSON.parse(empleadosGuardados);
-                    console.log(`👥 Cargados ${window.empleados.length} empleados desde empleadosData (fallback).`);
-                }
+                console.log(`ℹ️ Almacenamiento tiene ${data.empleados?.length || 0} empleados. Se usarán los 12 por defecto del sistema.`);
+                // No sobreescribimos window.empleados para mantener los 12 cargados por el HTML
             }
 
             // ⭐ RESTAURAR TODOS LOS DATOS DE TODOS LOS MESES (NO SOLO EL MES ACTUAL)
@@ -1507,7 +1511,7 @@ class TurnoManager {
                 
                 if (turnosMes.length < diasEnMes) {
                     console.log(`  Generando ${diasEnMes} turnos para ${empleado.nombre}...`);
-                    const nuevosTurnos = this.generarTurnosEmpleado(empleado, AppState.currentYear, AppState.currentMonth);
+                    const nuevosTurnos = this.generarTurnosEmpleado(empleado, diasEnMes);
                     
                     // Agregar nuevos turnos al final
                     AppState.scheduleData.set(empleado.id, [...turnosExistentes, ...nuevosTurnos]);
@@ -4806,21 +4810,35 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Iniciando Sistema en Modo Local (Persistence with JSON/LocalStorage)...');
     
     // 1. Cargar datos del usuario (si existen)
-    AppState.loadFromStorage().then(exito => {
+    AppState.loadFromStorage().then(async exito => {
         if (exito) {
             console.log('✅ Base de datos local cargada con éxito');
+            
+            // ⭐ VERIFICACIÓN DE EMERGENCIA: Si el año cargado es viejo, forzar 2026
+            if (AppState.currentYear < 2026) {
+                console.warn('📅 Año cargado antiguo. Forzando 2026.');
+                AppState.currentYear = 2026;
+                AppState.currentMonth = 0; // Enero 2026
+            }
         } else {
             console.log('ℹ️ Iniciando base de datos con configuración predeterminada');
+            // Asegurar 2026 por defecto
+            AppState.currentYear = 2026;
+            AppState.currentMonth = 0;
             // Guardar el estado inicial para que exista en el primer arranque
             AppState.saveToStorage();
         }
         
-        // 2. Generar UI inicial
+        // 2. IMPORTANTE: Reiniciar datos para asegurar que el mes actual tenga turnos generados
+        console.log('🛠️ Ejecutando inicialización de datos para asegurar cuadrante...');
+        await TurnoManager.reiniciarDatos();
+        
+        // 3. Generar UI inicial
         if (typeof UI !== 'undefined' && UI.generarCuadranteGeneral) {
             UI.generarCuadranteGeneral();
             
             if (window.NotificationSystem) {
-                NotificationSystem.show('Sistema listo (Modo Local Privado)', 'info');
+                NotificationSystem.show('Sistema listo para 2026', 'info');
             }
         }
     }).catch(err => {
