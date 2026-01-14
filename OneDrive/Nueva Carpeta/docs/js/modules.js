@@ -306,13 +306,28 @@ var empleados = [
             this.filters = data.filters || this.filters;
             this.userRole = data.userRole || 'admin';
 
-            // Restaurar Empleados - Solo si hay 12 o más, de lo contrario priorizar los del HTML
-            if (data.empleados && data.empleados.length >= 12) {
+            // Restaurar Empleados - FORZAR 12 EMPLEADOS SI HAY MENOS
+            const countAlmacenamiento = (data.empleados && Array.isArray(data.empleados)) ? data.empleados.length : 0;
+            
+            if (countAlmacenamiento >= 12) {
                 window.empleados = data.empleados;
-                console.log(`👥 Restaurados ${window.empleados.length} empleados desde almacenamiento.`);
+                console.log(`✅ Restaurados ${window.empleados.length} empleados desde almacenamiento.`);
             } else {
-                console.log(`ℹ️ Almacenamiento tiene ${data.empleados?.length || 0} empleados. Se usarán los 12 por defecto del sistema.`);
-                // No sobreescribimos window.empleados para mantener los 12 cargados por el HTML
+                console.warn(`⚠️ Almacenamiento tenía solo ${countAlmacenamiento} empleados. Forzando restauración de los 12 por defecto.`);
+                // Intentar cargar empleados del localStorage como fallback
+                const empleadosGuardados = localStorage.getItem('empleadosData');
+                if (empleadosGuardados) {
+                    const parsed = JSON.parse(empleadosGuardados);
+                    if (parsed.length >= 12) {
+                        window.empleados = parsed;
+                        console.log(`✅ Restaurados ${window.empleados.length} empleados desde empleadosData.`);
+                    }
+                }
+                
+                // Si aún no tenemos 12, los mantendremos de la inicialización del HTML
+                if (!window.empleados || window.empleados.length < 12) {
+                    console.log('ℹ️ Usando empleados definidos en el HTML.');
+                }
             }
 
             // ⭐ RESTAURAR TODOS LOS DATOS DE TODOS LOS MESES (NO SOLO EL MES ACTUAL)

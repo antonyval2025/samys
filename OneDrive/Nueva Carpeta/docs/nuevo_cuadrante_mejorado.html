@@ -8,15 +8,20 @@
     <title>Sistema de Gestión de Turnos - Cuadrantes Mensuales</title>
     <script>
         // ⭐ VERSIONADO DE APP - Forzar actualización si versión cambia
-        const APP_VERSION = '2026.01.14.v2';
+        const APP_VERSION = '2026.01.15';
         const lastVersion = localStorage.getItem('appVersion');
         
         if (lastVersion !== APP_VERSION) {
-            console.log(`🔄 Versión nueva detectada: ${APP_VERSION}. Limpiando datos obsoletos...`);
+            console.log(`🔄 Versión nueva detectada: ${APP_VERSION}. Limpiando datos obsoletos para forzar 2026 y 12 empleados...`);
             // Limpiar localStorage solo para datos que pueden ser incompatibles
             localStorage.removeItem('turnosAppState');
             localStorage.removeItem('tiposTurnoData');
             localStorage.setItem('appVersion', APP_VERSION);
+            
+            // Forzar recarga completa para asegurar que los scripts se cargan sin cache
+            setTimeout(() => {
+                location.reload(true);
+            }, 100);
         }
         
         // Capturar errores antes que nada
@@ -1555,10 +1560,10 @@
     <!-- Módulos JavaScript - Orden de carga crítico -->
     
     <!-- ⏳ GUARDIAS GLOBALES - Carga PRIMERO para evitar errores de referencias indefinidas -->
-    <script src="js/guardias-globales.js?v=2026.01.14.v2"></script>
+    <script src="js/guardias-globales.js?v=2026.01.15"></script>
     
     <!-- ✅ MÓDULOS PRINCIPALES -->
-    <script src="js/modules.js?v=2026.01.14.v2"></script>
+    <script src="js/modules.js?v=2026.01.15"></script>
 
     <!-- 🚀 FASE 1: SidebarSemana3Module - Carga ANTES de otros módulos para evitar dependencias -->
     <script src="js/controles-sidebar-semana3.js"></script>
@@ -3758,59 +3763,62 @@
     <!-- INICIALIZACIÓN: Panel de Filtros y Análisis de Equidad -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ⭐ INICIALIZADOR DE EMERGENCIA - FORZAR CARGA CORRECTA 2026
-            console.log('🚀 [INICIALIZADOR EMERGENCIA] Verificando estado...');
-            
-            async function inicializarSistema() {
-                // 1. Asegurarse de que AppState existe
+            setTimeout(async () => {
+                // ⭐ INICIALIZADOR DE EMERGENCIA - FORZAR CARGA CORRECTA
+                console.log('🚀 [INICIALIZADOR EMERGENCIA] Verificando estado...');
+                
+                // 1. Asegurarse de que AppState existe y tiene año correcto
                 if (typeof AppState !== 'undefined') {
-                    // Cargar primero para ver qué hay
-                    await AppState.loadFromStorage();
-                    console.log(`📅 AppState cargado: Año ${AppState.currentYear}, Mes ${AppState.currentMonth}`);
+                    console.log(`📅 AppState año actual: ${AppState.currentYear}, mes: ${AppState.currentMonth}`);
                     
-                    // FORZAR 2026 si es antiguo
-                    if (!AppState.currentYear || AppState.currentYear < 2026) {
-                        console.warn('⚠️ Detectado año antiguo o nulo. Forzando Enero 2026.');
+                    // Si el año es 2025, actualizar a 2026
+                    if (AppState.currentYear < 2026) {
                         AppState.currentYear = 2026;
-                        AppState.currentMonth = 0; 
-                        
-                        // Si es un año muy viejo (2024), quizás convenga limpiar datos corruptos
-                        if (AppState.currentYear === 2024) {
-                            console.warn('🧹 Limpiando localStorage de 2024...');
-                            localStorage.removeItem('turnosAppState');
-                        }
-                        
+                        AppState.currentMonth = 0; // Enero
                         AppState.saveToStorage();
+                        console.log('✅ Actualizado año a 2026');
                     }
                     
-                    // 2. Asegurar que hay 12 empleados (Sincronización forzada)
-                    if (window.empleados && window.empleados.length < 12) {
-                        console.warn(`⚠️ Detectados solo ${window.empleados.length} empleados. Restaurando 12...`);
-                        // El código al inicio del archivo ya los definió, pero por si acaso:
-                        localStorage.setItem('empleadosData', JSON.stringify(window.empleados));
+                    // 2. Forzar carga de datos desde localStorage
+                    try {
+                        await AppState.loadFromStorage();
+                        console.log(`✅ Datos cargados: ${AppState.scheduleData.size} empleados en cache`);
+                    } catch (e) {
+                        console.error('❌ Error cargando datos:', e);
                     }
                     
-                    // 3. Forzar regeneración si no hay datos
-                    if (typeof TurnoManager !== 'undefined' && TurnoManager.reiniciarDatos) {
-                        console.log('🛠️ Ejecutando TurnoManager.reiniciarDatos()...');
-                        await TurnoManager.reiniciarDatos();
+                    // 3. Asegurar que hay 12 empleados
+                    if (!window.empleados || window.empleados.length < 12) {
+                        console.warn(`⚠️ Solo ${window.empleados?.length || 0} empleados cargados, restaurando 12 por defecto...`);
+                        const empleadosGuardados = localStorage.getItem('empleadosData');
+                        if (empleadosGuardados) {
+                            window.empleados = JSON.parse(empleadosGuardados);
+                            console.log(`✅ Restaurados ${window.empleados.length} empleados desde localStorage`);
+                        }
                     }
                     
-                    // 4. Actualizar selectores
+                    // 4. Generar cuadrante inicial
+                    if (typeof UI !== 'undefined' && UI.generarCuadranteGeneral) {
+                        console.log('📊 Generando cuadrante inicial...');
+                        try {
+                            UI.generarCuadranteGeneral();
+                            console.log('✅ Cuadrante generado exitosamente');
+                        } catch (e) {
+                            console.error('❌ Error generando cuadrante:', e);
+                        }
+                    }
+                    
+                    // 5. Actualizar selectores de año/mes
                     const selectYear = document.getElementById('selectYear');
                     const selectMonth = document.getElementById('selectMonth');
                     if (selectYear) selectYear.value = AppState.currentYear;
                     if (selectMonth) selectMonth.value = AppState.currentMonth;
-                    
-                    console.log('✅ Sistema inicializado en 2026 con 12 empleados');
+                    console.log('✅ Selectores actualizados');
+                } else {
+                    console.error('❌ AppState no está disponible');
                 }
-            }
-
-            // Ejecutar con un pequeño delay para asegurar que los scripts se han parseado
-            setTimeout(inicializarSistema, 500);
-
-            // Resto de inicialización (Filtros)
-            setTimeout(async () => {
+                
+                // Inicializar Panel de Filtros
                 if (typeof PanelFiltros !== 'undefined') {
                     try {
                         const html = await PanelFiltros.renderizar();
@@ -3823,7 +3831,7 @@
                         console.error('⚠️ Error inicializando Panel de Filtros:', e);
                     }
                 }
-            }, 1000);
+            }, 1500);
         });
     </script>
 
