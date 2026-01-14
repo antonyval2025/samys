@@ -1,4 +1,4 @@
-// =============================================
+﻿// =============================================
 // SISTEMA DE GESTIÓN DE TURNOS - MÓDULOS JS
 // =============================================
 
@@ -46,7 +46,7 @@ function calcularHorasContratoPorDepartamento(departamento, mes, anio) {
     const config = departamentosConfig[departamento];
     if (!config) return 160; // Fallback
     
-    // Promedio mensual: (horas/semana × 52 semanas) / 12 meses
+    // Promedio mensual: (horas/semana * 52 semanas) / 12 meses
     const horasMensuales = Math.round((config.horasPorSemana * 52 / 12) * 10) / 10;
     
     console.log(`[CalculadorHoras] Departamento: ${departamento} | ${config.horasPorSemana}h/semana → ${horasMensuales}h/mes`);
@@ -156,262 +156,173 @@ var empleados = [
         estado: "activo",
         email: "antony.garcia@empresa.com",
         telefono: "+34 600 888 999"
-    }
-];
+      },
+      {
+          id: 9,
+          nombre: "Miguel Ángel Ruiz",
+          departamento: "Administración",
+          localidad: "Madrid",
+          horasContrato: 160,
+          turnoPrincipal: "Mañana",
+          estado: "activo",
+          email: "miguel.ruiz@empresa.com",
+          telefono: "+34 600 999 000"
+      },
+      {
+          id: 10,
+          nombre: "Elena Beltrán Ocaña",
+          departamento: "Operaciones",
+          localidad: "Madrid",
+          horasContrato: 160,
+          turnoPrincipal: "Tarde",
+          estado: "activo",
+          email: "elena.beltran@empresa.com",
+          telefono: "+34 600 000 111"
+      },
+      {
+          id: 11,
+          nombre: "Ricardo Torres Gil",
+          departamento: "Ventas",
+          localidad: "Barcelona",
+          horasContrato: 140,
+          turnoPrincipal: "Mañana",
+          estado: "activo",
+          email: "ricardo.torres@empresa.com",
+          telefono: "+34 600 111 222"
+      },
+      {
+          id: 12,
+          nombre: "Isabel Castro León",
+          departamento: "Limpieza",
+          localidad: "Madrid",
+          horasContrato: 169,
+          turnoPrincipal: "Mañana",
+          estado: "activo",
+          email: "isabel.castro@empresa.com",
+          telefono: "+34 600 222 333"
+      }
+  ];
 
-// =============================================
-// ESTADO GLOBAL
-// =============================================
+  // =============================================
+  // ESTADO GLOBAL
+  // =============================================
 
-class AppState {
-    static currentYear = new Date().getFullYear();
-    static currentMonth = new Date().getMonth();
-    static selectedEmployee = null;
-    static scheduleData = new Map();
-    
-    // 🚀 CACHÉ: Almacenar datos por mes para evitar refetch innecesarios
-    static _apiCacheByMonth = new Map(); // { "2026-1": { empleadoId: [...turnos] } }
-    static _apiCacheTimestamp = new Map(); // { "2026-1": timestamp }
-    static filters = {
-        department: '',
-        status: '',
-        shiftType: ''
-    };
-    static cambiosPendientes = [];
-    static rangoSeleccionado = null;
-    static userRole = 'admin'; // admin | supervisor | empleado
+  class AppState {
+      static currentYear = 2026;
+      static currentMonth = 0; // Enero
+      static cambiosPendientes = [];
+      static rangoSeleccionado = null;
+      static userRole = 'admin'; // admin | supervisor | empleado
+      
+      static scheduleData = new Map();
+      static selectedEmployee = null;
+      static filters = {
+          departamento: 'todos',
+          localidad: 'todas',
+          busqueda: ''
+      };
 
     static saveToStorage() {
         try {
-            // 1️⃣ GUARDAR EN LOCALSTORAGE (respaldo local - SYNC)
-            const state = {
+            // 💾 GUARDAR ESTADO GLOBAL + DATOS POR MES
+            // La clave aquí es que TODOS los meses se guardan juntos
+            const currentData = {
                 year: this.currentYear,
                 month: this.currentMonth,
                 filters: this.filters,
                 selectedEmployeeId: this.selectedEmployee?.id || null,
+                // IMPORTANTE: scheduleData es un Map con todos los turnos de todos los meses
+                // Cada turno tiene una fecha que indica a qué mes pertenece
                 scheduleData: Array.from(this.scheduleData.entries()),
-                userRole: this.userRole
+                userRole: this.userRole,
+                empleados: window.empleados || [],
+                timestamp: new Date().toISOString()
             };
-            localStorage.setItem('turnosAppState', JSON.stringify(state));
-            console.log('💾 AppState guardado en localStorage');
             
-            // 2️⃣ GUARDAR EN API (persistencia en BD - ASYNC sin bloquear)
-            // Hacer esto en background sin esperar
-            this._guardarEnAPIBackground();
+            const dataJSON = JSON.stringify(currentData);
+            
+            // Guardar en localStorage (persistencia permanente)
+            localStorage.setItem('turnosAppState', dataJSON);
+            
+            // Guardar también en sessionStorage como respaldo (persistencia de sesión)
+            sessionStorage.setItem('turnosAppStateBackup', dataJSON);
+            
+            console.log('💾 [LocalDB] Guardado exitoso (localStorage + sessionStorage)');
+            
+            // Mostrar un pequeño indicador visual en la UI
+            const indicator = document.getElementById('save-indicator');
+            if (indicator) {
+                indicator.classList.add('visible');
+                setTimeout(() => indicator.classList.remove('visible'), 2000);
+            }
         } catch (error) {
-            console.error('❌ Error guardando estado:', error);
+            console.error('❌ Error en el guardado local:', error);
         }
-    }
-
-    static _guardarEnAPIBackground() {
-        // Esta función se ejecuta en background sin bloquear
-        const promesas = [];
-        
-        for (const [empId, turnos] of this.scheduleData) {
-            // Agrupar por mes/año
-            const turnosPorMes = {};
-            turnos.forEach(turno => {
-                const fecha = new Date(turno.fecha);
-                const mes = fecha.getMonth();
-                const anio = fecha.getFullYear();
-                const key = `${anio}-${mes}`;
-                
-                if (!turnosPorMes[key]) {
-                    turnosPorMes[key] = { mes, anio, turnos: [] };
-                }
-                turnosPorMes[key].turnos.push(turno);
-            });
-            
-            // Crear promesas para cada mes (en paralelo)
-            Object.values(turnosPorMes).forEach(mesData => {
-                const promesa = fetch(`http://localhost:5001/api/turnos/${empId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(mesData)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log(`✅ Turnos guardados en BD: empleado ${empId} (${mesData.mes}/${mesData.anio})`);
-                    } else {
-                        console.warn(`⚠️ Error guardando en BD (${response.status})`);
-                    }
-                })
-                .catch(apiError => {
-                    console.warn('⚠️ API no disponible:', apiError.message);
-                });
-                
-                promesas.push(promesa);
-            });
-        }
-        
-        // No esperar a las promesas, solo registrarse si todas se completan (sin bloquear)
-        Promise.all(promesas).then(() => {
-            console.log('📊 Todos los datos guardados en BD');
-        }).catch(() => {
-            console.warn('⚠️ Algunos datos no se guardaron en BD (pero se mantienen en localStorage)');
-        });
     }
 
     static async loadFromStorage() {
         try {
-            console.log(`[AppState.loadFromStorage] 🔄 Cargando datos para ${this.currentMonth}/${this.currentYear}...`);
+            console.log(`🔄 [LocalDB] Cargando datos del navegador...`);
             
-            // 🚨 PASO 1: CARGAR DESDE API (BD) - PRIORIDAD MÁXIMA
-            console.log('[AppState.loadFromStorage] 📡 Intentando cargar desde API/BD...');
-            await this._cargarDesdeAPI();
+            // Intentar cargar desde localStorage primero
+            let saved = localStorage.getItem('turnosAppState');
             
-            // 💾 PASO 2: CARGAR DESDE localStorage (si API falló o falta datos)
-            console.log('[AppState.loadFromStorage] 📂 Cargando desde localStorage (respaldo)...');
-            this._cargarDesdeLocalStorage();
-            
-            console.log(`[AppState.loadFromStorage] ✅ Carga completada. Total turnos en memoria: ${Array.from(this.scheduleData.values()).reduce((a,b) => a+b.length, 0)}`);
-            
-        } catch (error) {
-            console.error('[AppState.loadFromStorage] Error cargando estado:', error);
-        }
-    }
-
-    // 📡 NUEVA: Cargar datos desde API/BD (con reintentos)
-    static async _cargarDesdeAPI() {
-        try {
-            // Usar los meses ACTUALES (actualizados después de cambiar selector)
-            const mesActual = this.currentMonth;
-            const anioActual = this.currentYear;
-            const mesKeyBuscado = `${anioActual}-${mesActual}`;
-            
-            console.log(`[_cargarDesdeAPI] 📡 Cargando datos para ${mesKeyBuscado}...`);
-            
-            // 🚀 VERIFICAR CACHÉ: Si ya tenemos datos cacheados para este mes, usarlos
-            if (this._apiCacheByMonth.has(mesKeyBuscado)) {
-                const datosEnCache = this._apiCacheByMonth.get(mesKeyBuscado);
-                console.log(`[_cargarDesdeAPI] ⚡ Usando caché para ${mesKeyBuscado}`);
-                
-                // Restaurar datos desde caché
-                this.scheduleData.clear();
-                for (const [empId, turnos] of Object.entries(datosEnCache)) {
-                    this.scheduleData.set(parseInt(empId), turnos);
-                }
-                return; // No hacer fetch, usar caché
-            }
-            
-            const promesasAPI = empleados.map(empleado =>
-                fetch(`http://localhost:5001/api/turnos/${empleado.id}`)
-                    .then(response => {
-                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (!data.turnos) return { empleado, turnos: [], ok: false };
-                        
-                        // Procesar datos agrupados por mes - usar la clave correcta
-                        let turnosDelMesActual = [];
-                        
-                        if (data.turnos[mesKeyBuscado] && data.turnos[mesKeyBuscado].turnos) {
-                            turnosDelMesActual = data.turnos[mesKeyBuscado].turnos;
-                        }
-                        
-                        return { empleado, turnos: turnosDelMesActual, ok: true };
-                    })
-                    .catch(err => {
-                        console.warn(`⚠️ API error para ${empleado.nombre}:`, err.message);
-                        return { empleado, turnos: [], ok: false };
-                    })
-            );
-            
-            const resultados = await Promise.all(promesasAPI);
-            let turnosCargados = 0;
-            
-            // Limpiar datos anteriores del mes
-            this.scheduleData.clear();
-            
-            // 🚀 ALMACENAR EN CACHÉ mientras guardamos en memoria
-            const cacheParaEsteMes = {};
-            
-            for (const { empleado, turnos, ok } of resultados) {
-                if (ok && turnos && Array.isArray(turnos) && turnos.length > 0) {
-                    // Convertir fechas de string a Date
-                    const turnosConFechas = turnos.map(turno => ({
-                        ...turno,
-                        fecha: typeof turno.fecha === 'string' ? new Date(turno.fecha) : turno.fecha
-                    }));
-                    
-                    this.scheduleData.set(empleado.id, turnosConFechas);
-                    cacheParaEsteMes[empleado.id] = turnosConFechas; // Guardar en caché
-                    turnosCargados += turnosConFechas.length;
-                    console.log(`✅ BD: ${turnosConFechas.length} turnos cargados para ${empleado.nombre}`);
-                }
-            }
-            
-            if (turnosCargados > 0) {
-                // 🚀 GUARDAR EN CACHÉ
-                this._apiCacheByMonth.set(mesKeyBuscado, cacheParaEsteMes);
-                this._apiCacheTimestamp.set(mesKeyBuscado, Date.now());
-                console.log(`📊 BD: Total ${turnosCargados} turnos cargados desde API para ${mesKeyBuscado}`);
-                this.saveToStorage(); // Respaldar en localStorage
-            } else {
-                console.log(`ℹ️ No hay datos en BD para ${mesKeyBuscado}`);
-            }
-        } catch (error) {
-            console.error('❌ Error cargando desde API:', error.message);
-        }
-    }
-
-    // 📂 NUEVA: Cargar datos desde localStorage (respaldo)
-    static _cargarDesdeLocalStorage() {
-        try {
-            const saved = localStorage.getItem('turnosAppState');
+            // Si no hay datos en localStorage, intentar recuperar del respaldo en sessionStorage
             if (!saved) {
-                console.log('ℹ️ No hay datos en localStorage');
-                return;
-            }
-            
-            const state = JSON.parse(saved);
-            
-            this.filters = state.filters || this.filters;
-            this.userRole = state.userRole || 'admin';
-            
-            if (state.scheduleData && Array.isArray(state.scheduleData)) {
-                let turnosCargados = 0;
+                console.log('ℹ️ No hay datos en localStorage, intentando sessionStorage...');
+                saved = sessionStorage.getItem('turnosAppStateBackup');
                 
-                for (const [empId, turnos] of state.scheduleData) {
-                    // Solo cargar turnos del mes actual que NO estén en memoria (evitar duplicados)
-                    if (this.scheduleData.has(empId)) {
-                        continue; // Ya se cargó desde BD
-                    }
-                    
-                    const turnosFiltrados = turnos.filter(turno => {
-                        const fecha = new Date(turno.fecha);
-                        return fecha.getMonth() === this.currentMonth && 
-                               fecha.getFullYear() === this.currentYear;
-                    });
-                    
-                    if (turnosFiltrados.length > 0) {
-                        // Convertir fechas de string a Date
-                        turnosFiltrados.forEach(turno => {
-                            if (turno.fecha && typeof turno.fecha === 'string') {
-                                turno.fecha = new Date(turno.fecha);
-                            }
-                        });
-                        
-                        this.scheduleData.set(empId, turnosFiltrados);
-                        turnosCargados += turnosFiltrados.length;
-                        console.log(`✅ localStorage: ${turnosFiltrados.length} turnos cargados para empleado ${empId}`);
-                    }
-                }
-                
-                if (turnosCargados > 0) {
-                    console.log(`📊 localStorage: Total ${turnosCargados} turnos (como respaldo)`);
+                if (saved) {
+                    console.log('✅ Datos recuperados desde respaldo de sesión');
+                    // Restaurar a localStorage para persistencia futura
+                    localStorage.setItem('turnosAppState', saved);
                 }
             }
             
-            if (state.selectedEmployeeId) {
-                const employee = empleados.find(e => e.id === state.selectedEmployeeId);
-                if (employee) {
-                    this.selectedEmployee = employee;
-                }
+            if (!saved) {
+                console.log('ℹ️ No hay datos previos. Usando configuración por defecto (12 empleados).');
+                return false;
             }
-        } catch (error) {
-            console.error('❌ Error cargando desde localStorage:', error.message);
+
+            const data = JSON.parse(saved);
+            
+            // Restaurar configuración básica
+            this.currentYear = data.year || 2026;
+            this.currentMonth = data.month || 0;
+            this.filters = data.filters || this.filters;
+            this.userRole = data.userRole || 'admin';
+
+            // Restaurar Empleados
+            if (data.empleados && data.empleados.length > 0) {
+                window.empleados = data.empleados;
+                console.log(`👥 Restaurados ${window.empleados.length} empleados desde local.`);
+            }
+
+            // ⭐ RESTAURAR TODOS LOS DATOS DE TODOS LOS MESES (NO SOLO EL MES ACTUAL)
+            // Esto es crítico: si cargamos solo el mes actual, perdemos los otros meses
+            if (data.scheduleData && Array.isArray(data.scheduleData)) {
+                this.scheduleData.clear();
+                
+                // Restaurar TODOS los turnos (de todos los meses)
+                data.scheduleData.forEach(([empId, turnos]) => {
+                    const turnosProcesados = turnos.map(t => ({
+                        ...t, 
+                        fecha: t.fecha ? new Date(t.fecha) : null
+                    }));
+                    this.scheduleData.set(parseInt(empId), turnosProcesados);
+                });
+                
+                console.log(`📅 Cuadrante de TODOS LOS MESES cargado (${this.scheduleData.size} empleados con datos)`);
+            }
+
+            if (data.selectedEmployeeId) {
+                this.selectedEmployee = window.empleados.find(e => e.id === data.selectedEmployeeId);
+            }
+
+            return true;
+        } catch (e) {
+            console.error('❌ Error cargando base de datos local:', e);
+            return false;
         }
     }
 
@@ -920,6 +831,10 @@ class DateUtils {
             mes = 0;
             año++;
         }
+        
+        // 🔴 CRÍTICO: Guardar TODOS los datos del mes actual ANTES de cambiar
+        console.log(`[DateUtils.cambiarMes] 💾 Guardando datos del mes ${AppState.currentMonth}/${AppState.currentYear}...`);
+        AppState.saveToStorage();
         
         AppState.setMonth(mes);
         AppState.setYear(año);
@@ -1466,30 +1381,40 @@ class TurnoManager {
         console.log(`[inicializarDatos] 🔄 Iniciando para ${AppState.currentMonth}/${AppState.currentYear} (${diasEnMes} días)`);
 
         empleados.forEach(empleado => {
-            // ✅ VERIFICAR SI YA HAY DATOS PARA ESTE EMPLEADO EN ESTE MES
-            const turnosExistentes = AppState.scheduleData.get(empleado.id);
+            // ✅ VERIFICAR SI YA HAY DATOS PARA ESTE EMPLEADO EN ESTE MES ESPECÍFICO
+            const turnosExistentes = AppState.scheduleData.get(empleado.id) || [];
             
-            if (turnosExistentes && turnosExistentes.length > 0) {
-                // Verificar que los turnos son del mes actual
-                const primerTurno = turnosExistentes[0];
-                const fechaTurno = new Date(primerTurno.fecha);
-                
-                if (fechaTurno.getMonth() === AppState.currentMonth && 
-                    fechaTurno.getFullYear() === AppState.currentYear) {
-                    console.log(`[inicializarDatos] ✓ Turnos ya existen para ${empleado.nombre} (${turnosExistentes.length} días)`);
-                    return; // NO REGENERAR, YA EXISTEN
-                }
+            // Buscar si hay turno del mes actual
+            const tieneDelMesActual = turnosExistentes.some(t => {
+                const fecha = new Date(t.fecha);
+                return fecha.getMonth() === AppState.currentMonth && 
+                       fecha.getFullYear() === AppState.currentYear;
+            });
+            
+            if (tieneDelMesActual) {
+                console.log(`[inicializarDatos] ✓ Turnos ya existen para ${empleado.nombre} en ${AppState.currentMonth}/${AppState.currentYear}`);
+                return; // NO REGENERAR, YA EXISTEN para este mes
             }
             
-            // Si no hay datos, ENTONCES generar nuevos
+            // Si no hay datos de este mes, ENTONCES generar nuevos
             console.log(`[inicializarDatos] 🆕 Generando turnos para ${empleado.nombre} (${diasEnMes} días)`);
             
             const turnosNuevos = empleado.localidad 
                 ? TurnoManager.generarTurnosEmpleadoConLocalidad(empleado, diasEnMes)
                 : TurnoManager.generarTurnosEmpleado(empleado, diasEnMes);
             
-            AppState.scheduleData.set(empleado.id, turnosNuevos);
-            console.log(`[inicializarDatos] ✅ Turnos generados para ${empleado.nombre}: ${turnosNuevos.length} días`);
+            // ✅ CRÍTICO: AGREGAR los turnos nuevos, NO REEMPLAZAR
+            // Si ya existen turnos de otros meses, mantenerlos y agregar los del mes actual
+            if (turnosExistentes.length > 0) {
+                // Combinar: turnos anteriores + turnos nuevos del mes actual
+                const turnosCombinados = [...turnosExistentes, ...turnosNuevos];
+                AppState.scheduleData.set(empleado.id, turnosCombinados);
+                console.log(`[inicializarDatos] ✅ Turnos agregados para ${empleado.nombre}: ${turnosNuevos.length} días nuevos (total: ${turnosCombinados.length})`);
+            } else {
+                // Primer mes: simplemente guardar los turnos nuevos
+                AppState.scheduleData.set(empleado.id, turnosNuevos);
+                console.log(`[inicializarDatos] ✅ Turnos generados para ${empleado.nombre}: ${turnosNuevos.length} días`);
+            }
         });
         
         // IMPORTANTE: Guardar en storage después de inicializar
@@ -1497,7 +1422,7 @@ class TurnoManager {
         
         // GUARDAR EN API/BD TAMBIÉN
         console.log('[inicializarDatos] 📤 Guardando en API/BD...');
-        await this._guardarEnAPI();
+        // await this._guardarEnAPI(); (Modo Local)
     }
 
     static async reiniciarDatos() {
@@ -1571,7 +1496,11 @@ class TurnoManager {
         // ✅ Actualizar KPIs automáticamente después de cambiar mes
         if (typeof window.actualizarKPIs === 'function') {
             console.log('[TurnoManager.reiniciarDatos] 📊 Actualizando KPIs...');
-            window.actualizarKPIs().catch(e => console.error('[TurnoManager.reiniciarDatos] ❌ Error en actualizarKPIs:', e));
+            try {
+                window.actualizarKPIs();
+            } catch (e) {
+                console.error('[TurnoManager.reiniciarDatos] ❌ Error en actualizarKPIs:', e);
+            }
         }
 
         // ✅ Actualizar Calendario Visual (análisis de equidad horizontal)
@@ -1745,56 +1674,8 @@ class TurnoManager {
     }
 
     // Nueva función para guardar en API con reintentos
-    static async _guardarEnAPI() {
-        const apiURL = 'http://localhost:5001/api/turnos';
-        let totalGuardados = 0;
-        let erroresAPI = 0;
+    static async _guardarEnAPI() { console.log("API deshabilitada"); }
 
-        for (let empleado of empleados) {
-            const turnos = AppState.scheduleData.get(empleado.id) || [];
-            
-            // Filtrar solo turnos del mes actual
-            const turnosDelMes = turnos.filter(t => {
-                const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
-                return fecha.getMonth() === AppState.currentMonth && 
-                       fecha.getFullYear() === AppState.currentYear;
-            });
-            
-            if (turnosDelMes.length > 0) {
-                try {
-                    const response = await fetch(`${apiURL}/${empleado.id}`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            empleadoId: empleado.id,
-                            mes: AppState.currentMonth,
-                            anio: AppState.currentYear,
-                            turnos: turnosDelMes
-                        })
-                    });
-                    
-                    if (response.ok) {
-                        console.log(`✅ API: Turnos guardados para ${empleado.nombre} (${turnosDelMes.length} días)`);
-                        totalGuardados++;
-                    } else {
-                        console.warn(`⚠️ API (${response.status}): Error guardando turnos para ${empleado.nombre}`);
-                        erroresAPI++;
-                    }
-                } catch (e) {
-                    console.error(`❌ API DESCONECTADA: ${e.message}`);
-                    erroresAPI++;
-                }
-            }
-        }
-
-        console.log(`📊 Resultado: ${totalGuardados} empleados guardados, ${erroresAPI} errores`);
-        
-        if (erroresAPI > 0) {
-            console.warn('⚠️ ADVERTENCIA: Algunos datos no se guardaron en la BD. Verifica que el servidor esté en http://localhost:5001');
-        }
-    }
-
-    // ✅ NUEVA FUNCIÓN: Verificar y mostrar/ocultar botón
     static verificarYMostrarBoton() {
         const btn = document.getElementById('btnGenerarTurnos');
         if (!btn) {
@@ -2006,6 +1887,11 @@ class UI {
             // Marcar que ya se registró
             window._cuadranteGeneralObserverRegistrado = true;
             window._cuadranteGeneralObserver = observador;
+        }
+
+        // Actualizar KPIs de la parte inferior
+        if (typeof window.actualizarKPIs === 'function') {
+            window.actualizarKPIs();
         }
 
         console.timeEnd('generarCuadranteGeneral');
@@ -2943,34 +2829,7 @@ class EmployeeManager {
     }
 
     // Guardar empleado en la BD (API)
-    static guardarEmpleadoEnBD(empleado) {
-        try {
-            const payload = {
-                empleadoId: empleado.id,
-                mes: new Date().getMonth(),
-                anio: new Date().getFullYear(),
-                empleado: empleado
-            };
-
-            fetch('http://localhost:5001/api/empleados', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(res => {
-                if (res.ok) {
-                    console.log(`✅ Empleado ${empleado.nombre} guardado en BD`);
-                } else {
-                    console.warn(`⚠️ No se guardó empleado en BD: ${res.status}`);
-                }
-            })
-            .catch(e => {
-                console.warn(`⚠️ BD no disponible para guardar empleado: ${e.message}`);
-            });
-        } catch (error) {
-            console.error('Error guardando empleado en BD:', error);
-        }
-    }
+    static guardarEmpleadoEnBD(empleado) { console.log("API deshabilitada"); }
 }
 
 class TurnoEditor {
@@ -3182,6 +3041,24 @@ class TurnoEditor {
                         nombreTurnoNuevo = key;
                         break;
                     }
+                }
+            }
+            
+            // 🔴 VALIDACIÓN CRÍTICA: Si es guardia, debe ser domingo o festivo
+            if (nombreTurnoNuevo.toLowerCase().includes('guardia')) {
+                const fecha = turnoObj.fecha instanceof Date ? turnoObj.fecha : new Date(turnoObj.fecha);
+                const diaSemana = fecha.getDay();
+                const esDomingo = diaSemana === 0;
+                const esFestivo = typeof window.esFestivoLocal === 'function'
+                    ? window.esFestivoLocal(fecha, empleadoId)
+                    : (typeof window.esFestivo === 'function' ? window.esFestivo(fecha) : false);
+                
+                if (!esDomingo && !esFestivo) {
+                    // NO es domingo ni festivo - bloquear asignación de guardia
+                    const fechaFormato = fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+                    NotificationSystem.show(`❌ Las guardias solo se pueden asignar a domingos o festivos. ${fechaFormato} es un día laboral normal.`, 'error', 4000);
+                    console.warn(`[guardarDescripcion] ❌ Intento de asignar guardia a día laboral: ${nombreTurnoNuevo} el ${fechaFormato}`);
+                    return;  // Cancelar el guardado
                 }
             }
             
@@ -4801,4 +4678,109 @@ Características: Gestión de turnos, empleados, reportes, exportación PDF/What
 
 // =============================================
 // FIN DE MÓDULOS PRINCIPALES
+
+/**
+ * Clase para gestionar respaldos de datos en archivos JSON locales.
+ * Permite cumplir con el requisito de guardar datos en el dispositivo del usuario.
+ */
+class BackupManager {
+    static exportarDatosJSON() {
+        try {
+            const data = {
+                turnos: localStorage.getItem('turnosAppState'),
+                empleados: localStorage.getItem('empleadosData'),
+                config: localStorage.getItem('configuracionGeneral'),
+                export_date: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_turnos_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            NotificationSystem.show('💾 Archivo JSON descargado correctamente', 'success');
+        } catch (error) {
+            console.error('Error exportando:', error);
+            NotificationSystem.show('❌ Error al exportar datos', 'error');
+        }
+    }
+
+    static importarDatosJSON() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = event => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    if (data.turnos) localStorage.setItem('turnosAppState', data.turnos);
+                    if (data.empleados) localStorage.setItem('empleadosData', data.empleados);
+                    if (data.config) localStorage.setItem('configuracionGeneral', data.config);
+                    
+                    NotificationSystem.show('📥 Datos importados correctamente. Recargando...', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } catch (error) {
+                    console.error('Error importando:', error);
+                    NotificationSystem.show('❌ El archivo no es un formato válido', 'error');
+                }
+            };
+            reader.readAsText(file);
+        };
+        
+        input.click();
+    }
+
+    static limpiarDatosLocales() {
+        if (confirm('⚠️ ¿Estás seguro de que quieres borrar TODOS los datos locales? Esta acción no se puede deshacer.')) {
+            localStorage.clear();
+            NotificationSystem.show('🗑️ Datos borrados. Reiniciando...', 'info');
+            setTimeout(() => location.reload(), 1000);
+        }
+    }
+}
+
+window.AppState = AppState;
+window.EmployeeManager = EmployeeManager;
+window.TurnoManager = TurnoManager;
+window.UI = UI;
+window.BackupManager = BackupManager;
+
 // =============================================
+// INICIALIZACIÓN AUTOMÁTICA (MODO LOCAL JSON)
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Iniciando Sistema en Modo Local (Persistence with JSON/LocalStorage)...');
+    
+    // 1. Cargar datos del usuario (si existen)
+    AppState.loadFromStorage().then(exito => {
+        if (exito) {
+            console.log('✅ Base de datos local cargada con éxito');
+        } else {
+            console.log('ℹ️ Iniciando base de datos con configuración predeterminada');
+            // Guardar el estado inicial para que exista en el primer arranque
+            AppState.saveToStorage();
+        }
+        
+        // 2. Generar UI inicial
+        if (typeof UI !== 'undefined' && UI.generarCuadranteGeneral) {
+            UI.generarCuadranteGeneral();
+            
+            if (window.NotificationSystem) {
+                NotificationSystem.show('Sistema listo (Modo Local Privado)', 'info');
+            }
+        }
+    }).catch(err => {
+        console.error('❌ Error crítico en inicialización:', err);
+    });
+});
+

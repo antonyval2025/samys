@@ -26,22 +26,19 @@ class DocumentAnalyzer {
             # Arquitectura del Sistema de Gestión de Turnos
             
             ## Clases Principales
-            - AppState: Gestiona estado global de la app
-            - EmployeeManager: CRUD de empleados
+            - AppState: Gestiona estado global de la app (Local Only)
+            - BackupManager: Exportación e Importación de datos en formato JSON
             - TurnoManager: Generación y formato de turnos
             - TurnoEditor: Edición interactiva de turnos
             - UI: Renderización de tablas
             - ExportManager: Exportación PDF, Excel, WhatsApp
             - ChatBot: Asistente inteligente
             
-            ## Datos
-            - localStorage['turnosAppState']: Estado global
-            - localStorage['empleadosData']: Lista de empleados
-            - Map<empleadoId, Array<turno>>: Turnos por empleado
-            
-            ## Persistencia
-            - Automática después de cada cambio
-            - Carga en inicialización (DOMContentLoaded)
+            ## Datos y Persistencia
+            - localStorage['turnosAppState']: Turnos y estado del cuadrante
+            - localStorage['empleadosData']: Base de datos de empleados
+            - 100% Serverless: Sin dependencias de bases de datos externas o APIs.
+            - Backups: Archivos JSON descargables para portabilidad de datos.
         `);
 
         this.agregarDocumento('EMPLEADOS', `
