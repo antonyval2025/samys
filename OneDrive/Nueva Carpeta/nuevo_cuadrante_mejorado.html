@@ -44,29 +44,25 @@
         
         // ⭐ CREAR 12 EMPLEADOS POR DEFECTO SI NO EXISTEN EN LOCALSTORAGE
         try {
-            const empleadosGuardados = localStorage.getItem('empleadosData');
+            // SIEMPRE recrear empleados para sincronizar con modules.js
+            const empleadosPorDefecto = [
+                { id: 1, nombre: 'María Rodríguez López', departamento: 'Operaciones', localidad: 'Madrid', horasContrato: 160, turnoPrincipal: 'Mañana', estado: 'activo', email: 'maria.rodriguez@empresa.com', telefono: '+34 600 111 222' },
+                { id: 2, nombre: 'Carlos Martínez Gutiérrez', departamento: 'Ventas', localidad: 'Barcelona', horasContrato: 140, turnoPrincipal: 'Tarde', estado: 'activo', email: 'carlos.martinez@empresa.com', telefono: '+34 600 222 333' },
+                { id: 3, nombre: 'Ana García Pérez', departamento: 'Administración', localidad: 'Valencia', horasContrato: 120, turnoPrincipal: 'Mañana', estado: 'vacaciones', email: 'ana.garcia@empresa.com', telefono: '+34 600 333 444' },
+                { id: 4, nombre: 'Javier Sánchez Ruiz', departamento: 'Soporte Técnico', localidad: 'Madrid', horasContrato: 180, turnoPrincipal: 'Noche', estado: 'activo', email: 'javier.sanchez@empresa.com', telefono: '+34 600 444 555' },
+                { id: 5, nombre: 'Laura Fernández Díaz', departamento: 'Operaciones', localidad: 'Bilbao', horasContrato: 160, turnoPrincipal: 'Mañana', estado: 'baja', email: 'laura.fernandez@empresa.com', telefono: '+34 600 555 666' },
+                { id: 6, nombre: 'Pedro Gómez Martín', departamento: 'Ventas', localidad: 'Barcelona', horasContrato: 140, turnoPrincipal: 'Tarde', estado: 'activo', email: 'pedro.gomez@empresa.com', telefono: '+34 600 666 777' },
+                { id: 7, nombre: 'Sofía López Martínez', departamento: 'Administración', localidad: 'Madrid', horasContrato: 120, turnoPrincipal: 'Mañana', estado: 'activo', email: 'sofia.lopez@empresa.com', telefono: '+34 600 777 888' },
+                { id: 8, nombre: 'Antony García Rodríguez', departamento: 'Operaciones', localidad: 'Getafe', horasContrato: 160, turnoPrincipal: 'Mañana', estado: 'activo', email: 'antony.garcia@empresa.com', telefono: '+34 600 888 999' },
+                { id: 9, nombre: 'Miguel Ángel Ruiz', departamento: 'Administración', localidad: 'Madrid', horasContrato: 160, turnoPrincipal: 'Mañana', estado: 'activo', email: 'miguel.ruiz@empresa.com', telefono: '+34 600 999 000' },
+                { id: 10, nombre: 'Elena Beltrán Ocaña', departamento: 'Operaciones', localidad: 'Madrid', horasContrato: 160, turnoPrincipal: 'Tarde', estado: 'activo', email: 'elena.beltran@empresa.com', telefono: '+34 600 000 111' },
+                { id: 11, nombre: 'Ricardo Torres Gil', departamento: 'Ventas', localidad: 'Barcelona', horasContrato: 140, turnoPrincipal: 'Mañana', estado: 'activo', email: 'ricardo.torres@empresa.com', telefono: '+34 600 111 222' },
+                { id: 12, nombre: 'Isabel Castro León', departamento: 'Limpieza', localidad: 'Madrid', horasContrato: 169, turnoPrincipal: 'Mañana', estado: 'activo', email: 'isabel.castro@empresa.com', telefono: '+34 600 222 333' }
+            ];
             
-            if (!empleadosGuardados || empleadosGuardados === '[]') {
-                // No hay empleados guardados - crear los 12 por defecto
-                const empleadosPorDefecto = [
-                    { id: 1, nombre: 'Juan García', email: 'juan.garcia@empresa.com', telefono: '600123456', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
-                    { id: 2, nombre: 'María López', email: 'maria.lopez@empresa.com', telefono: '600123457', estado: 'activo', departamento: 'producción', turnoPrincipal: 'tarde', horas: 8, foto: '' },
-                    { id: 3, nombre: 'Carlos Martínez', email: 'carlos.martinez@empresa.com', telefono: '600123458', estado: 'activo', departamento: 'logística', turnoPrincipal: 'noche', horas: 8, foto: '' },
-                    { id: 4, nombre: 'Ana Rodríguez', email: 'ana.rodriguez@empresa.com', telefono: '600123459', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
-                    { id: 5, nombre: 'Luis Fernández', email: 'luis.fernandez@empresa.com', telefono: '600123460', estado: 'activo', departamento: 'logística', turnoPrincipal: 'tarde', horas: 8, foto: '' },
-                    { id: 6, nombre: 'Elena Sánchez', email: 'elena.sanchez@empresa.com', telefono: '600123461', estado: 'activo', departamento: 'calidad', turnoPrincipal: 'mañana', horas: 8, foto: '' },
-                    { id: 7, nombre: 'Diego Pérez', email: 'diego.perez@empresa.com', telefono: '600123462', estado: 'activo', departamento: 'producción', turnoPrincipal: 'noche', horas: 8, foto: '' },
-                    { id: 8, nombre: 'Isabel Torres', email: 'isabel.torres@empresa.com', telefono: '600123463', estado: 'activo', departamento: 'mantenimiento', turnoPrincipal: 'mañana', horas: 8, foto: '' },
-                    { id: 9, nombre: 'Roberto Díaz', email: 'roberto.diaz@empresa.com', telefono: '600123464', estado: 'activo', departamento: 'logística', turnoPrincipal: 'tarde', horas: 8, foto: '' },
-                    { id: 10, nombre: 'Patricia Moreno', email: 'patricia.moreno@empresa.com', telefono: '600123465', estado: 'activo', departamento: 'producción', turnoPrincipal: 'mañana', horas: 8, foto: '' },
-                    { id: 11, nombre: 'Francisco Ruiz', email: 'francisco.ruiz@empresa.com', telefono: '600123466', estado: 'activo', departamento: 'calidad', turnoPrincipal: 'tarde', horas: 8, foto: '' },
-                    { id: 12, nombre: 'Gabriela Vargas', email: 'gabriela.vargas@empresa.com', telefono: '600123467', estado: 'activo', departamento: 'mantenimiento', turnoPrincipal: 'noche', horas: 8, foto: '' }
-                ];
-                
-                localStorage.setItem('empleadosData', JSON.stringify(empleadosPorDefecto));
-                window.empleados = empleadosPorDefecto;
-                console.log('✅ 12 empleados creados por defecto');
-            }
+            localStorage.setItem('empleadosData', JSON.stringify(empleadosPorDefecto));
+            window.empleados = empleadosPorDefecto;
+            console.log('✅ 12 empleados SINCRONIZADOS con modules.js');
         } catch (err) {
             console.error('❌ Error inicializando empleados:', err);
         }
@@ -3763,6 +3759,60 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(async () => {
+                // ⭐ INICIALIZADOR DE EMERGENCIA - FORZAR CARGA CORRECTA
+                console.log('🚀 [INICIALIZADOR EMERGENCIA] Verificando estado...');
+                
+                // 1. Asegurarse de que AppState existe y tiene año correcto
+                if (typeof AppState !== 'undefined') {
+                    console.log(`📅 AppState año actual: ${AppState.currentYear}, mes: ${AppState.currentMonth}`);
+                    
+                    // Si el año es 2025, actualizar a 2026
+                    if (AppState.currentYear < 2026) {
+                        AppState.currentYear = 2026;
+                        AppState.currentMonth = 0; // Enero
+                        AppState.saveToStorage();
+                        console.log('✅ Actualizado año a 2026');
+                    }
+                    
+                    // 2. Forzar carga de datos desde localStorage
+                    try {
+                        await AppState.loadFromStorage();
+                        console.log(`✅ Datos cargados: ${AppState.scheduleData.size} empleados en cache`);
+                    } catch (e) {
+                        console.error('❌ Error cargando datos:', e);
+                    }
+                    
+                    // 3. Asegurar que hay 12 empleados
+                    if (!window.empleados || window.empleados.length < 12) {
+                        console.warn(`⚠️ Solo ${window.empleados?.length || 0} empleados cargados, restaurando 12 por defecto...`);
+                        const empleadosGuardados = localStorage.getItem('empleadosData');
+                        if (empleadosGuardados) {
+                            window.empleados = JSON.parse(empleadosGuardados);
+                            console.log(`✅ Restaurados ${window.empleados.length} empleados desde localStorage`);
+                        }
+                    }
+                    
+                    // 4. Generar cuadrante inicial
+                    if (typeof UI !== 'undefined' && UI.generarCuadranteGeneral) {
+                        console.log('📊 Generando cuadrante inicial...');
+                        try {
+                            UI.generarCuadranteGeneral();
+                            console.log('✅ Cuadrante generado exitosamente');
+                        } catch (e) {
+                            console.error('❌ Error generando cuadrante:', e);
+                        }
+                    }
+                    
+                    // 5. Actualizar selectores de año/mes
+                    const selectYear = document.getElementById('selectYear');
+                    const selectMonth = document.getElementById('selectMonth');
+                    if (selectYear) selectYear.value = AppState.currentYear;
+                    if (selectMonth) selectMonth.value = AppState.currentMonth;
+                    console.log('✅ Selectores actualizados');
+                } else {
+                    console.error('❌ AppState no está disponible');
+                }
+                
                 // Inicializar Panel de Filtros
                 if (typeof PanelFiltros !== 'undefined') {
                     try {
@@ -3776,7 +3826,7 @@
                         console.error('⚠️ Error inicializando Panel de Filtros:', e);
                     }
                 }
-            }, 2000);
+            }, 1500);
         });
     </script>
     
