@@ -7,6 +7,18 @@
     <meta name="supported-color-schemes" content="light">
     <title>Sistema de Gestión de Turnos - Cuadrantes Mensuales</title>
     <script>
+        // ⭐ VERSIONADO DE APP - Forzar actualización si versión cambia
+        const APP_VERSION = '2026.01.14.v2';
+        const lastVersion = localStorage.getItem('appVersion');
+        
+        if (lastVersion !== APP_VERSION) {
+            console.log(`🔄 Versión nueva detectada: ${APP_VERSION}. Limpiando datos obsoletos...`);
+            // Limpiar localStorage solo para datos que pueden ser incompatibles
+            localStorage.removeItem('turnosAppState');
+            localStorage.removeItem('tiposTurnoData');
+            localStorage.setItem('appVersion', APP_VERSION);
+        }
+        
         // Capturar errores antes que nada
         window.addEventListener('error', function(e) {
             console.error('ERROR UNCAUGHT:', e.message, 'en', e.filename, ':', e.lineno);
@@ -1547,10 +1559,10 @@
     <!-- Módulos JavaScript - Orden de carga crítico -->
     
     <!-- ⏳ GUARDIAS GLOBALES - Carga PRIMERO para evitar errores de referencias indefinidas -->
-    <script src="js/guardias-globales.js"></script>
+    <script src="js/guardias-globales.js?v=2026.01.14.v2"></script>
     
     <!-- ✅ MÓDULOS PRINCIPALES -->
-    <script src="js/modules.js"></script>
+    <script src="js/modules.js?v=2026.01.14.v2"></script>
 
     <!-- 🚀 FASE 1: SidebarSemana3Module - Carga ANTES de otros módulos para evitar dependencias -->
     <script src="js/controles-sidebar-semana3.js"></script>
