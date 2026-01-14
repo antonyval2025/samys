@@ -3829,6 +3829,188 @@
             }, 1500);
         });
     </script>
+
+    <!-- ⭐ FUNCIÓN WHATSAPP INDIVIDUAL -->
+    <script>
+        // Función auxiliar para normalizar strings
+        function lowerCaseSafe(str) {
+            return (str ?? '').toString().toLowerCase().trim();
+        }
+
+        async function enviarWhatsAppIndividual() {
+            try {
+                console.log('🔵 [enviarWhatsAppIndividual] Iniciando...');
+                const cuadranteIndividual = document.getElementById('cuadranteIndividual');
+                if (!cuadranteIndividual || cuadranteIndividual.style.display === 'none') {
+                    alert('Error: El cuadrante individual no está abierto');
+                    return;
+                }
+                console.log('✅ [enviarWhatsAppIndividual] Cuadrante individual encontrado');
+
+                const btnWhatsAppOriginal = cuadranteIndividual.querySelector('.btn-whatsapp-modal');
+                const onclickAttr = btnWhatsAppOriginal?.getAttribute('onclick') || '';
+                let matchParams = onclickAttr.match(/exportarEmpleado\((\d+)\s*,\s*['"]([^'"\)]+)['"]\s*,\s*(\d+)/);
+
+                const titleEl = cuadranteIndividual.querySelector('h3');
+                let mesNombre = '';
+                let anio = 0;
+
+                if (matchParams) {
+                    mesNombre = matchParams[2];
+                    anio = parseInt(matchParams[3]);
+                } else {
+                    const titulo = titleEl?.textContent || '';
+                    const mesesNombresRaw = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+                    const encontrado = mesesNombresRaw.find(m => titulo.includes(m));
+                    if (!encontrado) {
+                        alert('Error: No se puede identificar el mes');
+                        return;
+                    }
+                    mesNombre = encontrado;
+                    const matchYear = titulo.match(/(20\d{2})/);
+                    anio = matchYear ? parseInt(matchYear[1]) : AppState.currentYear;
+                    const matchEmp = onclickAttr.match(/exportarEmpleado\((\d+)/);
+                    if (matchEmp) {
+                        matchParams = matchEmp;
+                    }
+                }
+
+                if (!matchParams) {
+                    alert('Error: No se pudo identificar el empleado');
+                    return;
+                }
+
+                const empleadoId = parseInt(matchParams[1]);
+                const empleado = empleados.find(e => e.id === empleadoId);
+                if (!empleado) {
+                    alert('Error: Empleado no encontrado');
+                    return;
+                }
+
+                const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                const normalizarMes = (valor) => (valor ?? '').toString().trim();
+                mesNombre = normalizarMes(mesNombre);
+                let mesNum = mesNombre ? mesesNombres.findIndex(m => lowerCaseSafe(m) === lowerCaseSafe(mesNombre)) : -1;
+                let anioSeleccionado = anio || AppState.currentYear;
+
+                if (mesNum === -1) {
+                    alert('Error: No se puede identificar el mes del cuadrante');
+                    return;
+                }
+
+                let turnosDelMes;
+                const turnosDelAppState = AppState.scheduleData.get(empleadoId) || [];
+                
+                turnosDelMes = turnosDelAppState.filter(t => {
+                    if (!t?.fecha) return false;
+                    const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
+                    return fecha.getMonth() === mesNum && fecha.getFullYear() === anioSeleccionado;
+                });
+                
+                const totalHoras = Math.round(turnosDelMes.reduce((sum, t) => sum + (t?.horas || 0), 0) * 100) / 100;
+                
+                console.log(`🔵 [enviarWhatsAppIndividual] Turnos del empleado ${empleadoId}: ${turnosDelAppState.length} total, ${turnosDelMes.length} del mes ${mesNum + 1}/${anioSeleccionado}, Total horas: ${totalHoras}h`);
+
+                const horasContrato = parseFloat(empleado.horasContrato) || 0;
+                const balance = totalHoras - horasContrato;
+                const cumplimiento = horasContrato > 0 ? Math.round((totalHoras / horasContrato) * 100) : 0;
+
+                let mensaje = `📋 *CUADRANTE MENSUAL*\n\n`;
+                mensaje += `*${empleado.nombre}*\n`;
+                mensaje += `\n*📊 Resumen ${mesNombre} ${anioSeleccionado}:*\n`;
+                mensaje += `• Horas Trabajadas: ${totalHoras}h\n`;
+                mensaje += `• Balance: ${balance >= 0 ? '+' : ''}${balance.toFixed(2)}h\n`;
+                mensaje += `• Cumplimiento: ${cumplimiento}%\n`;
+                mensaje += `• Contrato: ${horasContrato}h mensuales\n\n`;
+                mensaje += `📎 Consulta el cuadrante completo en la aplicación.`;
+
+                const numeroWhatsApp = empleado.telefono ? empleado.telefono.replace(/\D/g, '') : '';
+                if (!numeroWhatsApp) {
+                    alert('❌ El empleado no tiene número de teléfono registrado');
+                    return;
+                }
+
+                console.log('🟢 Abriendo WhatsApp...');
+                const urlWhatsApp = `whatsapp://send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensaje)}`;
+                console.log('🔗 URL WhatsApp:', urlWhatsApp.substring(0, 50) + '...');
+                window.location.href = urlWhatsApp;
+
+                if (typeof NotificationSystem !== 'undefined') {
+                    NotificationSystem.show('📱 Abriendo WhatsApp...', 'info', 3000);
+                }
+
+            } catch (error) {
+                console.error('❌ [enviarWhatsAppIndividual] Error:', error);
+                alert('Error en WhatsApp: ' + error.message);
+            }
+        }
+    </script>
+
+    <!-- ⭐ FAB FLOTANTE CON VALIDACIÓN DE CONTRASEÑA -->
+    <script>
+        // FAB flotante para borrar cuadrante con validación
+        const fabHTML = `
+            <button id="fabBorrar" style="
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #ff4757 0%, #e74c3c 100%);
+                color: white;
+                border: none;
+                font-size: 28px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+                transition: all 0.3s ease;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            " title="Borrar cuadrante (requiere contraseña)">
+                🗑️
+            </button>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', fabHTML);
+        
+        const fabBtn = document.getElementById('fabBorrar');
+        fabBtn.addEventListener('mouseover', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.boxShadow = '0 6px 16px rgba(255, 71, 87, 0.6)';
+        });
+        
+        fabBtn.addEventListener('mouseout', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '0 4px 12px rgba(255, 71, 87, 0.4)';
+        });
+        
+        fabBtn.addEventListener('click', function() {
+            const pwd = prompt('🔐 Ingresa la contraseña para borrar el cuadrante:\n(Contraseña: admin123)');
+            if (pwd === 'admin123') {
+                const confirmacion = confirm('⚠️ ¿Estás SEGURO de que quieres BORRAR todo el cuadrante?\n\nEsta acción NO se puede deshacer.');
+                if (confirmacion) {
+                    console.log('🗑️ Borrando todos los datos...');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    if (window.AppState) {
+                        AppState.scheduleData.clear();
+                        AppState.cambiosPendientes = [];
+                    }
+                    window.empleados = [];
+                    if (typeof NotificationSystem !== 'undefined') {
+                        NotificationSystem.show('✅ Cuadrante borrado. Recargando...', 'success');
+                    }
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            } else if (pwd !== null) {
+                alert('❌ Contraseña incorrecta');
+            }
+        });
+    </script>
     
 </div><!-- Cierre main-content -->
 </body>
