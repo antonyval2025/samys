@@ -1,0 +1,431 @@
+/* ================================================
+   MEJORAS VISUALES v2.1 - Ajustes Sutiles
+   Sin cambios de layout
+   ================================================ */
+
+/* 🎨 Mejorar contraste y legibilidad sin romper layout */
+body {
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.5px;
+}
+
+/* Header: mejorar tipografía */
+header h1 {
+  letter-spacing: -0.5px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header .subtitle {
+  opacity: 0.95;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+}
+
+/* Selectores de período: mejorar visibilidad */
+.period-select {
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  transition: all 0.2s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.period-select:hover {
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.15);
+}
+
+.period-select:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+}
+
+/* Botones de acción: mejorar hover */
+.action-btn {
+  transition: all 0.25s ease;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+/* Botones de navegación: mejorar claridad */
+.nav-btn {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  border: 2px solid rgba(14, 165, 233, 0.4);
+}
+
+.nav-btn:hover {
+  border-color: rgba(14, 165, 233, 0.8);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+  transform: scale(1.05);
+}
+
+/* Tabs: mejorar contraste */
+.tab-btn {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.tab-btn.active::after {
+  width: 100%;
+}
+
+/* Tablas: mejorar legibilidad */
+.monthly-table th {
+  letter-spacing: 0.4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.monthly-table td {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.monthly-table tbody tr:hover td {
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.12);
+}
+
+/* Nombres de empleados: mejor contraste */
+.employee-name-cell {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.employee-name-cell:hover {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Leyenda: mejorar layout */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Tarjetas de estadísticas: mejorar visual */
+.stat-card {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.02) 100%);
+}
+
+.stat-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+/* Filtros: mejorar visual */
+.filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filtro-select {
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  background: rgba(30, 41, 59, 0.6);
+  color: #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.filtro-select:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.filtro-select:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+}
+
+/* Controles de edición: mejor visual */
+.edit-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.edit-btn {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 0.25s ease;
+  border: none;
+  border-radius: 8px;
+}
+
+.edit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-btn.bulk {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Modales: mejorar visual */
+.modal-content {
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  letter-spacing: -0.3px;
+}
+
+/* Sidebar: mejorar botones */
+.sidebar-btn {
+  letter-spacing: 0.2px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.sidebar-btn:hover {
+  transform: translateX(4px);
+}
+
+.sidebar-section-title {
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+/* Inputs y selects generales: mejorar */
+input, textarea, select {
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+}
+
+/* Labels: mejor tipografía */
+label {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #e2e8f0;
+}
+
+/* Links: mejor interactividad */
+a {
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* Scrollbar mejorado (WebKit) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.6);
+}
+
+/* Placeholder mejorado */
+::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+  letter-spacing: 0.2px;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(139, 92, 246, 0.25);
+  color: inherit;
+}
+
+/* Transiciones globales: suave */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover mejorado en elementos interactivos */
+button, [role="button"], a, input[type="checkbox"], input[type="radio"] {
+  cursor: pointer;
+}
+
+/* Mejora de legibilidad en textos pequeños */
+small, .text-sm, [style*="font-size: 12px"], [style*="font-size: 13px"] {
+  letter-spacing: 0.2px;
+  line-height: 1.6;
+}
+
+/* Mejora de iconos y emojis */
+.sidebar-btn-icon, [style*="font-size: 2"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Focus visible mejorado */
+*:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Disable states mejorado */
+*:disabled, [disabled], .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mejora de sombras sutiles */
+.card, .stat-card, .modal-content {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.card:hover, .stat-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Animaciones sutiles */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+
+  button, a, [role="button"] {
+    position: relative;
+  }
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .action-btn, .nav-btn, .edit-btn {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .legend {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}
+
+/* Tablet optimization */
+@media (min-width: 769px) and (max-width: 1024px) {
+  header {
+    padding: 24px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+}
+
+/* Desktop optimization */
+@media (min-width: 1025px) {
+  header h1 {
+    font-size: 28px;
+  }
+
+  .stat-value {
+    font-size: 32px;
+  }
+}
