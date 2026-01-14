@@ -833,7 +833,8 @@ class DateUtils {
         });
     }
 
-    static cambiarMes(direccion) {
+    static async cambiarMes(direccion) {
+        const inicio = performance.now();
         let mes = AppState.currentMonth + direccion;
         let año = AppState.currentYear;
         
@@ -846,7 +847,7 @@ class DateUtils {
         }
         
         // 🔴 CRÍTICO: Guardar TODOS los datos del mes actual ANTES de cambiar
-        console.log(`[DateUtils.cambiarMes] 💾 Guardando datos del mes ${AppState.currentMonth}/${AppState.currentYear}...`);
+        console.log(`[DateUtils.cambiarMes] ⏱️ Cambiando de ${AppState.currentMonth}/${AppState.currentYear} a ${mes}/${año}...`);
         AppState.saveToStorage();
         
         AppState.setMonth(mes);
@@ -855,7 +856,11 @@ class DateUtils {
         document.getElementById('selectMonth').value = mes;
         document.getElementById('selectYear').value = año;
         
-        TurnoManager.reiniciarDatos();
+        // ⭐ ESPERAR a que reiniciarDatos complete (importante para async)
+        await TurnoManager.reiniciarDatos();
+        
+        const duracion = (performance.now() - inicio).toFixed(0);
+        console.log(`✅ Cambio de mes completado en ${duracion}ms`);
     }
 }
 
@@ -1440,19 +1445,15 @@ class TurnoManager {
 
     static async reiniciarDatos() {
         console.log(`[TurnoManager.reiniciarDatos] 📅 Cambiando a mes ${AppState.currentMonth}/${AppState.currentYear}`);
+        const inicio = performance.now();
         
-        // ✅ ACTUALIZACIÓN v11: MODO MANUAL ÚNICAMENTE
-        // ❌ NO GENERAR AUTOMÁTICAMENTE BAJO NINGUNA CIRCUNSTANCIA
-        // Solo cargar datos existentes y mostrar/ocultar botón
-        
-        console.log('[TurnoManager.reiniciarDatos] 💾 Guardando cambios del mes anterior...');
-        AppState.saveToStorage();
+        // ✅ OPTIMIZACIÓN: NO esperar al guardado (ya se guardó en cambiarMes)
         
         console.log('[TurnoManager.reiniciarDatos] 📂 Cargando datos del storage...');
         await AppState.loadFromStorage();
         
-        // ⏳ ESPERAR UN POCO para asegurar que cargaron los datos
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // ⏳ ESPERAR MÍNIMO para que el DOM se actualice
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // 🔍 DIAGNÓSTICO: Ver qué meses tienen datos
         console.log('[TurnoManager.reiniciarDatos] 🔍 Diagnóstico de meses disponibles:');
@@ -1485,10 +1486,37 @@ class TurnoManager {
             }
         }
         
-        // ✅ NO cambiar automáticamente de mes - Dejar que el usuario seleccione libremente
-        // Los KPIs cargarán directamente desde la BD sin dependencia de AppState.scheduleData
+        // ✅ AUTO-GENERAR TURNOS SI FALTAN PARA ESTE MES
         if (!tieneEmpleadosConDatosDelMes) {
-            console.log(`[TurnoManager.reiniciarDatos] ⚠️ NO hay datos en AppState para ${AppState.currentMonth}/${AppState.currentYear} (pero KPIs cargarán desde BD)`);
+            console.log(`[TurnoManager.reiniciarDatos] 🔨 Generando turnos automáticamente para ${AppState.currentMonth}/${AppState.currentYear}...`);
+            
+            // Generar turnos para todos los empleados de este mes
+            for (const empleado of empleados) {
+                if (!AppState.scheduleData.has(empleado.id)) {
+                    AppState.scheduleData.set(empleado.id, []);
+                }
+                
+                const turnosExistentes = AppState.scheduleData.get(empleado.id) || [];
+                const diasEnMes = DateUtils.getDiasEnMes(AppState.currentYear, AppState.currentMonth);
+                
+                // Solo generar si faltan turnos para este mes
+                const turnosMes = turnosExistentes.filter(t => {
+                    const fecha = t.fecha instanceof Date ? t.fecha : new Date(t.fecha);
+                    return fecha.getMonth() === AppState.currentMonth && fecha.getFullYear() === AppState.currentYear;
+                });
+                
+                if (turnosMes.length < diasEnMes) {
+                    console.log(`  Generando ${diasEnMes} turnos para ${empleado.nombre}...`);
+                    const nuevosTurnos = this.generarTurnosEmpleado(empleado, AppState.currentYear, AppState.currentMonth);
+                    
+                    // Agregar nuevos turnos al final
+                    AppState.scheduleData.set(empleado.id, [...turnosExistentes, ...nuevosTurnos]);
+                }
+            }
+            
+            console.log(`✅ Turnos generados para el mes ${AppState.currentMonth}/${AppState.currentYear}`);
+            AppState.saveToStorage();
+            tieneEmpleadosConDatosDelMes = true;
         } else {
             console.log(`[TurnoManager.reiniciarDatos] ✅ Cuadrante tiene datos en AppState del mes actual`);
         }
@@ -1498,13 +1526,16 @@ class TurnoManager {
             TurnoManager.verificarYMostrarBoton();
         }
         
-        AppState.saveToStorage();
+        // ⚡ RENDERIZAR RÁPIDO (sin espera adicional)
         UI.generarCuadranteGeneral();
         UI.actualizarTitulosMes();
         if (AppState.selectedEmployee) {
             UI.generarCuadranteIndividual();
             UI.actualizarEstadisticasIndividual();
         }
+        
+        const duracion = (performance.now() - inicio).toFixed(0);
+        console.log(`✅ reiniciarDatos completado en ${duracion}ms`);
         
         // ✅ Actualizar KPIs automáticamente después de cambiar mes
         if (typeof window.actualizarKPIs === 'function') {

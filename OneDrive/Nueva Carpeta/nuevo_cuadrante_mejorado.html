@@ -593,8 +593,8 @@
                     <option value="10">Noviembre</option>
                     <option value="11">Diciembre</option>
                 </select>
-                <button class="nav-btn" onclick="DateUtils.cambiarMes(-1)">◀</button>
-                <button class="nav-btn" onclick="DateUtils.cambiarMes(1)">▶</button>
+                <button class="nav-btn" id="btnMesAnterior" onclick="cambiarMesWrapper(-1)">◀</button>
+                <button class="nav-btn" id="btnMesSiguiente" onclick="cambiarMesWrapper(1)">▶</button>
             </div>
             
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -4010,6 +4010,35 @@
                 alert('❌ Contraseña incorrecta');
             }
         });
+
+        // ⭐ FUNCIONES WRAPPER PARA ASYNC CAMBIAR MES
+        window.cambiarMesWrapper = async function(direccion) {
+            const btnMesAnterior = document.getElementById('btnMesAnterior');
+            const btnMesSiguiente = document.getElementById('btnMesSiguiente');
+            const botonesNav = [btnMesAnterior, btnMesSiguiente].filter(b => b);
+            
+            // Deshabilitar botones durante la transición
+            botonesNav.forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'wait';
+            });
+            
+            try {
+                await DateUtils.cambiarMes(direccion);
+                console.log('✅ Cambio de mes completado');
+            } catch (e) {
+                console.error('❌ Error cambiando mes:', e);
+                NotificationSystem.show('❌ Error al cambiar mes', 'error');
+            } finally {
+                // Re-habilitar botones
+                botonesNav.forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                });
+            }
+        };
     </script>
     
 </div><!-- Cierre main-content -->
